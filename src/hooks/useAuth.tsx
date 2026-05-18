@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(s?.user ?? null);
       setLoading(false);
       if (s?.user) {
-        ( supabase as any ).from("user_roles").select("role").eq("user_id", s.user.id).then(({ data }) => {
+        ( supabase as any ).from("user_roles").select("role").eq("user_id", s.user.id).then(({ data }: any) => {
           setRoles((data ?? []).map((r: { role: Role }) => r.role));
         });
       }

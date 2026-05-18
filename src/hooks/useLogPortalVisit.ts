@@ -38,7 +38,7 @@ export function useLogPortalVisit(path: string = "/") {
         user_agent:
           typeof navigator !== "undefined" ? navigator.userAgent : null,
       })
-      .then(({ error }) => {
+      .then(({ error }: any) => {
         if (!error) {
           try {
             sessionStorage.setItem(FLAG, "1");
