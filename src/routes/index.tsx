@@ -21,7 +21,8 @@ const Index = () => {
   const [acessos, setAcessos] = useState<string>("+0");
   useEffect(() => {
     let active = true;
-    (supabase as any).rpc("get_last_month_visits").then(({ data, error }: any) => {
+    (supabase as any).rpc("get_last_month_visits").then((res: any) => {
+      const { data, error } = res;
       if (!active || error) return;
       const total = typeof data === "number" ? data : Number(data ?? 0);
       setAcessos(formatVisitsApprox(total));
