@@ -30,7 +30,7 @@ export function useLogPortalVisit(path: string = "/") {
       sessionId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     }
 
-    supabase
+    (supabase as any)
       .from("portal_visits")
       .insert({
         session_id: sessionId,
