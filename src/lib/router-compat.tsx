@@ -55,11 +55,10 @@ type SetSearchParams = (
 ) => void;
 
 export const useSearchParams = (): [URLSearchParams, SetSearchParams] => {
-  const search = useRouterState({ select: (s) => s.location.search });
+  const search = useRouterState({ select: (s) => s.location.search }) as unknown as Record<string, unknown>;
   const nav = tUseNavigate();
-  // search is an object in TanStack; serialize it
   const params = new URLSearchParams(
-    Object.entries((search as Record<string, unknown>) ?? {}).reduce<Record<string, string>>(
+    Object.entries(search ?? {}).reduce<Record<string, string>>(
       (acc, [k, v]) => {
         if (v != null) acc[k] = String(v);
         return acc;
