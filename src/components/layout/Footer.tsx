@@ -48,9 +48,9 @@ export const Footer = () => (
       <div>
         <h4 className="font-semibold mb-4 text-sm uppercase tracking-wide opacity-90">Contato</h4>
         <ul className="space-y-3 text-sm">
-          <li className="flex items-center gap-2"><Phone className="h-4 w-4 shrink-0" /> 136</li>
-          <li className="flex items-center gap-2"><Mail className="h-4 w-4 shrink-0" /> faleconosco@saude.mg.gov.br</li>
-          <li className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-0.5 shrink-0" /> Belo Horizonte – MG</li>
+          <li className="flex items-center gap-2"><Phone className="h-4 w-4 shrink-0" /><span>136</span></li>
+          <li className="flex items-center gap-2"><Mail className="h-4 w-4 shrink-0" /><span>faleconosco@saude.mg.gov.br</span></li>
+          <li className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-0.5 shrink-0" /><span>Belo Horizonte – MG</span></li>
         </ul>
       </div>
     </div>
