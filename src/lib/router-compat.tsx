@@ -47,7 +47,8 @@ export const useNavigate = () => {
 };
 
 export const useParams = <T extends Record<string, string> = Record<string, string>>() =>
-  tUseParams({ strict: false }) as T;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (tUseParams as any)({ strict: false }) as T;
 
 type SetSearchParams = (
   next: URLSearchParams | ((prev: URLSearchParams) => URLSearchParams),
