@@ -6,7 +6,7 @@ import {
   useParams as tUseParams,
   useRouterState,
 } from "@tanstack/react-router";
-import { forwardRef, type AnchorHTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useEffect, type AnchorHTMLAttributes, type ReactNode } from "react";
 
 type AnyProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   to: string;
