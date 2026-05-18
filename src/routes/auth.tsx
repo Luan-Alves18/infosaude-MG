@@ -70,17 +70,49 @@ const Auth = () => {
 
   const handleMicrosoftSignIn = async () => {
     setMsLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
+    // Quando o app roda dentro de um iframe (preview do Lovable), o redirect
+    // padrão do Supabase carrega o login da Microsoft dentro do iframe, que
+    // a Microsoft bloqueia (X-Frame-Options). Por isso usamos
+    // skipBrowserRedirect e abrimos no topo da janela.
+    const inIframe = typeof window !== "undefined" && window.self !== window.top;
+    const redirectOrigin =
+      inIframe && window.top
+        ? (() => {
+            try {
+              return window.top!.location.origin;
+            } catch {
+              return window.location.origin;
+            }
+          })()
+        : window.location.origin;
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "azure",
       options: {
-        redirectTo: `${window.location.origin}/painel`,
+        redirectTo: `${redirectOrigin}/painel`,
         scopes: "email openid profile",
+        skipBrowserRedirect: inIframe,
       },
     });
-    setMsLoading(false);
+
     if (error) {
-      toast({ title: "Erro ao entrar com Microsoft", description: error.message, variant: "destructive" });
+      setMsLoading(false);
+      toast({
+        title: "Erro ao entrar com Microsoft",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
     }
+
+    if (inIframe && data?.url) {
+      try {
+        window.top!.location.href = data.url;
+      } catch {
+        window.open(data.url, "_blank", "noopener,noreferrer");
+      }
+    }
+    setMsLoading(false);
   };
 
   return (
