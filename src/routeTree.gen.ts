@@ -9,12 +9,49 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LoginRouteImport } from './routes/login'
+import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as PainelRouteImport } from './routes/painel'
+import { Route as PaineisRouteImport } from './routes/paineis'
+import { Route as DadosAbertosRouteImport } from './routes/dados-abertos'
+import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as BuscarRouteImport } from './routes/buscar'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PaineisIdRouteImport } from './routes/paineis.$id'
 
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PainelRoute = PainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaineisRoute = PaineisRouteImport.update({
+  id: '/paineis',
+  path: '/paineis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DadosAbertosRoute = DadosAbertosRouteImport.update({
+  id: '/dados-abertos',
+  path: '/dados-abertos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuscarRoute = BuscarRouteImport.update({
+  id: '/buscar',
+  path: '/buscar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,40 +59,142 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaineisIdRoute = PaineisIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PaineisRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
+  '/auth': typeof AuthRoute
+  '/buscar': typeof BuscarRoute
+  '/contato': typeof ContatoRoute
+  '/dados-abertos': typeof DadosAbertosRoute
+  '/paineis': typeof PaineisRouteWithChildren
+  '/painel': typeof PainelRoute
+  '/sobre': typeof SobreRoute
+  '/paineis/$id': typeof PaineisIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
+  '/auth': typeof AuthRoute
+  '/buscar': typeof BuscarRoute
+  '/contato': typeof ContatoRoute
+  '/dados-abertos': typeof DadosAbertosRoute
+  '/paineis': typeof PaineisRouteWithChildren
+  '/painel': typeof PainelRoute
+  '/sobre': typeof SobreRoute
+  '/paineis/$id': typeof PaineisIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
+  '/auth': typeof AuthRoute
+  '/buscar': typeof BuscarRoute
+  '/contato': typeof ContatoRoute
+  '/dados-abertos': typeof DadosAbertosRoute
+  '/paineis': typeof PaineisRouteWithChildren
+  '/painel': typeof PainelRoute
+  '/sobre': typeof SobreRoute
+  '/paineis/$id': typeof PaineisIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/buscar'
+    | '/contato'
+    | '/dados-abertos'
+    | '/paineis'
+    | '/painel'
+    | '/sobre'
+    | '/paineis/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/' | '/login'
+  to:
+    | '/'
+    | '/auth'
+    | '/buscar'
+    | '/contato'
+    | '/dados-abertos'
+    | '/paineis'
+    | '/painel'
+    | '/sobre'
+    | '/paineis/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/buscar'
+    | '/contato'
+    | '/dados-abertos'
+    | '/paineis'
+    | '/painel'
+    | '/sobre'
+    | '/paineis/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  LoginRoute: typeof LoginRoute
+  AuthRoute: typeof AuthRoute
+  BuscarRoute: typeof BuscarRoute
+  ContatoRoute: typeof ContatoRoute
+  DadosAbertosRoute: typeof DadosAbertosRoute
+  PaineisRoute: typeof PaineisRouteWithChildren
+  PainelRoute: typeof PainelRoute
+  SobreRoute: typeof SobreRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/painel': {
+      id: '/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof PainelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/paineis': {
+      id: '/paineis'
+      path: '/paineis'
+      fullPath: '/paineis'
+      preLoaderRoute: typeof PaineisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dados-abertos': {
+      id: '/dados-abertos'
+      path: '/dados-abertos'
+      fullPath: '/dados-abertos'
+      preLoaderRoute: typeof DadosAbertosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/buscar': {
+      id: '/buscar'
+      path: '/buscar'
+      fullPath: '/buscar'
+      preLoaderRoute: typeof BuscarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -65,23 +204,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/paineis/$id': {
+      id: '/paineis/$id'
+      path: '/$id'
+      fullPath: '/paineis/$id'
+      preLoaderRoute: typeof PaineisIdRouteImport
+      parentRoute: typeof PaineisRoute
+    }
   }
 }
 
+interface PaineisRouteChildren {
+  PaineisIdRoute: typeof PaineisIdRoute
+}
+
+const PaineisRouteChildren: PaineisRouteChildren = {
+  PaineisIdRoute: PaineisIdRoute,
+}
+
+const PaineisRouteWithChildren =
+  PaineisRoute._addFileChildren(PaineisRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  LoginRoute: LoginRoute,
+  AuthRoute: AuthRoute,
+  BuscarRoute: BuscarRoute,
+  ContatoRoute: ContatoRoute,
+  DadosAbertosRoute: DadosAbertosRoute,
+  PaineisRoute: PaineisRouteWithChildren,
+  PainelRoute: PainelRoute,
+  SobreRoute: SobreRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

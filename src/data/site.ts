@@ -1,0 +1,91 @@
+// Dados do portal InfoSaúde MG. PAINEIS importados do site oficial info.saude.mg.gov.br
+
+export const AREAS_TEMATICAS = [
+  { id: 1, slug: "vigilancia-epidemiologica", nome: "Vigilância Epidemiológica", descricao: "Monitoramento de doenças, agravos e eventos de saúde pública.", icon: "Activity", cor: "from-rose-500 to-red-600" },
+  { id: 5, slug: "estudos-tecnicos", nome: "Estudos Técnicos", descricao: "Análises e relatórios técnicos sobre a saúde em Minas Gerais.", icon: "FileSearch", cor: "from-blue-500 to-indigo-600" },
+  { id: 7, slug: "gestao", nome: "Gestão", descricao: "Indicadores de gestão administrativa e financeira do SUS-MG.", icon: "Briefcase", cor: "from-violet-500 to-purple-600" },
+  { id: 8, slug: "regulacao", nome: "Regulação do Acesso a Serviços de Saúde", descricao: "Acompanhamento da regulação assistencial e fluxos de atendimento.", icon: "Network", cor: "from-cyan-500 to-teal-600" },
+  { id: 10, slug: "atencao-primaria", nome: "Atenção Primária", descricao: "Indicadores da APS, ESF e cobertura assistencial municipal.", icon: "HeartHandshake", cor: "from-emerald-500 to-green-600" },
+  { id: 11, slug: "regionalizacao", nome: "Regionalização", descricao: "Dados por regiões ampliadas e macrorregiões de saúde de MG.", icon: "Map", cor: "from-amber-500 to-orange-600" },
+  { id: 13, slug: "vigilancia-sanitaria", nome: "Vigilância Sanitária", descricao: "Ações de fiscalização, inspeção e segurança sanitária.", icon: "ShieldCheck", cor: "from-sky-500 to-blue-600" },
+  { id: 14, slug: "auditoria-sus", nome: "Auditoria do SUS-MG", descricao: "Painéis e indicadores das auditorias do SUS em Minas.", icon: "ClipboardCheck", cor: "from-pink-500 to-rose-600" },
+  { id: 15, slug: "saude-digital", nome: "Saúde Digital", descricao: "Transformação digital e produtos de dados em saúde.", icon: "MonitorSmartphone", cor: "from-indigo-500 to-blue-700" },
+  { id: 16, slug: "atencao-especializada", nome: "Atenção Especializada", descricao: "Atenção ambulatorial e hospitalar de média e alta complexidade.", icon: "Stethoscope", cor: "from-teal-500 to-emerald-600" },
+];
+
+export const INDICADORES_HOME = [
+  { label: "Municípios cobertos", valor: "853", sub: "100% de Minas Gerais" },
+  { label: "Painéis publicados", valor: "46+", sub: "em 10 áreas temáticas" },
+  { label: "Atualização", valor: "Diária", sub: "dados de fontes oficiais" },
+  { label: "Acessos/mês", valor: "+120 mil", sub: "gestores e cidadãos" },
+];
+
+export const NOTICIAS = [
+  { titulo: "Novo painel de Mortalidade Infantil e Materna é publicado", categoria: "Vigilância", data: "2025-03-18", resumo: "Ferramenta interativa permite acompanhar indicadores por município e regional de saúde em Minas Gerais." },
+  { titulo: "Observatório de Vacinação atualiza dados de cobertura vacinal", categoria: "Imunização", data: "2025-03-12", resumo: "Painel apresenta cobertura por imunobiológico e faixa etária, com séries históricas desde 2015." },
+  { titulo: "Integração de informações em saúde do SUS-MG ganha novo módulo", categoria: "Saúde Digital", data: "2025-02-28", resumo: "Módulo de Saúde Digital reúne produtos de dados e ferramentas para apoio à decisão clínica e gestora." },
+  { titulo: "Painéis de Regionalização ampliam visão por macrorregião", categoria: "Gestão", data: "2025-02-14", resumo: "Novos recortes territoriais facilitam a análise comparada entre regiões de saúde." },
+];
+
+// Auto-gerado a partir do site oficial info.saude.mg.gov.br
+
+export type Painel = {
+  id: number;
+  titulo: string;
+  areaId: number;
+  areaSlug: string;
+  areaNome: string;
+  embedUrl: string;
+  restrito?: boolean;
+};
+
+export const PAINEIS: Painel[] = [
+  { id: 2, titulo: "COVID - Monitoramento", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiZjg2ZDY2MWEtMDIxZC00NTk0LTg4OTQtMDk1YjYzNDZlNTNiIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 13, titulo: "Observatório de Vacinação - Vacinas de Rotina", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNmFhODAwZTEtOTYwMy00Zjc1LTkyNDAtYTA1N2VkMDU2N2IyIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 14, titulo: "COVID - Vacinômetro", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMDY4NDZhNzctNTgzOC00ZThjLTlmYzYtN2IzMGFkYjVkMGM2IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 22, titulo: "Meningites - Monitoramento", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiZjBkMWVmZTgtMmJiNS00M2IxLTk0NDctZTA5MDlhNjkzNGE5IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 23, titulo: "Mpox - Monitoramento", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMWE2MjIyYjItYjg2Zi00OWNkLTgyOWYtZWEzNGMwYjllOWZmIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 27, titulo: "Caxumba - Monitoramento", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiODBkZmQ0ZDktZjJlZC00ZGViLTlkZGYtZTdkZjM4YWVhMjBlIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 34, titulo: "Doença de Chagas Crônica (DCC)", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiZTIwNmE5YjktYzk5Ny00ZGUwLTlkMzYtYmMxMzVkZjBhMmU1IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 41, titulo: "Acidente de Trabalho Grave", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYTM3ODc3ZWUtOGEyNi00NWM1LWE4MTUtOTBhZjhiZTYwM2FhIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 42, titulo: "Acidente por Animais Peçonhentos", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMmRmMGU1ZGItOGViNy00OWExLThjYjUtYzlhYTQ1ODM3ODY3IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 43, titulo: "Acidentes por Transporte Terrestre (ATT)", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiODE2MzRkYmMtNjM3OS00NzczLWJmMDYtY2U4Yjc4YmM5YzY3IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 44, titulo: "Arboviroses – Controle Vetorial", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMzkyZTRhZGItNmNhMS00ZTFiLWJhZmEtYjRiNWE3MGExMGQxIiwidCI6IjlmZDc2YzIyLWZhMjktNGFlNS04OWE0LWQ2MGUxYzYzNDEzMSJ9" },
+  { id: 45, titulo: "Arboviroses – Epidemiológico", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYTg4MTk1NDUtN2IxMS00MTQ3LTk2MDAtYWMzNzcxNTM3ODQ4IiwidCI6ImU1ZDNhZTdjLTliMzgtNDhkZS1hMDg3LWY2NzM0YTI4NzU3NCJ9" },
+  { id: 46, titulo: "Arboviroses – Plano Municipal de Contingência", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMTE3ZWVjMjQtOTg2OS00MzExLTkyNjEtYmYwYTg4ZjVhMGJkIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 47, titulo: "Atendimento Antirrábico Humano", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYzk3NjQ3MDItOGY3Mi00NTQ1LTkzZGYtMGJmNGFlYjlkNmU0IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 48, titulo: "Câncer", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNTAxZjUwYzAtNWQ2Ni00YTQ5LWI2YmEtMThmMWYzMGU0MzQ3IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 49, titulo: "Doenças e Agravos Relacionados ao Trabalho (DART)", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiODkzYWI5ODItNDcwNS00ZGYzLTljZmUtNTNmYTlkNzliNWYyIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 50, titulo: "Doenças Crônicas Não Transmissíveis", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYWIzNjI5Y2YtYWM4Yy00ODY2LWI4NWQtZGIzZWM4ZTU5NzMyIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 51, titulo: "Hanseníase", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiODM4OTAyNWEtZTAwOS00NGVmLTgwYTQtOTk3MzJjZTAwZDUwIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 52, titulo: "Vigilância da Resistência no Tratamento da Hanseníase", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMGJmZDQxNDgtOGUxZS00YWY1LWEzZjQtNGE0YTNjNjI2ZWZlIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 53, titulo: "Hepatites Virais", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiY2VkMjQyNzEtMWY5ZS00MGUwLWIzY2YtMTUwOTU4MTk0YmQ5IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 54, titulo: "HIV/AIDS", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMmE1NjBmYTAtOWViYS00ODkzLWI2NTUtZGFjNDAyN2M5OGUwIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 55, titulo: "Leishmaniose Visceral", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNWIxNGM4MzAtYWQ4Ny00MjJjLTk3MzUtYzVlMDI0YWQ2OTJiIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 56, titulo: "Leptospirose", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiZGVmZGMzNmEtMDg2OS00NDJjLWFhNjEtM2Q3NzgzMjc4NGQwIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 57, titulo: "Mortalidade Geral", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNTlhYTYxMWItYTIyNy00NzdmLWE3NjYtMGNlNTMwM2M0YzMyIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 58, titulo: "Mortalidade Infantil", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNjVkYzZmNGItMTU2OC00NmFlLThkODAtMzNhZDc0NWMwY2U4IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 59, titulo: "Nascidos Vivos", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYzlmOTNiY2YtMWJiOS00OGJhLTg5MWUtMGJlNmZlMzAyOWU3IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 60, titulo: "Paralisia Flácida Aguda/Poliomielite", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMDI0ZGI1NzUtOTA5Yy00ZWYzLTgyNTYtYjI2Njc1ZmNmMzg2IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 61, titulo: "Sífilis", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiZDU1ZTQwMGEtNjY3ZS00ZWExLThiNWEtM2NjYmYxOWVjOTVjIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 62, titulo: "Síndrome Respiratória Aguda Hospitalizado", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMzljNjllYzMtNTc1ZS00NzBlLWE1YjEtZDEzM2E4MzJjOWZjIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 64, titulo: "Tuberculose", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiZjU5N2ZjNWEtYzBlNC00OGY4LWFhYTQtOTU1MjhmN2UwNWUxIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 65, titulo: "Tuberculose - Infecção Latente", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYWE0ODRjYjgtZGU2ZS00OWFmLTlkZGQtMmI2YTg3ZmQzYjNjIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 66, titulo: "Violência", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNzA0NmQzYzAtZGI2ZS00NTkzLWFkZTktYTdkMjcyYjVhOTU2IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 67, titulo: "Olhares Sobre a Violência Contra as Mulheres", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMzM0NTZiMWYtYzU3Mi00MGQzLTlkZDQtNTdlYmZmYjU3OWJhIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 68, titulo: "Vacimóvel", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNzRhOTUxOTAtYTc2OS00ZjUxLWIyOWItYzFlNTVhYzgxOWI5IiwidCI6IjlmZDc2YzIyLWZhMjktNGFlNS04OWE0LWQ2MGUxYzYzNDEzMSJ9" },
+  { id: 69, titulo: "Imunização - Classificação do Risco de Reintrodução", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiZDgzMzZmMGQtZWNiMi00NmM3LTk1NGMtNWY0ZDYxOGY3MzA3IiwidCI6IjlmZDc2YzIyLWZhMjktNGFlNS04OWE0LWQ2MGUxYzYzNDEzMSJ9" },
+  { id: 76, titulo: "Esporotricose - Painel Epidemiológico", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiZjJlNzk2ODctMzQwZS00YzNhLWJjM2MtMTVhMjNkODQ2OTAwIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 77, titulo: "Imunização – Coberturas Vacinais", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNDNkNzlhN2QtMjc2NS00NWE4LWFmNmEtNmU1Y2Y2NjAxZTFiIiwidCI6IjlmZDc2YzIyLWZhMjktNGFlNS04OWE0LWQ2MGUxYzYzNDEzMSJ9" },
+  { id: 16, titulo: "Análise de Acidentes de Trânsito em MG", areaId: 5, areaSlug: "estudos-tecnicos", areaNome: "Estudos Técnicos", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYTRhZmRkNTItMzYwMC00NTRjLTliZTEtMzA4YTkwYzFmNDRjIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 75, titulo: "Planejamento Anual de Compras", areaId: 7, areaSlug: "gestao", areaNome: "Gestão", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMDhhYzk2NzAtOTA2Ny00MDA2LWIzYzMtZWU0ZTQyZTVkYzRjIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 30, titulo: "Arboviroses - Dados Públicos de Regulação do Acesso", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMmYxMzJjOTUtY2VkOC00M2E2LWFhMzQtODg2NjllYzJlZTQzIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 31, titulo: "Síndromes Respiratórias - Dados Públicos de Regulação do Acesso", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNTFkNDIzYjAtYmM1Yi00MTA0LTg3NDYtOTNlNTg2YjFlN2YzIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 32, titulo: "Observatório da Demanda por Acesso - Dados Públicos", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMzAzM2I2ODgtNTk4OC00OGE4LWIwN2ItMjkzMGQzMjJlY2MzIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 37, titulo: "Monitoramento PDR", areaId: 11, areaSlug: "regionalizacao", areaNome: "Regionalização", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiZjYwZjhmNTQtMGEwMy00MDllLWI1NzAtOTkyOWIwZWRkNTBjIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9&amp;pageName=286b5974720719adf65f" },
+  { id: 40, titulo: "Painel de Monitoramento da Resolução 9.081/2023", areaId: 13, areaSlug: "vigilancia-sanitaria", areaNome: "Vigilância Sanitária", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNGQ0NzJjYzgtZDIwNi00MmNlLThjOTktODA0NTBlZmUyMjc0IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 70, titulo: "Painel de Auditoria do SUS-MG", areaId: 14, areaSlug: "auditoria-sus", areaNome: "Auditoria do SUS-MG", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMjAyZjRlZDUtNzllMC00OTQ2LThiMWMtODEwZDNjZGRkYmJjIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  { id: 72, titulo: "Observatório Saúde Digital: análises do SUS Digital", areaId: 15, areaSlug: "saude-digital", areaNome: "Saúde Digital", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNmY2MTczM2QtMmRhMC00YjMxLTllZWQtMzk5ODU3MjkxYjRlIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+];
+// Compat: usado em algumas telas antigas
+export const PAINEIS_VIGILANCIA = PAINEIS;
