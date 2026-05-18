@@ -82,15 +82,9 @@ export const useSearchParams = (): [URLSearchParams, SetSearchParams] => {
 type NavigateCompProps = { to: string; replace?: boolean };
 export const Navigate = ({ to, replace }: NavigateCompProps) => {
   const nav = tUseNavigate();
-  // Side-effect must run after render, otherwise we trigger an infinite
-  // render/navigate loop (page appears to "reload" itself).
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  // Using dynamic import to avoid a circular dep with React in some bundlers.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { useEffect } = require("react") as typeof import("react");
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     nav({ to: to as any, replace });
-  }, [to, replace]);
+  }, [to, replace, nav]);
   return null;
 };
