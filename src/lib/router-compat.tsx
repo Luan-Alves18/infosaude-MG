@@ -6,7 +6,7 @@ import {
   useParams as tUseParams,
   useRouterState,
 } from "@tanstack/react-router";
-import { forwardRef, type AnchorHTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useEffect, type AnchorHTMLAttributes, type ReactNode } from "react";
 
 type AnyProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   to: string;
@@ -82,7 +82,9 @@ export const useSearchParams = (): [URLSearchParams, SetSearchParams] => {
 type NavigateCompProps = { to: string; replace?: boolean };
 export const Navigate = ({ to, replace }: NavigateCompProps) => {
   const nav = tUseNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  nav({ to: to as any, replace });
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    nav({ to: to as any, replace });
+  }, [to, replace, nav]);
   return null;
 };
