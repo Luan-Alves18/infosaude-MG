@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         setTimeout(async () => {
-          const { data } = await supabase.from("user_roles").select("role").eq("user_id", s.user.id);
+          const { data } = await ( supabase as any ).from("user_roles").select("role").eq("user_id", s.user.id);
           setRoles((data ?? []).map((r: { role: Role }) => r.role));
         }, 0);
       } else {
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(s?.user ?? null);
       setLoading(false);
       if (s?.user) {
-        supabase.from("user_roles").select("role").eq("user_id", s.user.id).then(({ data }) => {
+        ( supabase as any ).from("user_roles").select("role").eq("user_id", s.user.id).then(({ data }) => {
           setRoles((data ?? []).map((r: { role: Role }) => r.role));
         });
       }
