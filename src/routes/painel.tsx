@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { Navigate } from "@/lib/router-compat";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -74,4 +75,4 @@ const Painel = () => {
   );
 };
 
-export default Painel;
+export const Route = createFileRoute("/painel")({ component: Painel });

@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Mail, MapPin, Phone, Globe, MessageSquare, Send } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -91,4 +92,4 @@ const Contato = () => {
   );
 };
 
-export default Contato;
+export const Route = createFileRoute("/contato")({ component: Contato });

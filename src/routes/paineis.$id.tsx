@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Link, useParams, Navigate } from "@/lib/router-compat";
 import { ArrowLeft, ExternalLink, Maximize2, Minimize2, Loader2 } from "lucide-react";
@@ -87,4 +88,4 @@ const VisualizarPainel = () => {
   );
 };
 
-export default VisualizarPainel;
+export const Route = createFileRoute("/paineis/$id")({ component: VisualizarPainel });

@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
 
@@ -49,4 +50,4 @@ const DadosAbertos = () => {
   );
 };
 
-export default DadosAbertos;
+export const Route = createFileRoute("/dados-abertos")({ component: DadosAbertos });

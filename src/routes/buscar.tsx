@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo } from "react";
 import { useSearchParams, Link, useNavigate } from "@/lib/router-compat";
 import { Badge } from "@/components/ui/badge";
@@ -163,4 +164,4 @@ const Buscar = () => {
   );
 };
 
-export default Buscar;
+export const Route = createFileRoute("/buscar")({ component: Buscar });

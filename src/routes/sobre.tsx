@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
 import { Target, Users, Database, ShieldCheck } from "lucide-react";
 import { FichaTecnica } from "@/components/FichaTecnica";
@@ -60,4 +61,4 @@ const Sobre = () => (
   </div>
 );
 
-export default Sobre;
+export const Route = createFileRoute("/sobre")({ component: Sobre });

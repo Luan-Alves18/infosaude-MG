@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import * as Icons from "lucide-react";
@@ -203,4 +204,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export const Route = createFileRoute("/")({ component: Index });

@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@/lib/router-compat";
 import { Button } from "@/components/ui/button";
@@ -181,4 +182,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export const Route = createFileRoute("/auth")({ component: Auth });

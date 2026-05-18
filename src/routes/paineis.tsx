@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "@/lib/router-compat";
 import * as Icons from "lucide-react";
@@ -161,4 +162,4 @@ const Paineis = () => {
   );
 };
 
-export default Paineis;
+export const Route = createFileRoute("/paineis")({ component: Paineis });
