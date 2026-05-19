@@ -17,7 +17,7 @@ import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PaineisIdRouteImport } from './routes/paineis.$id'
+import { Route as PaineisIdRouteImport } from './routes/paineis_.$id'
 
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
@@ -60,9 +60,9 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const PaineisIdRoute = PaineisIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => PaineisRoute,
+  id: '/paineis_/$id',
+  path: '/paineis/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -71,7 +71,7 @@ export interface FileRoutesByFullPath {
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/dados-abertos': typeof DadosAbertosRoute
-  '/paineis': typeof PaineisRouteWithChildren
+  '/paineis': typeof PaineisRoute
   '/painel': typeof PainelRoute
   '/sobre': typeof SobreRoute
   '/paineis/$id': typeof PaineisIdRoute
@@ -82,7 +82,7 @@ export interface FileRoutesByTo {
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/dados-abertos': typeof DadosAbertosRoute
-  '/paineis': typeof PaineisRouteWithChildren
+  '/paineis': typeof PaineisRoute
   '/painel': typeof PainelRoute
   '/sobre': typeof SobreRoute
   '/paineis/$id': typeof PaineisIdRoute
@@ -94,10 +94,10 @@ export interface FileRoutesById {
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/dados-abertos': typeof DadosAbertosRoute
-  '/paineis': typeof PaineisRouteWithChildren
+  '/paineis': typeof PaineisRoute
   '/painel': typeof PainelRoute
   '/sobre': typeof SobreRoute
-  '/paineis/$id': typeof PaineisIdRoute
+  '/paineis_/$id': typeof PaineisIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -132,7 +132,7 @@ export interface FileRouteTypes {
     | '/paineis'
     | '/painel'
     | '/sobre'
-    | '/paineis/$id'
+    | '/paineis_/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -141,9 +141,10 @@ export interface RootRouteChildren {
   BuscarRoute: typeof BuscarRoute
   ContatoRoute: typeof ContatoRoute
   DadosAbertosRoute: typeof DadosAbertosRoute
-  PaineisRoute: typeof PaineisRouteWithChildren
+  PaineisRoute: typeof PaineisRoute
   PainelRoute: typeof PainelRoute
   SobreRoute: typeof SobreRoute
+  PaineisIdRoute: typeof PaineisIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -204,26 +205,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/paineis/$id': {
-      id: '/paineis/$id'
-      path: '/$id'
+    '/paineis_/$id': {
+      id: '/paineis_/$id'
+      path: '/paineis/$id'
       fullPath: '/paineis/$id'
       preLoaderRoute: typeof PaineisIdRouteImport
-      parentRoute: typeof PaineisRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface PaineisRouteChildren {
-  PaineisIdRoute: typeof PaineisIdRoute
-}
-
-const PaineisRouteChildren: PaineisRouteChildren = {
-  PaineisIdRoute: PaineisIdRoute,
-}
-
-const PaineisRouteWithChildren =
-  PaineisRoute._addFileChildren(PaineisRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -231,10 +221,21 @@ const rootRouteChildren: RootRouteChildren = {
   BuscarRoute: BuscarRoute,
   ContatoRoute: ContatoRoute,
   DadosAbertosRoute: DadosAbertosRoute,
-  PaineisRoute: PaineisRouteWithChildren,
+  PaineisRoute: PaineisRoute,
   PainelRoute: PainelRoute,
   SobreRoute: SobreRoute,
+  PaineisIdRoute: PaineisIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
