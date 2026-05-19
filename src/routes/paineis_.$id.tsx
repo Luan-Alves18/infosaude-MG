@@ -88,4 +88,4 @@ const VisualizarPainel = () => {
   );
 };
 
-export const Route = createFileRoute("/paineis/$id")({ component: VisualizarPainel });
+export const Route = createFileRoute("/paineis_/$id")({ component: VisualizarPainel });
