@@ -136,6 +136,14 @@ export const Header = () => {
                   <DropdownMenuItem onClick={() => navigate("/painel")}>
                     Meu painel
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/solicitar-acesso-painel")}>
+                    Solicitar acesso a painel
+                  </DropdownMenuItem>
+                  {roles.includes("admin") && (
+                    <DropdownMenuItem onClick={() => navigate("/admin/usuarios")}>
+                      Gerenciar usuários
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem onClick={signOut} className="text-destructive">
                     <LogOut className="h-4 w-4 mr-2" /> Sair
                   </DropdownMenuItem>

@@ -1,18 +1,43 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Link, useParams, Navigate } from "@/lib/router-compat";
-import { ArrowLeft, ExternalLink, Maximize2, Minimize2, Loader2 } from "lucide-react";
+import { ArrowLeft, ExternalLink, Maximize2, Minimize2, Loader2, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PAINEIS } from "@/data/site";
+import { useAuth } from "@/hooks/useAuth";
+import { usePanelPermissions } from "@/hooks/usePanelPermissions";
 
 const VisualizarPainel = () => {
   const { id } = useParams<{ id: string }>();
   const painel = PAINEIS.find((p) => String(p.id) === id);
   const [loaded, setLoaded] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const { user, loading: authLoading } = useAuth();
+  const { panelIds: allowedIds, loading: permLoading } = usePanelPermissions();
 
   if (!painel) return <Navigate to="/paineis" replace />;
+
+  if (painel.restrito) {
+    if (authLoading || permLoading) {
+      return <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Carregando…</div>;
+    }
+    if (!user) return <Navigate to="/auth" replace />;
+    if (!allowedIds.includes(String(painel.id))) {
+      return (
+        <div className="container mx-auto px-4 py-20 max-w-xl text-center animate-fade-in">
+          <Lock className="h-10 w-10 text-warning mx-auto mb-4" />
+          <h1 className="text-2xl font-bold mb-2">Painel restrito</h1>
+          <p className="text-muted-foreground mb-6">
+            Você não possui permissão para acessar este painel. Solicite o acesso à equipe administradora.
+          </p>
+          <Button asChild>
+            <Link to="/solicitar-acesso-painel">Solicitar acesso</Link>
+          </Button>
+        </div>
+      );
+    }
+  }
 
   return (
     <div className={fullscreen ? "fixed inset-0 z-50 bg-background flex flex-col" : "container mx-auto px-4 py-8 animate-fade-in"}>

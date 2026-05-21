@@ -9,11 +9,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AREAS_TEMATICAS, PAINEIS } from "@/data/site";
 import { getAreaColor } from "@/lib/areaColors";
+import { useAuth } from "@/hooks/useAuth";
+import { usePanelPermissions } from "@/hooks/usePanelPermissions";
 
 const Paineis = () => {
   const [params, setParams] = useSearchParams();
   const [q, setQ] = useState("");
   const areaSlug = params.get("area") || "todas";
+  const { user } = useAuth();
+  const { panelIds: allowedPanelIds } = usePanelPermissions();
+
+  const visiblePaineis = useMemo(
+    () =>
+      PAINEIS.filter(
+        (p) => !p.restrito || (user && allowedPanelIds.includes(String(p.id))),
+      ),
+    [user, allowedPanelIds],
+  );
 
   const setArea = (slug: string) => {
     if (slug === "todas") {
@@ -26,17 +38,17 @@ const Paineis = () => {
 
   const countsByArea = useMemo(() => {
     const map: Record<string, number> = {};
-    PAINEIS.forEach((p) => (map[p.areaSlug] = (map[p.areaSlug] || 0) + 1));
+    visiblePaineis.forEach((p) => (map[p.areaSlug] = (map[p.areaSlug] || 0) + 1));
     return map;
-  }, []);
+  }, [visiblePaineis]);
 
   const filtered = useMemo(() => {
-    return PAINEIS.filter(
+    return visiblePaineis.filter(
       (p) =>
         (areaSlug === "todas" || p.areaSlug === areaSlug) &&
         p.titulo.toLowerCase().includes(q.toLowerCase().trim())
     );
-  }, [q, areaSlug]);
+  }, [q, areaSlug, visiblePaineis]);
 
   return (
     <div className="container mx-auto px-4 py-12 animate-fade-in">

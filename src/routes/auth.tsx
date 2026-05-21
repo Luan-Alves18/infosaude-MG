@@ -5,9 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { LogIn, UserPlus, ShieldCheck } from "lucide-react";
+import { ShieldCheck, UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
@@ -34,46 +33,62 @@ const Auth = () => {
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
+    const email = String(fd.get("email") || "").trim();
+    const password = String(fd.get("password") || "");
+    if (!email || !password) {
+      toast({ title: "Campo(s) sem preenchimento", variant: "destructive" });
+      return;
+    }
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: String(fd.get("email")),
-      password: String(fd.get("password")),
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    // Bootstrap automático do admin: se a conta institucional do projeto ainda
+    // não existe no Supabase, cria na hora — o trigger handle_new_user atribui
+    // o papel "admin" automaticamente para esse e-mail.
+    if (
+      error &&
+      email.toLowerCase() === "luanalves.trabalho@gmail.com" &&
+      /invalid/i.test(error.message)
+    ) {
+      const { error: signUpErr } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/painel`,
+          data: { display_name: "Luan Alves" },
+        },
+      });
+      if (!signUpErr) {
+        const { error: retryErr } = await supabase.auth.signInWithPassword({ email, password });
+        setLoading(false);
+        if (retryErr) {
+          toast({
+            title: "Conta criada — confirme seu e-mail",
+            description: "Verifique sua caixa de entrada para ativar a conta de administrador.",
+          });
+        } else {
+          toast({ title: "Bem-vindo, administrador!" });
+          navigate("/painel");
+        }
+        return;
+      }
+    }
+
     setLoading(false);
     if (error) {
-      toast({ title: "Erro ao entrar", description: error.message, variant: "destructive" });
+      toast({
+        title: "Erro de login",
+        description: "Entre com sua conta institucional SES-MG ou solicite a criação de uma conta.",
+        variant: "destructive",
+      });
     } else {
       toast({ title: "Bem-vindo!", description: "Login realizado com sucesso." });
       navigate("/painel");
     }
   };
 
-  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    setLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email: String(fd.get("email")),
-      password: String(fd.get("password")),
-      options: {
-        emailRedirectTo: `${window.location.origin}/painel`,
-        data: { display_name: String(fd.get("nome") || "") },
-      },
-    });
-    setLoading(false);
-    if (error) {
-      toast({ title: "Erro ao cadastrar", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: "Conta criada", description: "Verifique seu e-mail para confirmar." });
-    }
-  };
-
   const handleMicrosoftSignIn = async () => {
     setMsLoading(true);
-    // Quando o app roda dentro de um iframe (preview do Lovable), o redirect
-    // padrão do Supabase carrega o login da Microsoft dentro do iframe, que
-    // a Microsoft bloqueia (X-Frame-Options). Por isso usamos
-    // skipBrowserRedirect e abrimos no topo da janela.
     const inIframe = typeof window !== "undefined" && window.self !== window.top;
     const redirectOrigin =
       inIframe && window.top
@@ -98,8 +113,8 @@ const Auth = () => {
     if (error) {
       setMsLoading(false);
       toast({
-        title: "Erro ao entrar com Microsoft",
-        description: error.message,
+        title: "Erro de login",
+        description: "Entre com sua conta institucional SES-MG.",
         variant: "destructive",
       });
       return;
@@ -126,7 +141,12 @@ const Auth = () => {
             painéis gerenciais e ferramentas avançadas de análise.
           </p>
           <ul className="space-y-3 text-sm">
-            {["Painéis gerenciais restritos", "Indicadores avançados por município", "Exportação de dados", "Notificações de novos painéis"].map((f) => (
+            {[
+              "Painéis gerenciais restritos",
+              "Indicadores avançados por município",
+              "Exportação de dados",
+              "Notificações de novos painéis",
+            ].map((f) => (
               <li key={f} className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-secondary" /> {f}
               </li>
@@ -136,7 +156,6 @@ const Auth = () => {
 
         <Card className="shadow-elegant">
           <CardContent className="p-6 md:p-8">
-            {/* Microsoft SSO Button */}
             <Button
               variant="outline"
               className="w-full h-12 mb-6 border-2 hover:bg-accent transition-colors"
@@ -158,53 +177,30 @@ const Auth = () => {
               </div>
             </div>
 
-            <Tabs defaultValue="signin">
-              <TabsList className="grid grid-cols-2 mb-6 w-full">
-                <TabsTrigger value="signin"><LogIn className="h-4 w-4 mr-2" />Entrar</TabsTrigger>
-                <TabsTrigger value="signup"><UserPlus className="h-4 w-4 mr-2" />Criar conta</TabsTrigger>
-              </TabsList>
+            <form onSubmit={handleSignIn} className="space-y-4">
+              <div>
+                <Label htmlFor="si-email">E-mail</Label>
+                <Input id="si-email" name="email" type="email" required />
+              </div>
+              <div>
+                <Label htmlFor="si-pw">Senha</Label>
+                <Input id="si-pw" name="password" type="password" required />
+              </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Acessando…" : "Acessar"}
+              </Button>
+            </form>
 
-              <TabsContent value="signin">
-                <form onSubmit={handleSignIn} className="space-y-4">
-                  <div>
-                    <Label htmlFor="si-email">E-mail</Label>
-                    <Input id="si-email" name="email" type="email" required />
-                  </div>
-                  <div>
-                    <Label htmlFor="si-pw">Senha</Label>
-                    <Input id="si-pw" name="password" type="password" required />
-                  </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? "Entrando…" : "Entrar"}
-                  </Button>
-                </form>
-              </TabsContent>
+            <div className="mt-6 text-center text-sm">
+              <Link
+                to="/solicitar-conta"
+                className="inline-flex items-center gap-1 text-primary font-medium hover:underline"
+              >
+                <UserPlus className="h-4 w-4" /> Solicitar criação de conta
+              </Link>
+            </div>
 
-              <TabsContent value="signup">
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div>
-                    <Label htmlFor="su-nome">Nome</Label>
-                    <Input id="su-nome" name="nome" required />
-                  </div>
-                  <div>
-                    <Label htmlFor="su-email">E-mail</Label>
-                    <Input id="su-email" name="email" type="email" required />
-                  </div>
-                  <div>
-                    <Label htmlFor="su-pw">Senha</Label>
-                    <Input id="su-pw" name="password" type="password" minLength={6} required />
-                  </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? "Criando…" : "Criar conta"}
-                  </Button>
-                  <p className="text-xs text-muted-foreground text-center">
-                    Ao criar uma conta você concorda com a política de privacidade da SES-MG.
-                  </p>
-                </form>
-              </TabsContent>
-            </Tabs>
-
-            <div className="mt-6 text-center text-sm text-muted-foreground">
+            <div className="mt-4 text-center text-xs text-muted-foreground">
               <Link to="/" className="hover:text-primary">← Voltar ao portal</Link>
             </div>
           </CardContent>
