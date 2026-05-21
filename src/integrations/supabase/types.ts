@@ -14,6 +14,96 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_requests: {
+        Row: {
+          chefia_imediata: string
+          created_at: string
+          email: string
+          id: string
+          instituicao: string
+          motivo: string
+          nome_completo: string
+          senha: string
+          status: string
+        }
+        Insert: {
+          chefia_imediata: string
+          created_at?: string
+          email: string
+          id?: string
+          instituicao: string
+          motivo: string
+          nome_completo: string
+          senha: string
+          status?: string
+        }
+        Update: {
+          chefia_imediata?: string
+          created_at?: string
+          email?: string
+          id?: string
+          instituicao?: string
+          motivo?: string
+          nome_completo?: string
+          senha?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      panel_access_requests: {
+        Row: {
+          created_at: string
+          id: string
+          motivo: string
+          panel_ids: string[]
+          status: string
+          user_email: string
+          user_id: string
+          user_name: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          motivo: string
+          panel_ids: string[]
+          status?: string
+          user_email: string
+          user_id: string
+          user_name?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          motivo?: string
+          panel_ids?: string[]
+          status?: string
+          user_email?: string
+          user_id?: string
+          user_name?: string | null
+        }
+        Relationships: []
+      }
+      panel_permissions: {
+        Row: {
+          granted_at: string
+          granted_by: string | null
+          panel_id: string
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          granted_by?: string | null
+          panel_id: string
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          granted_by?: string | null
+          panel_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       portal_visits: {
         Row: {
           id: string
