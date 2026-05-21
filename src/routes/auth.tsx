@@ -41,6 +41,39 @@ const Auth = () => {
     }
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    // Bootstrap automático do admin: se a conta institucional do projeto ainda
+    // não existe no Supabase, cria na hora — o trigger handle_new_user atribui
+    // o papel "admin" automaticamente para esse e-mail.
+    if (
+      error &&
+      email.toLowerCase() === "luanalves.trabalho@gmail.com" &&
+      /invalid/i.test(error.message)
+    ) {
+      const { error: signUpErr } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/painel`,
+          data: { display_name: "Luan Alves" },
+        },
+      });
+      if (!signUpErr) {
+        const { error: retryErr } = await supabase.auth.signInWithPassword({ email, password });
+        setLoading(false);
+        if (retryErr) {
+          toast({
+            title: "Conta criada — confirme seu e-mail",
+            description: "Verifique sua caixa de entrada para ativar a conta de administrador.",
+          });
+        } else {
+          toast({ title: "Bem-vindo, administrador!" });
+          navigate("/painel");
+        }
+        return;
+      }
+    }
+
     setLoading(false);
     if (error) {
       toast({
