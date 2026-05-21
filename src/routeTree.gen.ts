@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SolicitarContaRouteImport } from './routes/solicitar-conta'
+import { Route as SolicitarAcessoPainelRouteImport } from './routes/solicitar-acesso-painel'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as PainelRouteImport } from './routes/painel'
 import { Route as PaineisRouteImport } from './routes/paineis'
@@ -18,7 +20,18 @@ import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PaineisIdRouteImport } from './routes/paineis_.$id'
+import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
 
+const SolicitarContaRoute = SolicitarContaRouteImport.update({
+  id: '/solicitar-conta',
+  path: '/solicitar-conta',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolicitarAcessoPainelRoute = SolicitarAcessoPainelRouteImport.update({
+  id: '/solicitar-acesso-painel',
+  path: '/solicitar-acesso-painel',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
@@ -64,6 +77,11 @@ const PaineisIdRoute = PaineisIdRouteImport.update({
   path: '/paineis/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
+  id: '/admin/usuarios',
+  path: '/admin/usuarios',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -74,6 +92,9 @@ export interface FileRoutesByFullPath {
   '/paineis': typeof PaineisRoute
   '/painel': typeof PainelRoute
   '/sobre': typeof SobreRoute
+  '/solicitar-acesso-painel': typeof SolicitarAcessoPainelRoute
+  '/solicitar-conta': typeof SolicitarContaRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/paineis/$id': typeof PaineisIdRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +106,9 @@ export interface FileRoutesByTo {
   '/paineis': typeof PaineisRoute
   '/painel': typeof PainelRoute
   '/sobre': typeof SobreRoute
+  '/solicitar-acesso-painel': typeof SolicitarAcessoPainelRoute
+  '/solicitar-conta': typeof SolicitarContaRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/paineis/$id': typeof PaineisIdRoute
 }
 export interface FileRoutesById {
@@ -97,6 +121,9 @@ export interface FileRoutesById {
   '/paineis': typeof PaineisRoute
   '/painel': typeof PainelRoute
   '/sobre': typeof SobreRoute
+  '/solicitar-acesso-painel': typeof SolicitarAcessoPainelRoute
+  '/solicitar-conta': typeof SolicitarContaRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/paineis_/$id': typeof PaineisIdRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +137,9 @@ export interface FileRouteTypes {
     | '/paineis'
     | '/painel'
     | '/sobre'
+    | '/solicitar-acesso-painel'
+    | '/solicitar-conta'
+    | '/admin/usuarios'
     | '/paineis/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +151,9 @@ export interface FileRouteTypes {
     | '/paineis'
     | '/painel'
     | '/sobre'
+    | '/solicitar-acesso-painel'
+    | '/solicitar-conta'
+    | '/admin/usuarios'
     | '/paineis/$id'
   id:
     | '__root__'
@@ -132,6 +165,9 @@ export interface FileRouteTypes {
     | '/paineis'
     | '/painel'
     | '/sobre'
+    | '/solicitar-acesso-painel'
+    | '/solicitar-conta'
+    | '/admin/usuarios'
     | '/paineis_/$id'
   fileRoutesById: FileRoutesById
 }
@@ -144,11 +180,28 @@ export interface RootRouteChildren {
   PaineisRoute: typeof PaineisRoute
   PainelRoute: typeof PainelRoute
   SobreRoute: typeof SobreRoute
+  SolicitarAcessoPainelRoute: typeof SolicitarAcessoPainelRoute
+  SolicitarContaRoute: typeof SolicitarContaRoute
+  AdminUsuariosRoute: typeof AdminUsuariosRoute
   PaineisIdRoute: typeof PaineisIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/solicitar-conta': {
+      id: '/solicitar-conta'
+      path: '/solicitar-conta'
+      fullPath: '/solicitar-conta'
+      preLoaderRoute: typeof SolicitarContaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solicitar-acesso-painel': {
+      id: '/solicitar-acesso-painel'
+      path: '/solicitar-acesso-painel'
+      fullPath: '/solicitar-acesso-painel'
+      preLoaderRoute: typeof SolicitarAcessoPainelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sobre': {
       id: '/sobre'
       path: '/sobre'
@@ -212,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaineisIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/usuarios': {
+      id: '/admin/usuarios'
+      path: '/admin/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AdminUsuariosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -224,6 +284,9 @@ const rootRouteChildren: RootRouteChildren = {
   PaineisRoute: PaineisRoute,
   PainelRoute: PainelRoute,
   SobreRoute: SobreRoute,
+  SolicitarAcessoPainelRoute: SolicitarAcessoPainelRoute,
+  SolicitarContaRoute: SolicitarContaRoute,
+  AdminUsuariosRoute: AdminUsuariosRoute,
   PaineisIdRoute: PaineisIdRoute,
 }
 export const routeTree = rootRouteImport

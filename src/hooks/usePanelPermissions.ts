@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { getMyPanelPermissions } from "@/lib/admin.functions";
+import { getMyPanelPermissions } from "@/lib/panel-permissions.functions";
 import { useAuth } from "@/hooks/useAuth";
 
 export function usePanelPermissions() {
