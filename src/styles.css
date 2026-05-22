@@ -131,17 +131,14 @@
     color: hsl(var(--foreground));
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
-    background-color: hsl(30 25% 96%);
+    background-color: hsl(210 30% 97%);
     background-image:
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 70 70'><g fill='hsl(22,18%25,28%25)' fill-opacity='0.07'><path d='M30 10h10v18h18v10H40v18H30V38H12V28h18z'/></g></svg>"),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><polygon points='50,18 82,76 18,76' fill='hsl(358,72%25,45%25)' fill-opacity='0.04' stroke='hsl(358,72%25,45%25)' stroke-opacity='0.10' stroke-width='1.5'/></svg>"),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'><path d='M45 72c-15-11-24-19-24-31a12 12 0 0 1 24-5 12 12 0 0 1 24 5c0 12-9 20-24 31z' fill='hsl(210,85%25,45%25)' fill-opacity='0.05'/></svg>"),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='70' viewBox='0 0 220 70'><path d='M0 35 H55 L66 14 L80 58 L94 24 L108 46 L124 35 H220' fill='none' stroke='hsl(152,70%25,38%25)' stroke-opacity='0.09' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'/></svg>"),
-      radial-gradient(at 0% 0%, hsl(22 18% 28% / 0.07) 0, transparent 45%),
-      radial-gradient(at 100% 100%, hsl(358 72% 45% / 0.06) 0, transparent 50%),
-      radial-gradient(at 50% 100%, hsl(210 85% 45% / 0.05) 0, transparent 55%);
-    background-position: 0 0, 50px 30px, 110px 15px, 0 50%, 0 0, 0 0, 0 0;
-    background-size: 110px 110px, 160px 160px, 140px 140px, 240px 80px, auto, auto, auto;
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><g fill='none' stroke='hsl(210,55%25,38%25)' stroke-opacity='0.06' stroke-width='1.2'><circle cx='40' cy='40' r='8'/><circle cx='40' cy='40' r='13'/><line x1='40' y1='22' x2='40' y2='27'/><line x1='40' y1='53' x2='40' y2='58'/><line x1='22' y1='40' x2='27' y2='40'/><line x1='53' y1='40' x2='58' y2='40'/><line x1='28' y1='28' x2='31' y2='31'/><line x1='49' y1='49' x2='52' y2='52'/><line x1='28' y1='52' x2='31' y2='49'/><line x1='49' y1='31' x2='52' y2='28'/></g><g fill='hsl(210,55%25,38%25)' fill-opacity='0.05'><path d='M120 100 h6 v-6 h6 v6 h6 v6 h-6 v6 h-6 v-6 h-6 z'/></g></svg>"),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='80' viewBox='0 0 280 80'><path d='M0 40 H70 L82 18 L96 62 L110 28 L124 52 L140 40 H280' fill='none' stroke='hsl(210,55%25,38%25)' stroke-opacity='0.05' stroke-width='1.2' stroke-linejoin='round' stroke-linecap='round'/></svg>"),
+      radial-gradient(at 0% 0%, hsl(210 55% 38% / 0.04) 0, transparent 50%),
+      radial-gradient(at 100% 100%, hsl(210 55% 38% / 0.04) 0, transparent 55%);
+    background-position: 0 0, 0 60%, 0 0, 0 0;
+    background-size: 160px 160px, 300px 100px, auto, auto;
     background-attachment: fixed;
   }
   h1, h2, h3, h4 { font-family: 'Inter', system-ui, sans-serif; letter-spacing: -0.02em; }

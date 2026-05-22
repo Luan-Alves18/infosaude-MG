@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { useAccessibility } from "@/hooks/useAccessibility";
-import seloMG from "@/assets/selo-mg.png";
+import { MapaMGMini } from "@/components/MapaMGMini";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -69,11 +69,9 @@ export const Header = () => {
       <div className="container mx-auto px-3 sm:px-4">
         <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
           <Link to="/" className="flex items-center gap-2 sm:gap-3 group min-w-0">
-            <img
-              src={seloMG}
-              alt="Selo Governo de Minas Gerais"
-              className="h-9 w-9 sm:h-11 sm:w-11 object-contain group-hover:scale-105 transition-smooth shrink-0"
-            />
+            <div className="h-9 w-9 sm:h-11 sm:w-11 rounded-lg bg-primary/5 group-hover:bg-primary/10 p-1 flex items-center justify-center transition-smooth shrink-0">
+              <MapaMGMini className="h-full w-full" />
+            </div>
             <div className="leading-tight min-w-0">
               <div className="font-bold text-base sm:text-lg text-foreground truncate">InfoSaúde<span className="text-secondary"> MG</span></div>
               <div className="text-[11px] text-muted-foreground hidden sm:block">Portal Oficial · SES-MG</div>

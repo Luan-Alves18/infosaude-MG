@@ -1,41 +1,42 @@
 import { Link } from "@/lib/router-compat";
-import { Mail, MapPin, Phone, ExternalLink } from "lucide-react";
-import seloGovernoMG from "@/assets/selo-governo-mg.png";
-import seloMG from "@/assets/selo-mg.png";
+import { Mail, MapPin, ExternalLink } from "lucide-react";
+import { MapaMGMini } from "@/components/MapaMGMini";
 
 export const Footer = () => (
   <footer className="gradient-footer text-primary-foreground mt-20">
-    <div className="container mx-auto px-4 py-10 md:py-12 grid gap-8 md:gap-10 sm:grid-cols-2 md:grid-cols-4">
-      <div className="sm:col-span-2 md:col-span-2">
+    <div className="container mx-auto px-4 py-12 grid gap-10 md:grid-cols-12">
+      {/* Marca */}
+      <div className="md:col-span-5">
         <div className="flex items-center gap-3 mb-4">
-          <img src={seloMG} alt="Selo MG" className="h-10 w-10 object-contain" />
+          <div className="h-11 w-11 rounded-lg bg-primary-foreground/10 p-1.5 flex items-center justify-center">
+            <MapaMGMini variant="light" className="h-full w-full text-primary-foreground" />
+          </div>
           <div>
-            <div className="font-bold text-lg">InfoSaúde MG</div>
+            <div className="font-bold text-lg leading-tight">
+              InfoSaúde<span className="opacity-80"> MG</span>
+            </div>
             <div className="text-xs opacity-80">Portal de Informações em Saúde</div>
           </div>
         </div>
         <p className="text-sm opacity-90 max-w-md leading-relaxed">
-          Integração das informações em saúde do Estado de Minas Gerais.
+          Integração das informações em saúde do Estado de Minas Gerais por meio
+          de ferramentas interativas e produtos de dados.
         </p>
-        <div className="mt-6 flex items-center gap-3">
-          <img
-            src={seloGovernoMG}
-            alt="Governo de Minas Gerais"
-            className="h-8 object-contain"
-          />
-          <a
-            href="https://www.saude.mg.gov.br"
-            target="_blank"
-            rel="noreferrer"
-            className="text-[11px] opacity-80 hover:opacity-100 inline-flex items-center gap-1 underline"
-          >
-            SES-MG <ExternalLink className="h-3 w-3" />
-          </a>
-        </div>
+        <a
+          href="https://www.saude.mg.gov.br"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-5 inline-flex items-center gap-1.5 text-xs font-medium opacity-90 hover:opacity-100 underline underline-offset-4"
+        >
+          Site oficial SES-MG <ExternalLink className="h-3 w-3" />
+        </a>
       </div>
 
-      <div>
-        <h4 className="font-semibold mb-4 text-sm uppercase tracking-wide opacity-90">Navegação</h4>
+      {/* Navegação */}
+      <div className="md:col-span-3">
+        <h4 className="font-semibold mb-4 text-sm uppercase tracking-wide opacity-90">
+          Navegação
+        </h4>
         <ul className="space-y-2 text-sm">
           <li><Link to="/" className="opacity-80 hover:opacity-100 hover:underline">Início</Link></li>
           <li><Link to="/paineis" className="opacity-80 hover:opacity-100 hover:underline">Galeria de Painéis</Link></li>
@@ -45,12 +46,25 @@ export const Footer = () => (
         </ul>
       </div>
 
-      <div>
-        <h4 className="font-semibold mb-4 text-sm uppercase tracking-wide opacity-90">Contato</h4>
+      {/* Contato */}
+      <div className="md:col-span-4">
+        <h4 className="font-semibold mb-4 text-sm uppercase tracking-wide opacity-90">
+          Contato
+        </h4>
         <ul className="space-y-3 text-sm">
-          <li className="flex items-center gap-2"><Phone className="h-4 w-4 shrink-0" /><span>136</span></li>
-          <li className="flex items-center gap-2"><Mail className="h-4 w-4 shrink-0" /><span>nucleodedados@saude.mg.gov.br</span></li>
-          <li className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-0.5 shrink-0" /><span>Belo Horizonte – MG</span></li>
+          <li className="flex items-start gap-2">
+            <Mail className="h-4 w-4 mt-0.5 shrink-0" />
+            <a
+              href="mailto:nucleodedados@saude.mg.gov.br"
+              className="opacity-90 hover:opacity-100 hover:underline break-all"
+            >
+              nucleodedados@saude.mg.gov.br
+            </a>
+          </li>
+          <li className="flex items-start gap-2">
+            <MapPin className="h-4 w-4 mt-0.5 shrink-0" />
+            <span className="opacity-90">Belo Horizonte – MG</span>
+          </li>
         </ul>
       </div>
     </div>
