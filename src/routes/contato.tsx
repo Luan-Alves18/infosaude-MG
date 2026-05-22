@@ -22,11 +22,9 @@ const Contato = () => {
   };
 
   const contacts = [
-    { icon: Phone, t: "Disque Saúde", v: "136", d: "Atendimento gratuito" },
     { icon: Mail, t: "Fale Conosco", v: "nucleodedados@saude.mg.gov.br", d: "Resposta em até 5 dias úteis" },
     { icon: MapPin, t: "Endereço", v: "Cidade Administrativa Tancredo Neves", d: "Rod. Papa João Paulo II, 4143 – Belo Horizonte/MG" },
     { icon: Globe, t: "Site oficial SES-MG", v: "saude.mg.gov.br", d: "Portal institucional", url: "https://www.saude.mg.gov.br" },
-    { icon: MessageSquare, t: "Ouvidoria SUS", v: "162", d: "Atendimento Ouvidoria SES-MG" },
   ];
 
   return (

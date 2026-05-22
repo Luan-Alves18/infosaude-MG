@@ -6,7 +6,7 @@ import { ArrowRight, Activity, BarChart3, Database, Sparkles, Target } from "luc
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AREAS_TEMATICAS, INDICADORES_HOME, NOTICIAS } from "@/data/site";
+import { AREAS_TEMATICAS, INDICADORES_HOME } from "@/data/site";
 import { getAreaColor } from "@/lib/areaColors";
 import { MapaMG } from "@/components/MapaMG";
 import { supabase } from "@/integrations/supabase/client";
@@ -136,27 +136,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* NOTÍCIAS / DESTAQUES */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
-          <div>
-            <Badge variant="secondary" className="mb-3">Destaques</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold">Últimas atualizações</h2>
-          </div>
-        </div>
-        <div className="grid md:grid-cols-2 gap-5">
-          {NOTICIAS.map((n) => (
-            <article key={n.titulo} className="group bg-card p-6 rounded-xl border border-border hover:shadow-elegant transition-smooth">
-              <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
-                <Badge variant="outline" className="text-xs">{n.categoria}</Badge>
-                <time>{new Date(n.data).toLocaleDateString("pt-BR")}</time>
-              </div>
-              <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-smooth">{n.titulo}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{n.resumo}</p>
-            </article>
-          ))}
-        </div>
-      </section>
 
       {/* MAPA ESTRATÉGICO */}
       <section className="container mx-auto px-4 pb-20">
