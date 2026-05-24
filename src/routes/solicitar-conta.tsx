@@ -95,10 +95,6 @@ const SolicitarConta = () => {
               <Label htmlFor="motivo">Motivo da solicitação *</Label>
               <Textarea id="motivo" name="motivo" rows={4} required />
             </div>
-            <div>
-              <Label htmlFor="motivo">Motivo da solicitação *</Label>
-              <Textarea id="motivo" name="motivo" rows={4} required />
-            </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Enviando…" : "Solicitar"}
             </Button>
