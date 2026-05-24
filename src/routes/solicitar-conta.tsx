@@ -92,8 +92,8 @@ const SolicitarConta = () => {
               <Input id="email" name="email" type="email" required />
             </div>
             <div>
-              <Label htmlFor="senha">Senha que deseja cadastrar *</Label>
-              <Input id="senha" name="senha" type="password" minLength={6} required />
+              <Label htmlFor="motivo">Motivo da solicitação *</Label>
+              <Textarea id="motivo" name="motivo" rows={4} required />
             </div>
             <div>
               <Label htmlFor="motivo">Motivo da solicitação *</Label>
