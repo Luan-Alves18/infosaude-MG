@@ -25,7 +25,6 @@ const SolicitarConta = () => {
       instituicao: String(fd.get("instituicao") || "").trim(),
       chefia_imediata: String(fd.get("chefia_imediata") || "").trim(),
       email: String(fd.get("email") || "").trim(),
-      senha: String(fd.get("senha") || ""),
       motivo: String(fd.get("motivo") || "").trim(),
     };
 
@@ -34,7 +33,6 @@ const SolicitarConta = () => {
       !payload.instituicao ||
       !payload.chefia_imediata ||
       !payload.email ||
-      !payload.senha ||
       !payload.motivo
     ) {
       toast({ title: "Campo(s) sem preenchimento", variant: "destructive" });
