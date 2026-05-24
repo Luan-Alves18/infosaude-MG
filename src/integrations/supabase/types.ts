@@ -23,7 +23,6 @@ export type Database = {
           instituicao: string
           motivo: string
           nome_completo: string
-          senha: string
           status: string
         }
         Insert: {
@@ -34,7 +33,6 @@ export type Database = {
           instituicao: string
           motivo: string
           nome_completo: string
-          senha: string
           status?: string
         }
         Update: {
@@ -45,7 +43,6 @@ export type Database = {
           instituicao?: string
           motivo?: string
           nome_completo?: string
-          senha?: string
           status?: string
         }
         Relationships: []

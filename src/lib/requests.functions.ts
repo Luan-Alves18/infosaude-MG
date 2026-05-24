@@ -8,7 +8,6 @@ const accountReqSchema = z.object({
   instituicao: z.string().trim().min(1).max(200),
   chefia_imediata: z.string().trim().min(1).max(200),
   email: z.string().trim().email().max(255),
-  senha: z.string().min(6).max(200),
   motivo: z.string().trim().min(1).max(2000),
 });
 
@@ -20,7 +19,6 @@ export const createAccountRequest = createServerFn({ method: "POST" })
       instituicao: data.instituicao,
       chefia_imediata: data.chefia_imediata,
       email: data.email.toLowerCase(),
-      senha: data.senha,
       motivo: data.motivo,
     });
     if (error) throw new Error(error.message);
