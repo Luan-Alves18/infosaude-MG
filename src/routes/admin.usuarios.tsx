@@ -152,7 +152,7 @@ const AdminUsuarios = () => {
         created_at: request.createdAt,
         roles: users.find((item) => item.id === request.userId)?.roles ?? ["user"],
       });
-      setUserPanelIds((prev) => Array.from(new Set([...prev, ...request.panelIds])));
+      setUserPanelIds(request.panelIds);
       setRequests((prev) => prev.filter((item) => item.id !== request.id));
       toast({ title: "Solicitação aprovada", description: "Os painéis foram liberados para o usuário." });
     } catch (e) {
