@@ -141,7 +141,9 @@ export const approvePanelAccessRequest = createServerFn({ method: "POST" })
     if (requestError) throw new Error(requestError.message);
     if (!request) throw new Error("Solicitação não encontrada.");
 
-    const panelIds = Array.from(new Set((request.panel_ids ?? []).map((id) => String(id))));
+    const panelIds: string[] = Array.from(
+      new Set(((request.panel_ids ?? []) as string[]).map((id: string) => String(id))),
+    );
 
     if (panelIds.length > 0) {
       const { error: permissionError } = await supabase.from("panel_permissions").upsert(
@@ -165,7 +167,7 @@ export const approvePanelAccessRequest = createServerFn({ method: "POST" })
       if (updateError) throw new Error(updateError.message);
     }
 
-    return { ok: true, userId: request.user_id, panelIds };
+    return { ok: true as const, userId: request.user_id, panelIds };
   });
 
 export const setPanelPermission = createServerFn({ method: "POST" })
