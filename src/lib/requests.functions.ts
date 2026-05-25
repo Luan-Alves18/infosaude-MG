@@ -34,7 +34,11 @@ export const createPanelAccessRequest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => panelReqSchema.parse(input))
   .handler(async ({ data, context }) => {
-    const { userId, claims } = context as { userId: string; claims: { email?: string } };
+    const { supabase, userId, claims } = context as {
+      supabase: import("@supabase/supabase-js").SupabaseClient;
+      userId: string;
+      claims: { email?: string };
+    };
     const email = claims.email ?? "";
     const name = email.includes("@")
       ? email
@@ -43,7 +47,7 @@ export const createPanelAccessRequest = createServerFn({ method: "POST" })
           .replace(/\b\w/g, (c) => c.toUpperCase())
       : email;
 
-    const { error } = await supabaseAdmin.from("panel_access_requests").insert({
+    const { error } = await supabase.from("panel_access_requests").insert({
       user_id: userId,
       user_email: email,
       user_name: name,
