@@ -91,6 +91,85 @@ export const listPanelPermissions = createServerFn({ method: "POST" })
     return { panelIds: (rows ?? []).map((r) => r.panel_id) };
   });
 
+export const listPanelAccessRequests = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { userId, supabase } = context as { userId: string; supabase: SupabaseClient };
+    await ensureAdmin(supabase, userId);
+
+    const { data, error } = await supabase
+      .from("panel_access_requests")
+      .select("id, user_id, user_email, user_name, panel_ids, motivo, status, created_at")
+      .eq("status", "pendente")
+      .order("created_at", { ascending: false });
+
+    if (error) throw new Error(error.message);
+
+    return {
+      requests: (data ?? []).map((request) => ({
+        id: request.id,
+        userId: request.user_id,
+        userEmail: request.user_email,
+        userName: request.user_name ?? nameFromEmail(request.user_email),
+        panelIds: request.panel_ids,
+        motivo: request.motivo,
+        status: request.status,
+        createdAt: request.created_at,
+      })),
+    };
+  });
+
+export const approvePanelAccessRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { requestId: string }) =>
+    z.object({ requestId: z.string().uuid() }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId: adminId, supabase } = context as {
+      userId: string;
+      supabase: SupabaseClient;
+    };
+
+    await ensureAdmin(supabase, adminId);
+
+    const { data: request, error: requestError } = await supabase
+      .from("panel_access_requests")
+      .select("id, user_id, panel_ids, status")
+      .eq("id", data.requestId)
+      .maybeSingle();
+
+    if (requestError) throw new Error(requestError.message);
+    if (!request) throw new Error("Solicitação não encontrada.");
+
+    const panelIds: string[] = Array.from(
+      new Set(((request.panel_ids ?? []) as string[]).map((id: string) => String(id))),
+    );
+
+    if (panelIds.length > 0) {
+      const { error: permissionError } = await supabase.from("panel_permissions").upsert(
+        panelIds.map((panelId) => ({
+          user_id: request.user_id,
+          panel_id: panelId,
+          granted_by: adminId,
+        })),
+        { onConflict: "user_id,panel_id" },
+      );
+
+      if (permissionError) throw new Error(permissionError.message);
+    }
+
+    if (request.status !== "aprovado") {
+      const { error: updateError } = await supabase
+        .from("panel_access_requests")
+        .update({ status: "aprovado" })
+        .eq("id", request.id);
+
+      if (updateError) throw new Error(updateError.message);
+    }
+
+    return { ok: true as const, userId: request.user_id, panelIds };
+  });
+
 export const setPanelPermission = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { userId: string; panelId: string; granted: boolean }) =>
