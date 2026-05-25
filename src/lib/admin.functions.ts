@@ -1,10 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-async function ensureAdmin(userId: string) {
-  const { data, error } = await supabaseAdmin
+async function ensureAdmin(supabase: SupabaseClient, userId: string) {
+  const { data, error } = await supabase
     .from("user_roles")
     .select("role")
     .eq("user_id", userId)
@@ -28,28 +28,26 @@ export const listUsers = createServerFn({ method: "POST" })
     z.object({ search: z.string().trim().max(200).optional() }).parse(input ?? {}),
   )
   .handler(async ({ data, context }) => {
-    const { userId } = context as { userId: string };
-    await ensureAdmin(userId);
+    const { userId, supabase } = context as { userId: string; supabase: SupabaseClient };
+    await ensureAdmin(supabase, userId);
 
-    const { data: usersRes, error } = await supabaseAdmin.auth.admin.listUsers({
-      page: 1,
-      perPage: 200,
-    });
+    const { data: profiles, error } = await supabase
+      .from("profiles")
+      .select("id, email, display_name, created_at")
+      .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
 
-    // Override name from account_requests when available
-    const { data: requests } = await supabaseAdmin
+    const { data: requests } = await supabase
       .from("account_requests")
       .select("email, nome_completo")
       .order("created_at", { ascending: false });
     const nameByEmail = new Map<string, string>();
     for (const r of requests ?? []) {
-      if (!nameByEmail.has(r.email.toLowerCase())) {
-        nameByEmail.set(r.email.toLowerCase(), r.nome_completo);
-      }
+      const key = (r.email ?? "").toLowerCase();
+      if (key && !nameByEmail.has(key)) nameByEmail.set(key, r.nome_completo);
     }
 
-    const { data: roleRows } = await supabaseAdmin.from("user_roles").select("user_id, role");
+    const { data: roleRows } = await supabase.from("user_roles").select("user_id, role");
     const rolesByUser = new Map<string, string[]>();
     for (const r of roleRows ?? []) {
       const arr = rolesByUser.get(r.user_id) ?? [];
@@ -57,19 +55,17 @@ export const listUsers = createServerFn({ method: "POST" })
       rolesByUser.set(r.user_id, arr);
     }
 
-    const items = usersRes.users
-      .map((u) => {
-        const email = (u.email ?? "").toLowerCase();
-        const name = nameByEmail.get(email) ?? nameFromEmail(email);
-        return {
-          id: u.id,
-          email,
-          name,
-          created_at: u.created_at,
-          roles: rolesByUser.get(u.id) ?? [],
-        };
-      })
-      .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+    const items = (profiles ?? []).map((p) => {
+      const email = (p.email ?? "").toLowerCase();
+      const name = nameByEmail.get(email) ?? p.display_name ?? nameFromEmail(email);
+      return {
+        id: p.id,
+        email,
+        name,
+        created_at: p.created_at,
+        roles: rolesByUser.get(p.id) ?? [],
+      };
+    });
 
     const q = (data.search ?? "").toLowerCase();
     const filtered = q
@@ -85,9 +81,9 @@ export const listPanelPermissions = createServerFn({ method: "POST" })
     z.object({ userId: z.string().uuid() }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { userId } = context as { userId: string };
-    await ensureAdmin(userId);
-    const { data: rows, error } = await supabaseAdmin
+    const { userId, supabase } = context as { userId: string; supabase: SupabaseClient };
+    await ensureAdmin(supabase, userId);
+    const { data: rows, error } = await supabase
       .from("panel_permissions")
       .select("panel_id")
       .eq("user_id", data.userId);
@@ -107,10 +103,13 @@ export const setPanelPermission = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { userId: adminId } = context as { userId: string };
-    await ensureAdmin(adminId);
+    const { userId: adminId, supabase } = context as {
+      userId: string;
+      supabase: SupabaseClient;
+    };
+    await ensureAdmin(supabase, adminId);
     if (data.granted) {
-      const { error } = await supabaseAdmin
+      const { error } = await supabase
         .from("panel_permissions")
         .upsert(
           { user_id: data.userId, panel_id: data.panelId, granted_by: adminId },
@@ -118,7 +117,7 @@ export const setPanelPermission = createServerFn({ method: "POST" })
         );
       if (error) throw new Error(error.message);
     } else {
-      const { error } = await supabaseAdmin
+      const { error } = await supabase
         .from("panel_permissions")
         .delete()
         .eq("user_id", data.userId)
@@ -127,4 +126,3 @@ export const setPanelPermission = createServerFn({ method: "POST" })
     }
     return { ok: true };
   });
-
