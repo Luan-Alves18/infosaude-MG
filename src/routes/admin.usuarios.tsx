@@ -277,11 +277,18 @@ const AdminUsuarios = () => {
       </p>
 
       <Tabs defaultValue="usuarios" className="space-y-4">
-        <TabsList>
+        <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="usuarios">Usuários</TabsTrigger>
           <TabsTrigger value="solicitacoes" className="gap-2">
-            Solicitações pendentes
+            Acesso a painéis
             {requests.length > 0 && <Badge variant="secondary">{requests.length}</Badge>}
+          </TabsTrigger>
+          <TabsTrigger value="contas" className="gap-2">
+            Criação de conta
+            {accountRequests.length > 0 && <Badge variant="secondary">{accountRequests.length}</Badge>}
+          </TabsTrigger>
+          <TabsTrigger value="estatisticas" className="gap-2">
+            <BarChart3 className="h-3.5 w-3.5" /> Estatísticas
           </TabsTrigger>
         </TabsList>
 
