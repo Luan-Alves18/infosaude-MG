@@ -206,3 +206,144 @@ export const setPanelPermission = createServerFn({ method: "POST" })
     }
     return { ok: true };
   });
+
+// ---------- Account requests (criar conta) ----------
+
+export const listAccountRequests = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { userId, supabase } = context as { userId: string; supabase: SupabaseClient };
+    await ensureAdmin(supabase, userId);
+
+    const { data, error } = await supabase
+      .from("account_requests")
+      .select("id, nome_completo, email, instituicao, chefia_imediata, motivo, status, created_at")
+      .eq("status", "pendente")
+      .order("created_at", { ascending: false });
+
+    if (error) throw new Error(error.message);
+
+    return {
+      requests: (data ?? []).map((r) => ({
+        id: r.id,
+        nomeCompleto: r.nome_completo,
+        email: r.email,
+        instituicao: r.instituicao,
+        chefiaImediata: r.chefia_imediata,
+        motivo: r.motivo,
+        status: r.status,
+        createdAt: r.created_at,
+      })),
+    };
+  });
+
+function generateTempPassword() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
+  let out = "";
+  for (let i = 0; i < 16; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return out;
+}
+
+export const approveAccountRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { requestId: string }) =>
+    z.object({ requestId: z.string().uuid() }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId, supabase } = context as { userId: string; supabase: SupabaseClient };
+    await ensureAdmin(supabase, userId);
+
+    const { data: req, error: reqErr } = await supabase
+      .from("account_requests")
+      .select("id, email, nome_completo, status")
+      .eq("id", data.requestId)
+      .maybeSingle();
+    if (reqErr) throw new Error(reqErr.message);
+    if (!req) throw new Error("Solicitação não encontrada.");
+
+    const email = req.email.trim().toLowerCase();
+    const tempPassword = generateTempPassword();
+
+    // Cria o usuário já confirmado para que o trigger handle_new_user crie o profile + role.
+    const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password: tempPassword,
+      email_confirm: true,
+      user_metadata: { display_name: req.nome_completo },
+    });
+
+    // Se já existe, seguimos com a aprovação mesmo assim.
+    if (createErr && !/already|exists|registered/i.test(createErr.message)) {
+      throw new Error(createErr.message);
+    }
+
+    // Dispara o e-mail de definição de senha (recovery) para o usuário recém-criado.
+    const origin =
+      process.env.SITE_URL ||
+      `https://project--6bcf2ab2-9482-479a-a655-be09a4f31797.lovable.app`;
+    await supabaseAdmin.auth.resetPasswordForEmail(email, {
+      redirectTo: `${origin}/auth/reset`,
+    });
+
+    const { error: updErr } = await supabase
+      .from("account_requests")
+      .update({ status: "aprovado" })
+      .eq("id", req.id);
+    if (updErr) throw new Error(updErr.message);
+
+    return { ok: true as const, userCreated: Boolean(created?.user) };
+  });
+
+export const rejectAccountRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { requestId: string }) =>
+    z.object({ requestId: z.string().uuid() }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId, supabase } = context as { userId: string; supabase: SupabaseClient };
+    await ensureAdmin(supabase, userId);
+    const { error } = await supabase
+      .from("account_requests")
+      .update({ status: "recusado" })
+      .eq("id", data.requestId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+// ---------- Estatísticas de visitas por painel ----------
+
+export const getPanelVisitsStats = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { period: "week" | "month" | "year" }) =>
+    z.object({ period: z.enum(["week", "month", "year"]) }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId, supabase } = context as { userId: string; supabase: SupabaseClient };
+    await ensureAdmin(supabase, userId);
+
+    const now = Date.now();
+    const days = data.period === "week" ? 7 : data.period === "month" ? 30 : 365;
+    const since = new Date(now - days * 24 * 60 * 60 * 1000).toISOString();
+
+    const { data: rows, error } = await supabase
+      .from("portal_visits")
+      .select("path")
+      .gte("visited_at", since)
+      .like("path", "/paineis/%")
+      .limit(50000);
+
+    if (error) throw new Error(error.message);
+
+    const countsByPanelId = new Map<string, number>();
+    for (const row of rows ?? []) {
+      const m = /^\/paineis\/(\d+)/.exec(String(row.path ?? ""));
+      if (!m) continue;
+      const id = m[1];
+      countsByPanelId.set(id, (countsByPanelId.get(id) ?? 0) + 1);
+    }
+
+    return {
+      countsByPanelId: Object.fromEntries(countsByPanelId),
+      since,
+    };
+  });
