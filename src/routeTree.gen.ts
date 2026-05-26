@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SolicitarContaRouteImport } from './routes/solicitar-conta'
 import { Route as SolicitarAcessoPainelRouteImport } from './routes/solicitar-acesso-painel'
 import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as PainelRouteImport } from './routes/painel'
 import { Route as PaineisRouteImport } from './routes/paineis'
 import { Route as DadosAbertosRouteImport } from './routes/dados-abertos'
@@ -20,6 +21,7 @@ import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PaineisIdRouteImport } from './routes/paineis_.$id'
+import { Route as AuthResetRouteImport } from './routes/auth.reset'
 import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
 
 const SolicitarContaRoute = SolicitarContaRouteImport.update({
@@ -35,6 +37,11 @@ const SolicitarAcessoPainelRoute = SolicitarAcessoPainelRouteImport.update({
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PainelRoute = PainelRouteImport.update({
@@ -77,6 +84,11 @@ const PaineisIdRoute = PaineisIdRouteImport.update({
   path: '/paineis/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthResetRoute = AuthResetRouteImport.update({
+  id: '/reset',
+  path: '/reset',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
   id: '/admin/usuarios',
   path: '/admin/usuarios',
@@ -85,45 +97,51 @@ const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/dados-abertos': typeof DadosAbertosRoute
   '/paineis': typeof PaineisRoute
   '/painel': typeof PainelRoute
+  '/perfil': typeof PerfilRoute
   '/sobre': typeof SobreRoute
   '/solicitar-acesso-painel': typeof SolicitarAcessoPainelRoute
   '/solicitar-conta': typeof SolicitarContaRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
+  '/auth/reset': typeof AuthResetRoute
   '/paineis/$id': typeof PaineisIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/dados-abertos': typeof DadosAbertosRoute
   '/paineis': typeof PaineisRoute
   '/painel': typeof PainelRoute
+  '/perfil': typeof PerfilRoute
   '/sobre': typeof SobreRoute
   '/solicitar-acesso-painel': typeof SolicitarAcessoPainelRoute
   '/solicitar-conta': typeof SolicitarContaRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
+  '/auth/reset': typeof AuthResetRoute
   '/paineis/$id': typeof PaineisIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/dados-abertos': typeof DadosAbertosRoute
   '/paineis': typeof PaineisRoute
   '/painel': typeof PainelRoute
+  '/perfil': typeof PerfilRoute
   '/sobre': typeof SobreRoute
   '/solicitar-acesso-painel': typeof SolicitarAcessoPainelRoute
   '/solicitar-conta': typeof SolicitarContaRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
+  '/auth/reset': typeof AuthResetRoute
   '/paineis_/$id': typeof PaineisIdRoute
 }
 export interface FileRouteTypes {
@@ -136,10 +154,12 @@ export interface FileRouteTypes {
     | '/dados-abertos'
     | '/paineis'
     | '/painel'
+    | '/perfil'
     | '/sobre'
     | '/solicitar-acesso-painel'
     | '/solicitar-conta'
     | '/admin/usuarios'
+    | '/auth/reset'
     | '/paineis/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -150,10 +170,12 @@ export interface FileRouteTypes {
     | '/dados-abertos'
     | '/paineis'
     | '/painel'
+    | '/perfil'
     | '/sobre'
     | '/solicitar-acesso-painel'
     | '/solicitar-conta'
     | '/admin/usuarios'
+    | '/auth/reset'
     | '/paineis/$id'
   id:
     | '__root__'
@@ -164,21 +186,24 @@ export interface FileRouteTypes {
     | '/dados-abertos'
     | '/paineis'
     | '/painel'
+    | '/perfil'
     | '/sobre'
     | '/solicitar-acesso-painel'
     | '/solicitar-conta'
     | '/admin/usuarios'
+    | '/auth/reset'
     | '/paineis_/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   BuscarRoute: typeof BuscarRoute
   ContatoRoute: typeof ContatoRoute
   DadosAbertosRoute: typeof DadosAbertosRoute
   PaineisRoute: typeof PaineisRoute
   PainelRoute: typeof PainelRoute
+  PerfilRoute: typeof PerfilRoute
   SobreRoute: typeof SobreRoute
   SolicitarAcessoPainelRoute: typeof SolicitarAcessoPainelRoute
   SolicitarContaRoute: typeof SolicitarContaRoute
@@ -207,6 +232,13 @@ declare module '@tanstack/react-router' {
       path: '/sobre'
       fullPath: '/sobre'
       preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/painel': {
@@ -265,6 +297,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaineisIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/reset': {
+      id: '/auth/reset'
+      path: '/reset'
+      fullPath: '/auth/reset'
+      preLoaderRoute: typeof AuthResetRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/admin/usuarios': {
       id: '/admin/usuarios'
       path: '/admin/usuarios'
@@ -275,14 +314,25 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthRouteChildren {
+  AuthResetRoute: typeof AuthResetRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthResetRoute: AuthResetRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   BuscarRoute: BuscarRoute,
   ContatoRoute: ContatoRoute,
   DadosAbertosRoute: DadosAbertosRoute,
   PaineisRoute: PaineisRoute,
   PainelRoute: PainelRoute,
+  PerfilRoute: PerfilRoute,
   SobreRoute: SobreRoute,
   SolicitarAcessoPainelRoute: SolicitarAcessoPainelRoute,
   SolicitarContaRoute: SolicitarContaRoute,

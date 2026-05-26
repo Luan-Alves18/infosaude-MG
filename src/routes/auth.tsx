@@ -23,12 +23,39 @@ const MicrosoftIcon = () => (
 const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [msLoading, setMsLoading] = useState(false);
+  const [showReset, setShowReset] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetSending, setResetSending] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
     if (user) navigate("/painel", { replace: true });
   }, [user, navigate]);
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const email = resetEmail.trim();
+    if (!email) {
+      toast({ title: "Informe o e-mail", variant: "destructive" });
+      return;
+    }
+    setResetSending(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/reset`,
+    });
+    setResetSending(false);
+    if (error) {
+      toast({ title: "Erro ao enviar", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({
+      title: "E-mail enviado",
+      description: "Se houver uma conta com este e-mail, você receberá um link para redefinir sua senha.",
+    });
+    setShowReset(false);
+    setResetEmail("");
+  };
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -191,6 +218,33 @@ const Auth = () => {
               </Button>
             </form>
 
+            <div className="mt-4 text-center text-sm">
+              <button
+                type="button"
+                onClick={() => setShowReset((v) => !v)}
+                className="text-primary hover:underline"
+              >
+                Esqueci minha senha
+              </button>
+            </div>
+
+            {showReset && (
+              <form onSubmit={handleResetPassword} className="mt-3 space-y-2 border border-border rounded-md p-3 bg-muted/30">
+                <Label htmlFor="reset-email" className="text-xs">Informe seu e-mail para receber o link</Label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  placeholder="seu@email.com"
+                  required
+                />
+                <Button type="submit" size="sm" className="w-full" disabled={resetSending}>
+                  {resetSending ? "Enviando…" : "Enviar link de recuperação"}
+                </Button>
+              </form>
+            )}
+
             <div className="mt-6 text-center text-sm">
               <Link
                 to="/solicitar-conta"
@@ -199,6 +253,7 @@ const Auth = () => {
                 <UserPlus className="h-4 w-4" /> Solicitar criação de conta
               </Link>
             </div>
+
 
             <div className="mt-4 text-center text-xs text-muted-foreground">
               <Link to="/" className="hover:text-primary">← Voltar ao portal</Link>

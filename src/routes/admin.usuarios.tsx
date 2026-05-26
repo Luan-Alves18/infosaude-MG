@@ -8,15 +8,20 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, ShieldCheck, ArrowDownAZ, CheckCheck, FileClock } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, ShieldCheck, ArrowDownAZ, CheckCheck, FileClock, UserPlus, BarChart3, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { PAINEIS } from "@/data/site";
+import { AREAS_TEMATICAS, PAINEIS } from "@/data/site";
 import {
+  approveAccountRequest,
   approvePanelAccessRequest,
+  getPanelVisitsStats,
+  listAccountRequests,
   listUsers,
   listPanelAccessRequests,
   listPanelPermissions,
+  rejectAccountRequest,
   setPanelPermission,
 } from "@/lib/admin.functions";
 
@@ -31,17 +36,40 @@ type PanelAccessRequest = {
   status: string;
   createdAt: string;
 };
+type AccountRequest = {
+  id: string;
+  nomeCompleto: string;
+  email: string;
+  instituicao: string;
+  chefiaImediata: string;
+  motivo: string;
+  status: string;
+  createdAt: string;
+};
+type Period = "week" | "month" | "year";
 
 const AdminUsuarios = () => {
   const { user, loading: authLoading, roles } = useAuth();
   const listFn = useServerFn(listUsers);
   const listRequestsFn = useServerFn(listPanelAccessRequests);
+  const listAccountReqsFn = useServerFn(listAccountRequests);
+  const approveAccountFn = useServerFn(approveAccountRequest);
+  const rejectAccountFn = useServerFn(rejectAccountRequest);
   const listPermsFn = useServerFn(listPanelPermissions);
   const setPermFn = useServerFn(setPanelPermission);
   const approveRequestFn = useServerFn(approvePanelAccessRequest);
+  const getStatsFn = useServerFn(getPanelVisitsStats);
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [requests, setRequests] = useState<PanelAccessRequest[]>([]);
+  const [accountRequests, setAccountRequests] = useState<AccountRequest[]>([]);
+  const [loadingAccountRequests, setLoadingAccountRequests] = useState(false);
+  const [processingAccountId, setProcessingAccountId] = useState<string | null>(null);
+
+  const [statsPeriod, setStatsPeriod] = useState<Period>("month");
+  const [statsCounts, setStatsCounts] = useState<Record<string, number>>({});
+  const [loadingStats, setLoadingStats] = useState(false);
+
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [userPanelIds, setUserPanelIds] = useState<string[]>([]);
@@ -95,13 +123,37 @@ const AdminUsuarios = () => {
       .finally(() => setLoadingRequests(false));
   };
 
+  const loadAccountRequests = () => {
+    setLoadingAccountRequests(true);
+    listAccountReqsFn()
+      .then((res) => setAccountRequests(res.requests))
+      .catch((e) => toast({ title: "Erro", description: e.message, variant: "destructive" }))
+      .finally(() => setLoadingAccountRequests(false));
+  };
+
+  const loadStats = (period: Period) => {
+    setLoadingStats(true);
+    getStatsFn({ data: { period } })
+      .then((res) => setStatsCounts(res.countsByPanelId))
+      .catch((e) => toast({ title: "Erro", description: e.message, variant: "destructive" }))
+      .finally(() => setLoadingStats(false));
+  };
+
   useEffect(() => {
     if (isAdmin) {
       loadUsers();
       loadRequests();
+      loadAccountRequests();
+      loadStats(statsPeriod);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAdmin]);
+
+  useEffect(() => {
+    if (isAdmin) loadStats(statsPeriod);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statsPeriod]);
+
 
   useEffect(() => {
     if (!selectedUser) {
@@ -166,6 +218,54 @@ const AdminUsuarios = () => {
     }
   };
 
+  const handleApproveAccount = async (req: AccountRequest) => {
+    setProcessingAccountId(req.id);
+    try {
+      await approveAccountFn({ data: { requestId: req.id } });
+      setAccountRequests((prev) => prev.filter((r) => r.id !== req.id));
+      toast({
+        title: "Conta criada",
+        description: `Um e-mail de definição de senha foi enviado para ${req.email}.`,
+      });
+    } catch (e) {
+      toast({ title: "Erro", description: e instanceof Error ? e.message : "Falha ao aprovar.", variant: "destructive" });
+    } finally {
+      setProcessingAccountId(null);
+    }
+  };
+
+  const handleRejectAccount = async (req: AccountRequest) => {
+    setProcessingAccountId(req.id);
+    try {
+      await rejectAccountFn({ data: { requestId: req.id } });
+      setAccountRequests((prev) => prev.filter((r) => r.id !== req.id));
+      toast({ title: "Solicitação recusada" });
+    } catch (e) {
+      toast({ title: "Erro", description: e instanceof Error ? e.message : "Falha ao recusar.", variant: "destructive" });
+    } finally {
+      setProcessingAccountId(null);
+    }
+  };
+
+  // Agrupa estatísticas por área temática e por tipo (público/restrito).
+  const statsByArea = AREAS_TEMATICAS.map((a) => {
+    const paneis = PAINEIS.filter((p) => p.areaSlug === a.slug);
+    const total = paneis.reduce((acc, p) => acc + (statsCounts[String(p.id)] ?? 0), 0);
+    return { area: a, total, paneis };
+  })
+    .filter((s) => s.total > 0)
+    .sort((a, b) => b.total - a.total);
+
+  const panelsWithCounts = PAINEIS.map((p) => ({
+    panel: p,
+    count: statsCounts[String(p.id)] ?? 0,
+  })).filter((s) => s.count > 0);
+
+  const publicPanels = panelsWithCounts.filter((s) => !s.panel.restrito).sort((a, b) => b.count - a.count);
+  const restrictedPanels = panelsWithCounts.filter((s) => s.panel.restrito).sort((a, b) => b.count - a.count);
+
+
+
   return (
     <div className="container mx-auto px-4 py-10 animate-fade-in">
       <Badge variant="secondary" className="mb-3">
@@ -177,11 +277,18 @@ const AdminUsuarios = () => {
       </p>
 
       <Tabs defaultValue="usuarios" className="space-y-4">
-        <TabsList>
+        <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="usuarios">Usuários</TabsTrigger>
           <TabsTrigger value="solicitacoes" className="gap-2">
-            Solicitações pendentes
+            Acesso a painéis
             {requests.length > 0 && <Badge variant="secondary">{requests.length}</Badge>}
+          </TabsTrigger>
+          <TabsTrigger value="contas" className="gap-2">
+            Criação de conta
+            {accountRequests.length > 0 && <Badge variant="secondary">{accountRequests.length}</Badge>}
+          </TabsTrigger>
+          <TabsTrigger value="estatisticas" className="gap-2">
+            <BarChart3 className="h-3.5 w-3.5" /> Estatísticas
           </TabsTrigger>
         </TabsList>
 
