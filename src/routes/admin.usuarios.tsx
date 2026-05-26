@@ -123,13 +123,37 @@ const AdminUsuarios = () => {
       .finally(() => setLoadingRequests(false));
   };
 
+  const loadAccountRequests = () => {
+    setLoadingAccountRequests(true);
+    listAccountReqsFn()
+      .then((res) => setAccountRequests(res.requests))
+      .catch((e) => toast({ title: "Erro", description: e.message, variant: "destructive" }))
+      .finally(() => setLoadingAccountRequests(false));
+  };
+
+  const loadStats = (period: Period) => {
+    setLoadingStats(true);
+    getStatsFn({ data: { period } })
+      .then((res) => setStatsCounts(res.countsByPanelId))
+      .catch((e) => toast({ title: "Erro", description: e.message, variant: "destructive" }))
+      .finally(() => setLoadingStats(false));
+  };
+
   useEffect(() => {
     if (isAdmin) {
       loadUsers();
       loadRequests();
+      loadAccountRequests();
+      loadStats(statsPeriod);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAdmin]);
+
+  useEffect(() => {
+    if (isAdmin) loadStats(statsPeriod);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statsPeriod]);
+
 
   useEffect(() => {
     if (!selectedUser) {
