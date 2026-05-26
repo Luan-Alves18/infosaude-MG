@@ -218,6 +218,54 @@ const AdminUsuarios = () => {
     }
   };
 
+  const handleApproveAccount = async (req: AccountRequest) => {
+    setProcessingAccountId(req.id);
+    try {
+      await approveAccountFn({ data: { requestId: req.id } });
+      setAccountRequests((prev) => prev.filter((r) => r.id !== req.id));
+      toast({
+        title: "Conta criada",
+        description: `Um e-mail de definição de senha foi enviado para ${req.email}.`,
+      });
+    } catch (e) {
+      toast({ title: "Erro", description: e instanceof Error ? e.message : "Falha ao aprovar.", variant: "destructive" });
+    } finally {
+      setProcessingAccountId(null);
+    }
+  };
+
+  const handleRejectAccount = async (req: AccountRequest) => {
+    setProcessingAccountId(req.id);
+    try {
+      await rejectAccountFn({ data: { requestId: req.id } });
+      setAccountRequests((prev) => prev.filter((r) => r.id !== req.id));
+      toast({ title: "Solicitação recusada" });
+    } catch (e) {
+      toast({ title: "Erro", description: e instanceof Error ? e.message : "Falha ao recusar.", variant: "destructive" });
+    } finally {
+      setProcessingAccountId(null);
+    }
+  };
+
+  // Agrupa estatísticas por área temática e por tipo (público/restrito).
+  const statsByArea = AREAS_TEMATICAS.map((a) => {
+    const paneis = PAINEIS.filter((p) => p.areaSlug === a.slug);
+    const total = paneis.reduce((acc, p) => acc + (statsCounts[String(p.id)] ?? 0), 0);
+    return { area: a, total, paneis };
+  })
+    .filter((s) => s.total > 0)
+    .sort((a, b) => b.total - a.total);
+
+  const panelsWithCounts = PAINEIS.map((p) => ({
+    panel: p,
+    count: statsCounts[String(p.id)] ?? 0,
+  })).filter((s) => s.count > 0);
+
+  const publicPanels = panelsWithCounts.filter((s) => !s.panel.restrito).sort((a, b) => b.count - a.count);
+  const restrictedPanels = panelsWithCounts.filter((s) => s.panel.restrito).sort((a, b) => b.count - a.count);
+
+
+
   return (
     <div className="container mx-auto px-4 py-10 animate-fade-in">
       <Badge variant="secondary" className="mb-3">
