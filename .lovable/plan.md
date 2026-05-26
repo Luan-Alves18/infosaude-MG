@@ -1,65 +1,97 @@
-# Plano: Novo fluxo de autenticação e permissões
+# Plano de implementação
 
-## 1. Página de Login (`/auth`)
-- Manter o botão **"Entrar com a conta Microsoft"** (já existente, com bloqueio para domínios diferentes de `@saude.mg.gov.br` — já implementado em `useAuth`).
-- **Remover** as abas "Entrar" / "Criar conta" e o botão "Entrar".
-- Deixar apenas os campos **E-mail** e **Senha** + link **"Solicitar criação de conta"**.
-- O submit do formulário e-mail/senha chama `signInWithPassword` diretamente (sem aba).
-- Mensagem de erro institucional ajustada: *"Erro de login, entre com sua conta institucional SES-MG"* (quando domínio Microsoft inválido).
+Esta é uma demanda grande, dividida em 6 blocos. Sugiro aprovar tudo de uma vez e eu implemento em sequência, ou aprovar bloco a bloco se preferir revisar entre etapas.
 
-## 2. Página `/solicitar-conta`
-- Formulário com campos obrigatórios: Nome completo, Instituição, Chefia Imediata, E-mail desejado, Senha desejada, Motivo.
-- Validação: se algum campo vazio → toast *"Campo(s) sem preenchimento"*.
-- Submit grava em nova tabela `account_requests` e dispara e-mail para `luanalves.trabalho@gmail.com` via server function + Lovable Email (gateway transacional). Como ainda não há domínio configurado, irei armazenar a solicitação no banco e usar `fetch` para o gateway `Lovable AI / Resend` somente se possível — caso contrário, deixar registrado e exibir aviso no admin.
+---
 
-## 3. Página `/solicitar-acesso-painel` (usuário logado)
-- Campos: Painel(is) desejados (multi-select com lista dos painéis restritos do `PAINEIS`), Motivo.
-- Submit grava em `panel_access_requests` e envia e-mail para o mesmo destinatário.
+## 1. Estatísticas de acesso por painel (aba em "Gerenciar usuários")
 
-## 4. Header / Perfil do usuário
-- Quando logado, menu dropdown com avatar/nome contendo:
-  - "Solicitar acesso a painel"
-  - "Sair"
-  - (se admin) "Gerenciar usuários"
+**Nova aba "Estatísticas"** em `/admin/usuarios` com:
+- Filtro de período: **Semana / Mês / Ano**
+- Dois blocos: **Painéis públicos** e **Painéis restritos** (separados)
+- Um bloco por **Área temática** (somatório dos painéis da área no período)
+- Tabela com: nome do painel/área, total de acessos, gráfico simples de barras
 
-## 5. Página `/admin/usuarios` (apenas admin)
-- Lista de usuários (de `profiles` + `auth.users` via server function admin), com:
-  - Busca por nome/e-mail
-  - Ordenação por mais recentes
-  - Nome (derivado do e-mail institucional ou da solicitação) + e-mail
-  - Painel lateral por usuário: lista TODOS os painéis restritos (`PAINEIS.filter(p => p.restrito)`) com checkbox para conceder/revogar acesso, gravando em nova tabela `panel_permissions (user_id, panel_id)`.
-- Como atualmente não existem painéis restritos no `PAINEIS`, a UI funciona mas a lista lateral fica vazia até serem adicionados — controle já fica pronto.
+**Backend:**
+- A tabela `portal_visits` já existe e registra `path`. Vou usar o `path` (ex.: `/paineis/123`) para extrair o painel.
+- Nova server function `getPanelVisitsStats({ period: 'week'|'month'|'year' })` que agrupa visitas por painel e cruza com `PAINEIS` (de `src/data/site.ts`) para classificar como público/restrito e por área.
+- Já existe `useLogPortalVisit` — confirmar que está registrando em todas as rotas de painel.
 
-## 6. Bootstrap do admin `luanalves.trabalho@gmail.com`
-- Migração SQL: trigger/handler que ao inserir usuário com esse e-mail concede automaticamente role `admin`.
-- O usuário deve criar a conta uma vez via `/solicitar-conta` ou eu posso pré-cadastrar via SQL. **Como o Supabase exige fluxo de signup**, a abordagem é: ao logar pela primeira vez via e-mail/senha (`teste123`), se a conta não existir, eu faço signup automático e atribuo admin. Verificação por código no e-mail: usar `signInWithOtp` apenas para esse e-mail (envia OTP) antes de liberar.
-- **Simplificação**: pré-criar usuário admin via migração SQL (`auth.users` insert + `user_roles` insert) com senha `teste123`. Login normal funciona.
+---
 
-## 7. Banco de dados (migração Supabase)
-Novas tabelas:
-- `account_requests` (nome_completo, instituicao, chefia, email, senha_hash, motivo, status, created_at)
-- `panel_access_requests` (user_id, panel_ids text[], motivo, status, created_at)
-- `panel_permissions` (user_id, panel_id) — PK composta
-- RLS: insert público em `account_requests`; insert autenticado em `panel_access_requests`; admin-only em `panel_permissions` e select de requests.
-- Atualizar trigger `handle_new_user` para promover `luanalves.trabalho@gmail.com` a admin automaticamente.
+## 2. Solicitações de criação de conta na aba "Solicitações pendentes"
 
-## 8. Envio de e-mail para `luanalves.trabalho@gmail.com`
-- Como o projeto não tem domínio de e-mail configurado e não há conector Resend declarado, irei:
-  - Armazenar a solicitação no banco (sempre).
-  - Tentar enviar via Lovable Email gateway se disponível (server function `send-request-email`).
-  - Se não houver domínio, retornar mensagem ao admin de que a solicitação ficou registrada no banco para consulta.
-- **Pergunta para o usuário antes de implementar envio real**: precisa configurar domínio de e-mail (Lovable Emails) — irei perguntar no fim, mas já implementar o fallback de registro no banco.
+- Adicionar **sub-seção** dentro de "Solicitações pendentes" mostrando registros de `account_requests` com status `pendente` (já existe a tabela).
+- Cada solicitação exibe: nome, e-mail, instituição, chefia, motivo, data.
+- Botão **"Aprovar e criar conta"**: cria o usuário via Supabase Auth Admin (server function com service role), gera senha temporária aleatória, marca request como `aprovado`, e dispara e-mail ao usuário com link de definição de senha (usa fluxo `resetPasswordForEmail`).
+- Botão **"Recusar"**: marca como `recusado`.
 
-## 9. Ocultação de painéis restritos
-- Em `paineis.tsx` e `index.tsx`, filtrar `PAINEIS` para esconder `restrito=true` quando: usuário não logado **OU** sem permissão em `panel_permissions`.
-- Em `paineis_.$id.tsx`, bloquear acesso direto se painel restrito e usuário sem permissão.
+**Backend:** server function `approveAccountRequest({ requestId })` que usa `supabaseAdmin.auth.admin.createUser` + envia magic link de definição de senha.
+
+---
+
+## 3. Galeria de Painéis — ordenação alfabética com áreas vazias ao final
+
+Em `src/routes/paineis.tsx`:
+- Ordenar áreas temáticas por **ordem alfabética** (pt-BR, case-insensitive).
+- Áreas **sem painéis visíveis para o usuário** (público sem painéis OU restrito sem permissão) vão para o final, **sem entrar na ordenação alfabética** (mantêm sua ordem original entre si, ou também alfabética — confirmar preferência; vou aplicar alfabética entre as vazias também por consistência).
+- A flag "vazia" é calculada **dinamicamente** com base nos painéis liberados ao usuário logado, então áreas voltam à ordenação se o usuário ganhar permissão.
+- Os painéis dentro de cada área (e a listagem geral abaixo, se houver) também ordenados alfabeticamente.
+- Preservar legendas e edições visuais existentes.
+
+---
+
+## 4. Recuperação de senha na página de login
+
+Em `src/routes/auth.tsx`:
+- Adicionar link **"Esqueci minha senha"** abaixo do formulário de login.
+- Abre modal/seção com input de e-mail.
+- Chama `supabase.auth.resetPasswordForEmail(email, { redirectTo: '<app>/auth/reset' })`.
+- Criar rota `src/routes/auth.reset.tsx` para o usuário definir a nova senha (recebe o token via hash da URL, usa `supabase.auth.updateUser({ password })`).
+- Disponível para qualquer usuário (não só não-@saude.mg.gov.br) — restringir apenas visualmente seria confuso; deixo aberto para todos.
+
+---
+
+## 5. Notificações por e-mail para o admin
+
+Usar **Lovable Emails** (e-mail nativo). Preciso configurar o domínio de envio primeiro (botão no chat). Depois:
+
+- **Solicitação de criação de conta** → e-mail para `luanalves.trabalho@gmail.com` no estilo "nova solicitação pendente, verifique em Gerenciar usuários", com link direto.
+- **Solicitação de acesso a painel restrito** → mesmo padrão.
+- **Formulário "Envie uma mensagem" (Contato)** → e-mail com o conteúdo da mensagem, `reply_to` apontando para o e-mail do remetente, para que o admin responda diretamente pela caixa de e-mail.
+
+**Implementação:** 3 templates React Email + triggers nos pontos de envio (após insert em `account_requests`, `panel_access_requests`, e no submit do formulário de contato).
+
+---
+
+## 6. "Meu perfil" no lugar de "Meu painel"
+
+Substituir o item de menu **Meu painel** → **Meu perfil**, com nova rota `src/routes/perfil.tsx` contendo abas:
+
+- **Dados:** nome (`display_name`) e e-mail (read-only), botão salvar.
+- **Favoritos:** lista de painéis salvos. Botão de ⭐ aparece em cada card de painel (públicos e restritos liberados). Nova tabela `user_favorites (user_id, panel_id, created_at)` com RLS por dono.
+- **Alterar senha:** form de senha atual + nova senha; usa `supabase.auth.updateUser({ password })` (Supabase não exige senha atual, mas vou pedir e revalidar via `signInWithPassword` por segurança antes de trocar).
+
+---
 
 ## Detalhes técnicos
-- Server functions com `requireSupabaseAuth` para mutações sensíveis.
-- Server function admin (`supabaseAdmin`) para listar usuários e gerenciar permissões.
-- React Hook Form + zod para validação dos formulários.
-- Toasts para feedback.
-- Rota `/admin/usuarios` protegida por `beforeLoad` que verifica role admin.
 
-## Confirmação necessária
-Antes de implementar o envio real de e-mail, preciso saber: você quer configurar o domínio de e-mail Lovable agora (para envio automático), ou prefere que as solicitações fiquem apenas no banco e visíveis no painel admin? Sem domínio configurado, não consigo enviar e-mail para `luanalves.trabalho@gmail.com` de forma confiável.
+- **Migrations necessárias:**
+  - `user_favorites` (id, user_id, panel_id text, created_at) + RLS + GRANTs.
+  - Possível índice em `portal_visits(path, visited_at)` para performance das stats.
+- **Server functions novas:** `getPanelVisitsStats`, `listAccountRequests`, `approveAccountRequest`, `rejectAccountRequest`, `addFavorite`, `removeFavorite`, `listFavorites`, `updateProfile`, `changePassword`.
+- **E-mails:** depende de configuração do domínio Lovable Emails — vou abrir o setup quando chegarmos nesse bloco.
+- **Secrets:** nenhum novo (Lovable Emails usa infra interna; admin user creation usa `SUPABASE_SERVICE_ROLE_KEY` que já existe).
+
+---
+
+## Ordem de execução sugerida
+
+1. Galeria — ordenação alfabética (rápido, isolado).
+2. Recuperação de senha + página de reset.
+3. Meu perfil + favoritos (inclui migration).
+4. Estatísticas de acesso (server fn + nova aba).
+5. Aprovação de solicitações de conta.
+6. E-mails (último porque depende do setup de domínio).
+
+Confirma que posso seguir com tudo nessa ordem?
