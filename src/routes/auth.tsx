@@ -23,12 +23,39 @@ const MicrosoftIcon = () => (
 const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [msLoading, setMsLoading] = useState(false);
+  const [showReset, setShowReset] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetSending, setResetSending] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
     if (user) navigate("/painel", { replace: true });
   }, [user, navigate]);
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const email = resetEmail.trim();
+    if (!email) {
+      toast({ title: "Informe o e-mail", variant: "destructive" });
+      return;
+    }
+    setResetSending(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/reset`,
+    });
+    setResetSending(false);
+    if (error) {
+      toast({ title: "Erro ao enviar", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({
+      title: "E-mail enviado",
+      description: "Se houver uma conta com este e-mail, você receberá um link para redefinir sua senha.",
+    });
+    setShowReset(false);
+    setResetEmail("");
+  };
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
