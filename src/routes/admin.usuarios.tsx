@@ -36,17 +36,40 @@ type PanelAccessRequest = {
   status: string;
   createdAt: string;
 };
+type AccountRequest = {
+  id: string;
+  nomeCompleto: string;
+  email: string;
+  instituicao: string;
+  chefiaImediata: string;
+  motivo: string;
+  status: string;
+  createdAt: string;
+};
+type Period = "week" | "month" | "year";
 
 const AdminUsuarios = () => {
   const { user, loading: authLoading, roles } = useAuth();
   const listFn = useServerFn(listUsers);
   const listRequestsFn = useServerFn(listPanelAccessRequests);
+  const listAccountReqsFn = useServerFn(listAccountRequests);
+  const approveAccountFn = useServerFn(approveAccountRequest);
+  const rejectAccountFn = useServerFn(rejectAccountRequest);
   const listPermsFn = useServerFn(listPanelPermissions);
   const setPermFn = useServerFn(setPanelPermission);
   const approveRequestFn = useServerFn(approvePanelAccessRequest);
+  const getStatsFn = useServerFn(getPanelVisitsStats);
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [requests, setRequests] = useState<PanelAccessRequest[]>([]);
+  const [accountRequests, setAccountRequests] = useState<AccountRequest[]>([]);
+  const [loadingAccountRequests, setLoadingAccountRequests] = useState(false);
+  const [processingAccountId, setProcessingAccountId] = useState<string | null>(null);
+
+  const [statsPeriod, setStatsPeriod] = useState<Period>("month");
+  const [statsCounts, setStatsCounts] = useState<Record<string, number>>({});
+  const [loadingStats, setLoadingStats] = useState(false);
+
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [userPanelIds, setUserPanelIds] = useState<string[]>([]);
