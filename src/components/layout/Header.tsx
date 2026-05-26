@@ -131,8 +131,8 @@ export const Header = () => {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate("/painel")}>
-                    Meu painel
+                  <DropdownMenuItem onClick={() => navigate("/perfil")}>
+                    Meu perfil
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/solicitar-acesso-painel")}>
                     Solicitar acesso a painel
