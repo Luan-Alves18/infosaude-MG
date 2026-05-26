@@ -8,15 +8,20 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, ShieldCheck, ArrowDownAZ, CheckCheck, FileClock } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, ShieldCheck, ArrowDownAZ, CheckCheck, FileClock, UserPlus, BarChart3, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { PAINEIS } from "@/data/site";
+import { AREAS_TEMATICAS, PAINEIS } from "@/data/site";
 import {
+  approveAccountRequest,
   approvePanelAccessRequest,
+  getPanelVisitsStats,
+  listAccountRequests,
   listUsers,
   listPanelAccessRequests,
   listPanelPermissions,
+  rejectAccountRequest,
   setPanelPermission,
 } from "@/lib/admin.functions";
 
