@@ -459,6 +459,201 @@ const AdminUsuarios = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="contas">
+          <Card>
+            <CardContent className="p-4 space-y-3">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h2 className="font-semibold flex items-center gap-2">
+                    <UserPlus className="h-4 w-4" /> Solicitações de criação de conta
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Ao aprovar, a conta é criada e um e-mail de definição de senha é enviado ao solicitante.
+                  </p>
+                </div>
+                <Button variant="outline" onClick={loadAccountRequests} disabled={loadingAccountRequests}>
+                  {loadingAccountRequests ? "Atualizando…" : "Atualizar"}
+                </Button>
+              </div>
+
+              {loadingAccountRequests && (
+                <p className="text-sm text-muted-foreground py-6 text-center">Carregando solicitações…</p>
+              )}
+
+              {!loadingAccountRequests && accountRequests.length === 0 && (
+                <div className="border border-dashed border-border rounded-md p-6 text-center text-sm text-muted-foreground">
+                  <FileClock className="h-5 w-5 mx-auto mb-2" />
+                  Nenhuma solicitação de conta pendente.
+                </div>
+              )}
+
+              {!loadingAccountRequests && accountRequests.map((req) => (
+                <div key={req.id} className="border border-border rounded-md p-4 space-y-3">
+                  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                    <div className="min-w-0 space-y-1">
+                      <div className="font-medium truncate">{req.nomeCompleto}</div>
+                      <div className="text-sm text-muted-foreground break-all">{req.email}</div>
+                      <div className="text-xs text-muted-foreground">
+                        Solicitado em {new Date(req.createdAt).toLocaleString("pt-BR")}
+                      </div>
+                    </div>
+                    <div className="flex gap-2 shrink-0">
+                      <Button
+                        variant="outline"
+                        onClick={() => handleRejectAccount(req)}
+                        disabled={processingAccountId === req.id}
+                        className="gap-2"
+                      >
+                        <X className="h-4 w-4" /> Recusar
+                      </Button>
+                      <Button
+                        onClick={() => handleApproveAccount(req)}
+                        disabled={processingAccountId === req.id}
+                        className="gap-2"
+                      >
+                        <CheckCheck className="h-4 w-4" />
+                        {processingAccountId === req.id ? "Processando…" : "Aprovar e criar conta"}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground mb-0.5">Instituição</p>
+                      <p>{req.instituicao}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground mb-0.5">Chefia imediata</p>
+                      <p>{req.chefiaImediata}</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground mb-1">Motivo</p>
+                    <p className="text-sm leading-relaxed">{req.motivo}</p>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="estatisticas">
+          <Card>
+            <CardContent className="p-4 space-y-5">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h2 className="font-semibold flex items-center gap-2">
+                    <BarChart3 className="h-4 w-4" /> Acessos por painel
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Visualizações registradas nas páginas de painéis.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Select value={statsPeriod} onValueChange={(v) => setStatsPeriod(v as Period)}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="week">Última semana</SelectItem>
+                      <SelectItem value="month">Último mês</SelectItem>
+                      <SelectItem value="year">Último ano</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button variant="outline" onClick={() => loadStats(statsPeriod)} disabled={loadingStats}>
+                    {loadingStats ? "Atualizando…" : "Atualizar"}
+                  </Button>
+                </div>
+              </div>
+
+              {loadingStats ? (
+                <p className="text-sm text-muted-foreground py-6 text-center">Carregando estatísticas…</p>
+              ) : (
+                <>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="border border-border rounded-md p-4">
+                      <h3 className="font-medium mb-3 flex items-center justify-between">
+                        Painéis públicos
+                        <Badge variant="secondary">
+                          {publicPanels.reduce((acc, s) => acc + s.count, 0)} acessos
+                        </Badge>
+                      </h3>
+                      {publicPanels.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">Sem acessos no período.</p>
+                      ) : (
+                        <ul className="divide-y divide-border">
+                          {publicPanels.map(({ panel, count }) => (
+                            <li key={panel.id} className="flex items-center justify-between gap-3 py-2 text-sm">
+                              <span className="truncate">
+                                <span className="font-medium">{panel.titulo}</span>
+                                <span className="block text-xs text-muted-foreground">{panel.areaNome}</span>
+                              </span>
+                              <Badge variant="outline">{count}</Badge>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+
+                    <div className="border border-border rounded-md p-4">
+                      <h3 className="font-medium mb-3 flex items-center justify-between">
+                        Painéis restritos
+                        <Badge variant="secondary">
+                          {restrictedPanels.reduce((acc, s) => acc + s.count, 0)} acessos
+                        </Badge>
+                      </h3>
+                      {restrictedPanels.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">Sem acessos no período.</p>
+                      ) : (
+                        <ul className="divide-y divide-border">
+                          {restrictedPanels.map(({ panel, count }) => (
+                            <li key={panel.id} className="flex items-center justify-between gap-3 py-2 text-sm">
+                              <span className="truncate">
+                                <span className="font-medium">{panel.titulo}</span>
+                                <span className="block text-xs text-muted-foreground">{panel.areaNome}</span>
+                              </span>
+                              <Badge variant="outline">{count}</Badge>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-medium mb-3">Acessos por área temática</h3>
+                    {statsByArea.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">Sem acessos no período.</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {statsByArea.map(({ area, total, paneis }) => {
+                          const max = statsByArea[0].total || 1;
+                          const pct = Math.round((total / max) * 100);
+                          return (
+                            <div key={area.slug} className="border border-border rounded-md p-3">
+                              <div className="flex items-center justify-between gap-3 mb-2">
+                                <span className="font-medium text-sm">{area.nome}</span>
+                                <Badge variant="secondary">{total} acessos</Badge>
+                              </div>
+                              <div className="h-2 rounded-full bg-muted overflow-hidden">
+                                <div className="h-full bg-primary" style={{ width: `${pct}%` }} />
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-2">
+                                {paneis.length} painel(éis) com registros
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   );
