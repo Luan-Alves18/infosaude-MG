@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { Link, useNavigate } from "@/lib/router-compat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,11 +9,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, UserPlus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { createAccountRequest } from "@/lib/requests.functions";
+import { supabase } from "@/integrations/supabase/client";
 
 const SolicitarConta = () => {
   const [loading, setLoading] = useState(false);
-  const submitFn = useServerFn(createAccountRequest);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,7 +22,7 @@ const SolicitarConta = () => {
       nome_completo: String(fd.get("nome_completo") || "").trim(),
       instituicao: String(fd.get("instituicao") || "").trim(),
       chefia_imediata: String(fd.get("chefia_imediata") || "").trim(),
-      email: String(fd.get("email") || "").trim(),
+      email: String(fd.get("email") || "").trim().toLowerCase(),
       motivo: String(fd.get("motivo") || "").trim(),
     };
 
@@ -40,22 +38,23 @@ const SolicitarConta = () => {
     }
 
     setLoading(true);
-    try {
-      await submitFn({ data: payload });
-      toast({
-        title: "Solicitação enviada",
-        description: "Sua solicitação foi registrada. Você será notificado quando a conta for criada.",
-      });
-      navigate("/auth");
-    } catch (err) {
+    // Inserção direta usando a política RLS de INSERT pública (anon).
+    // Não usa service role — não depende de variáveis de ambiente do servidor.
+    const { error } = await supabase.from("account_requests").insert(payload);
+    setLoading(false);
+    if (error) {
       toast({
         title: "Erro ao enviar solicitação",
-        description: err instanceof Error ? err.message : "Tente novamente.",
+        description: error.message,
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
+      return;
     }
+    toast({
+      title: "Solicitação enviada",
+      description: "Sua solicitação foi registrada. Você será notificado quando a conta for criada.",
+    });
+    navigate("/auth");
   };
 
   return (

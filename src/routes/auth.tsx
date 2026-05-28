@@ -72,12 +72,15 @@ const Auth = () => {
     // Bootstrap automático do admin: se a conta institucional do projeto ainda
     // não existe no Supabase, cria na hora — o trigger handle_new_user atribui
     // o papel "admin" automaticamente para esse e-mail.
+    // IMPORTANTE: só executa se signUp REALMENTE criar um usuário novo
+    // (identities.length > 0). Se a conta já existe, propaga o erro normal de
+    // login — evita falso positivo de "Conta criada" ao errar a senha.
     if (
       error &&
       email.toLowerCase() === "luanalves.trabalho@gmail.com" &&
       /invalid/i.test(error.message)
     ) {
-      const { error: signUpErr } = await supabase.auth.signUp({
+      const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -85,7 +88,8 @@ const Auth = () => {
           data: { display_name: "Luan Alves" },
         },
       });
-      if (!signUpErr) {
+      const isBrandNewUser = !signUpErr && (signUpData.user?.identities?.length ?? 0) > 0;
+      if (isBrandNewUser) {
         const { error: retryErr } = await supabase.auth.signInWithPassword({ email, password });
         setLoading(false);
         if (retryErr) {
