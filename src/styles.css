@@ -133,7 +133,7 @@
     -webkit-font-smoothing: antialiased;
     background-color: hsl(210 30% 97%);
     background-image:
-      linear-gradient(hsl(210 30% 97% / 0.88), hsl(210 30% 97% / 0.88)),
+      linear-gradient(hsl(210 30% 97% / 0.78), hsl(210 30% 97% / 0.78)),
       url("/bg-pattern.png");
     background-repeat: no-repeat, repeat;
     background-size: auto, 420px auto;
