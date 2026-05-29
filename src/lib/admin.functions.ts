@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { createClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 async function ensureAdmin(supabase: SupabaseClient, userId: string) {
@@ -237,12 +237,6 @@ export const listAccountRequests = createServerFn({ method: "POST" })
     };
   });
 
-function generateTempPassword() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
-  let out = "";
-  for (let i = 0; i < 16; i++) out += chars[Math.floor(Math.random() * chars.length)];
-  return out;
-}
 
 export const approveAccountRequest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -262,28 +256,30 @@ export const approveAccountRequest = createServerFn({ method: "POST" })
     if (!req) throw new Error("Solicitação não encontrada.");
 
     const email = req.email.trim().toLowerCase();
-    const tempPassword = generateTempPassword();
 
-    // Cria o usuário já confirmado para que o trigger handle_new_user crie o profile + role.
-    const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password: tempPassword,
-      email_confirm: true,
-      user_metadata: { display_name: req.nome_completo },
+    // Cliente anon do lado do servidor (não persiste sessão).
+    const SUPABASE_URL = process.env.SUPABASE_URL!;
+    const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY!;
+    const anon = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    // Se já existe, seguimos com a aprovação mesmo assim.
-    if (createErr && !/already|exists|registered/i.test(createErr.message)) {
-      throw new Error(createErr.message);
-    }
-
-    // Dispara o e-mail de definição de senha (recovery) para o usuário recém-criado.
     const origin =
       process.env.SITE_URL ||
       `https://project--6bcf2ab2-9482-479a-a655-be09a4f31797.lovable.app`;
-    await supabaseAdmin.auth.resetPasswordForEmail(email, {
-      redirectTo: `${origin}/auth/reset`,
+
+    // Cria o usuário (se ainda não existir) e envia um magic link para acessar.
+    // O trigger handle_new_user cuida de profile + role automaticamente.
+    const { error: otpErr } = await anon.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: true,
+        emailRedirectTo: `${origin}/auth/reset`,
+        data: { display_name: req.nome_completo },
+      },
     });
+
+    if (otpErr) throw new Error(otpErr.message);
 
     const { error: updErr } = await supabase
       .from("account_requests")
@@ -291,7 +287,7 @@ export const approveAccountRequest = createServerFn({ method: "POST" })
       .eq("id", req.id);
     if (updErr) throw new Error(updErr.message);
 
-    return { ok: true as const, userCreated: Boolean(created?.user) };
+    return { ok: true as const };
   });
 
 export const rejectAccountRequest = createServerFn({ method: "POST" })

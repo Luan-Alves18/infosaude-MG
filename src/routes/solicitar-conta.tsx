@@ -38,8 +38,35 @@ const SolicitarConta = () => {
     }
 
     setLoading(true);
+
+    // Bloqueia duplicidade: já existe solicitação pendente para este e-mail?
+    const { data: existing, error: checkErr } = await supabase
+      .from("account_requests")
+      .select("id, status")
+      .eq("email", payload.email)
+      .eq("status", "pendente")
+      .limit(1);
+    if (checkErr) {
+      setLoading(false);
+      toast({
+        title: "Erro ao verificar solicitação",
+        description: checkErr.message,
+        variant: "destructive",
+      });
+      return;
+    }
+    if (existing && existing.length > 0) {
+      setLoading(false);
+      toast({
+        title: "Solicitação já registrada",
+        description:
+          "Já existe uma solicitação pendente para este e-mail. Aguarde a análise do administrador.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Inserção direta usando a política RLS de INSERT pública (anon).
-    // Não usa service role — não depende de variáveis de ambiente do servidor.
     const { error } = await supabase.from("account_requests").insert(payload);
     setLoading(false);
     if (error) {
