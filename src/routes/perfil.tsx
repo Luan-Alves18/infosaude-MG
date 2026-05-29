@@ -269,28 +269,37 @@ const Perfil = () => {
           </Card>
 
           <Card className="mt-4 hidden lg:block">
-            <CardContent className="p-4 space-y-3 text-sm">
+            <CardContent className="p-4 space-y-3">
               <h3 className="font-semibold text-xs uppercase tracking-wide text-muted-foreground">
-                Resumo
+                Ações rápidas
               </h3>
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-muted-foreground">
-                  <Star className="h-4 w-4" /> Favoritos
-                </span>
-                <span className="font-semibold">{favorites.length}</span>
+              <div className="space-y-2">
+                <Link
+                  to="/paineis"
+                  className="flex items-center gap-2 text-sm px-2 py-2 rounded-md hover:bg-muted transition-colors"
+                >
+                  <LayoutGrid className="h-4 w-4 text-primary" />
+                  Explorar painéis
+                </Link>
+                <Link
+                  to="/solicitar-acesso-painel"
+                  className="flex items-center gap-2 text-sm px-2 py-2 rounded-md hover:bg-muted transition-colors"
+                >
+                  <Lock className="h-4 w-4 text-primary" />
+                  Solicitar acesso
+                </Link>
+                <Link
+                  to="/contato"
+                  className="flex items-center gap-2 text-sm px-2 py-2 rounded-md hover:bg-muted transition-colors"
+                >
+                  <Mail className="h-4 w-4 text-primary" />
+                  Falar com a equipe
+                </Link>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-muted-foreground">
-                  <LayoutGrid className="h-4 w-4" /> Painéis acessíveis
-                </span>
-                <span className="font-semibold">{accessiblePanels.length}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-muted-foreground">
-                  <Lock className="h-4 w-4" /> Restritos liberados
-                </span>
-                <span className="font-semibold">{allowedPanelIds.length}</span>
-              </div>
+              <Separator />
+              <p className="text-[11px] leading-relaxed text-muted-foreground">
+                Precisa de ajuda? Entre em contato com o administrador do portal.
+              </p>
             </CardContent>
           </Card>
         </aside>
