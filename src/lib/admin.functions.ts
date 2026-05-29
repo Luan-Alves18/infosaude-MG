@@ -237,12 +237,6 @@ export const listAccountRequests = createServerFn({ method: "POST" })
     };
   });
 
-function generateTempPassword() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
-  let out = "";
-  for (let i = 0; i < 16; i++) out += chars[Math.floor(Math.random() * chars.length)];
-  return out;
-}
 
 export const approveAccountRequest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
