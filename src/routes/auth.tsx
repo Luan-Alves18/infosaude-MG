@@ -108,14 +108,31 @@ const Auth = () => {
       }
     }
 
-    setLoading(false);
     if (error) {
-      toast({
-        title: "Erro de login",
-        description: "Entre com sua conta institucional SES-MG ou solicite a criação de uma conta.",
-        variant: "destructive",
-      });
+      // Distingue "senha incorreta" de "conta inexistente" consultando o servidor.
+      let exists = false;
+      try {
+        const res = await checkEmailExistsFn({ data: { email } });
+        exists = !!res?.exists;
+      } catch {
+        exists = false;
+      }
+      setLoading(false);
+      if (exists) {
+        toast({
+          title: "Senha incorreta",
+          description: "A conta existe, mas a senha informada está incorreta. Tente novamente ou clique em 'Esqueci minha senha'.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Conta não encontrada",
+          description: "Não localizamos uma conta com este e-mail. Use a conta institucional SES-MG ou solicite a criação de uma conta.",
+          variant: "destructive",
+        });
+      }
     } else {
+      setLoading(false);
       toast({ title: "Bem-vindo!", description: "Login realizado com sucesso." });
       navigate("/painel");
     }
