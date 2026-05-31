@@ -30,6 +30,7 @@ const Auth = () => {
   const [resetSending, setResetSending] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const checkEmailExistsFn = useServerFn(checkEmailExists);
 
   useEffect(() => {
     if (user) navigate("/painel", { replace: true });
