@@ -13,7 +13,7 @@ const cards: Card[] = [
     icon: Building2,
     label: "Realização",
     primary: ["NIGD"],
-    secondary: "Núcleo de Informação e Governança de Dados — Secretaria de Estado de Saúde de Minas Gerais",
+    secondary: "Núcleo de Inteligência e Governança de Dados — Secretaria de Estado de Saúde de Minas Gerais",
     code: "SES/GAB/ATI-NIGD",
   },
   {
