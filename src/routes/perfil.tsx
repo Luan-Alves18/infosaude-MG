@@ -353,28 +353,11 @@ const Perfil = () => {
                     <EmptyFavorites />
                   ) : (
                     <div className="grid sm:grid-cols-2 gap-3">
-                      {favorites.slice(0, 4).map((p) => (
+                      {favorites.slice(0, 2).map((p) => (
                         <FavoriteCard key={p.id} panel={p} />
                       ))}
                     </div>
                   )}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <h2 className="font-semibold mb-1">Atalhos</h2>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Acesse rapidamente as principais áreas do portal.
-                  </p>
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    <ShortcutLink to="/paineis" icon={LayoutGrid} label="Galeria de Painéis" />
-                    <ShortcutLink
-                      to="/solicitar-acesso-painel"
-                      icon={Lock}
-                      label="Solicitar acesso a painéis"
-                    />
-                  </div>
                 </CardContent>
               </Card>
             </>
