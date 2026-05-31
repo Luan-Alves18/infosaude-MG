@@ -40,21 +40,21 @@ const VisualizarPainel = () => {
   }
 
   return (
-    <div className={fullscreen ? "fixed inset-0 z-50 bg-background flex flex-col" : "container mx-auto px-4 py-8 animate-fade-in"}>
+    <div className={fullscreen ? "fixed inset-0 z-50 bg-background flex flex-col" : "container mx-auto px-4 py-6 animate-fade-in flex flex-col h-[calc(100vh-4rem)]"}>
       {/* Cabeçalho */}
-      <div className={fullscreen ? "px-3 sm:px-4 py-2 sm:py-3 border-b border-border flex items-center justify-between gap-2 sm:gap-4 bg-background" : "mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"}>
+      <div className={fullscreen ? "px-3 sm:px-4 py-2 sm:py-3 border-b border-border flex items-center justify-between gap-2 sm:gap-4 bg-background" : "mb-4 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 shrink-0"}>
         <div className={fullscreen ? "flex items-center gap-3 min-w-0 flex-1" : "min-w-0 flex-1"}>
           {!fullscreen && (
             <Link
               to={`/paineis?area=${painel.areaSlug}`}
-              className="text-sm text-primary inline-flex items-center gap-1 hover:gap-2 transition-all mb-3"
+              className="text-sm text-primary inline-flex items-center gap-1 hover:gap-2 transition-all mb-2"
             >
               <ArrowLeft className="h-4 w-4" /> Voltar para painéis de {painel.areaNome}
             </Link>
           )}
           <div className={fullscreen ? "min-w-0" : ""}>
-            <Badge variant="outline" className="mb-2">{painel.areaNome}</Badge>
-            <h1 className={fullscreen ? "text-sm sm:text-lg font-semibold truncate" : "text-xl sm:text-2xl md:text-3xl font-bold leading-tight"}>
+            <Badge variant="outline" className="mb-1">{painel.areaNome}</Badge>
+            <h1 className={fullscreen ? "text-sm sm:text-lg font-semibold truncate" : "text-lg sm:text-xl md:text-2xl font-bold leading-tight"}>
               {painel.titulo}
             </h1>
           </div>
@@ -79,14 +79,13 @@ const VisualizarPainel = () => {
         </div>
       </div>
 
-      {/* Embed */}
+      {/* Embed — adaptativo à viewport disponível, preenche o espaço restante */}
       <div
         className={
           fullscreen
             ? "flex-1 relative bg-muted"
-            : "relative w-full bg-muted rounded-xl overflow-hidden border border-border shadow-elegant"
+            : "relative w-full flex-1 bg-muted rounded-xl overflow-hidden border border-border shadow-elegant min-h-[320px]"
         }
-        style={fullscreen ? undefined : { aspectRatio: "16 / 10", minHeight: 'min(600px, 75vh)' }}
       >
         {!loaded && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-muted-foreground">
