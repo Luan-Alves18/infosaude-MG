@@ -10,6 +10,8 @@ import { ShieldCheck, UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
+import { useServerFn } from "@tanstack/react-start";
+import { checkEmailExists } from "@/lib/auth-check.functions";
 
 const MicrosoftIcon = () => (
   <svg width="18" height="18" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
