@@ -10,8 +10,8 @@ import { ShieldCheck, UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
-import { useServerFn } from "@tanstack/react-start";
-import { checkEmailExists } from "@/lib/auth-check.functions";
+
+
 
 const MicrosoftIcon = () => (
   <svg width="18" height="18" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,7 +30,7 @@ const Auth = () => {
   const [resetSending, setResetSending] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
-  const checkEmailExistsFn = useServerFn(checkEmailExists);
+  
 
   useEffect(() => {
     if (user) navigate("/painel", { replace: true });
@@ -109,28 +109,12 @@ const Auth = () => {
     }
 
     if (error) {
-      // Distingue "senha incorreta" de "conta inexistente" consultando o servidor.
-      let exists = false;
-      try {
-        const res = await checkEmailExistsFn({ data: { email } });
-        exists = !!res?.exists;
-      } catch {
-        exists = false;
-      }
       setLoading(false);
-      if (exists) {
-        toast({
-          title: "Senha incorreta",
-          description: "A conta existe, mas a senha informada está incorreta. Tente novamente ou clique em 'Esqueci minha senha'.",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Conta não encontrada",
-          description: "Não localizamos uma conta com este e-mail. Use a conta institucional SES-MG ou solicite a criação de uma conta.",
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "Não foi possível entrar",
+        description: "E-mail ou senha incorretos. Verifique seus dados, clique em 'Esqueci minha senha' ou solicite a criação de uma conta.",
+        variant: "destructive",
+      });
     } else {
       setLoading(false);
       toast({ title: "Bem-vindo!", description: "Login realizado com sucesso." });
