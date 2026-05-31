@@ -76,10 +76,13 @@ const Paineis = () => {
         (areaSlug === "todas" || p.areaSlug === areaSlug) &&
         p.titulo.toLowerCase().includes(q.toLowerCase().trim()),
     );
-    // Ordena por área (alfabética) e depois por título.
+    // Sem filtro de área: ordena apenas por título (alfabética).
+    // Com filtro: ordena por área e então por título.
     return list.sort((a, b) => {
-      const areaCmp = a.areaNome.localeCompare(b.areaNome, "pt-BR", { sensitivity: "base" });
-      if (areaCmp !== 0) return areaCmp;
+      if (areaSlug !== "todas") {
+        const areaCmp = a.areaNome.localeCompare(b.areaNome, "pt-BR", { sensitivity: "base" });
+        if (areaCmp !== 0) return areaCmp;
+      }
       return a.titulo.localeCompare(b.titulo, "pt-BR", { sensitivity: "base" });
     });
   }, [q, areaSlug, visiblePaineis]);

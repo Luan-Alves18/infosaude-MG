@@ -353,28 +353,11 @@ const Perfil = () => {
                     <EmptyFavorites />
                   ) : (
                     <div className="grid sm:grid-cols-2 gap-3">
-                      {favorites.slice(0, 4).map((p) => (
+                      {favorites.slice(0, 2).map((p) => (
                         <FavoriteCard key={p.id} panel={p} />
                       ))}
                     </div>
                   )}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <h2 className="font-semibold mb-1">Atalhos</h2>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Acesse rapidamente as principais áreas do portal.
-                  </p>
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    <ShortcutLink to="/paineis" icon={LayoutGrid} label="Galeria de Painéis" />
-                    <ShortcutLink
-                      to="/solicitar-acesso-painel"
-                      icon={Lock}
-                      label="Solicitar acesso a painéis"
-                    />
-                  </div>
                 </CardContent>
               </Card>
             </>
@@ -591,24 +574,5 @@ const EmptyFavorites = () => (
   </div>
 );
 
-const ShortcutLink = ({
-  to,
-  icon: Icon,
-  label,
-}: {
-  to: string;
-  icon: React.ElementType;
-  label: string;
-}) => (
-  <Link
-    to={to}
-    className="flex items-center justify-between p-4 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-smooth group"
-  >
-    <span className="flex items-center gap-3 text-sm font-medium">
-      <Icon className="h-4 w-4 text-primary" /> {label}
-    </span>
-    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
-  </Link>
-);
 
 export const Route = createFileRoute("/perfil")({ component: Perfil });
