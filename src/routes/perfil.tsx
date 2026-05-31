@@ -574,24 +574,5 @@ const EmptyFavorites = () => (
   </div>
 );
 
-const ShortcutLink = ({
-  to,
-  icon: Icon,
-  label,
-}: {
-  to: string;
-  icon: React.ElementType;
-  label: string;
-}) => (
-  <Link
-    to={to}
-    className="flex items-center justify-between p-4 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-smooth group"
-  >
-    <span className="flex items-center gap-3 text-sm font-medium">
-      <Icon className="h-4 w-4 text-primary" /> {label}
-    </span>
-    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
-  </Link>
-);
 
 export const Route = createFileRoute("/perfil")({ component: Perfil });
