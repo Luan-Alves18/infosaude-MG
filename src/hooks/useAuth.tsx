@@ -26,6 +26,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(s);
       setUser(s?.user ?? null);
 
+      // Fluxo de recuperação de senha: garante que o usuário caia na
+      // página /au/reset, independentemente da URL para a qual o link de
+      // recuperação do Supabase apontou.
+      if (_e === "PASSWORD_RECOVERY") {
+        try { sessionStorage.setItem("pw_recovery", "1"); } catch { /* ignore */ }
+        if (
+          typeof window !== "undefined" &&
+          !window.location.pathname.startsWith("/auth/reset")
+        ) {
+          window.location.replace("/auth/reset");
+          return;
+        }
+      }
+
+
+
       if (s?.user && s.user.email) {
         const isMicrosoftLogin = s.user.identities?.some(
           (identity) => identity.provider === "azure" || identity.provider === "microsoft"

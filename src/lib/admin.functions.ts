@@ -106,19 +106,51 @@ export const listPanelAccessRequests = createServerFn({ method: "POST" })
 
     if (error) throw new Error(error.message);
 
+    // Mesma lógica de nome usada em listUsers: prioriza nome_completo de
+    // account_requests, depois display_name do profile, depois deriva do e-mail.
+    const { data: requestsRows } = await supabase
+      .from("account_requests")
+      .select("email, nome_completo")
+      .order("created_at", { ascending: false });
+    const nameByEmail = new Map<string, string>();
+    for (const r of requestsRows ?? []) {
+      const key = (r.email ?? "").toLowerCase();
+      if (key && !nameByEmail.has(key)) nameByEmail.set(key, r.nome_completo);
+    }
+
+    const userIds = Array.from(new Set((data ?? []).map((r) => r.user_id)));
+    const profileNameByUserId = new Map<string, string>();
+    if (userIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, display_name")
+        .in("id", userIds);
+      for (const p of profiles ?? []) {
+        if (p.display_name) profileNameByUserId.set(p.id, p.display_name);
+      }
+    }
+
     return {
-      requests: (data ?? []).map((request) => ({
-        id: request.id,
-        userId: request.user_id,
-        userEmail: request.user_email,
-        userName: request.user_name ?? nameFromEmail(request.user_email),
-        panelIds: request.panel_ids,
-        motivo: request.motivo,
-        status: request.status,
-        createdAt: request.created_at,
-      })),
+      requests: (data ?? []).map((request) => {
+        const email = (request.user_email ?? "").toLowerCase();
+        const resolvedName =
+          nameByEmail.get(email) ??
+          profileNameByUserId.get(request.user_id) ??
+          nameFromEmail(email);
+        return {
+          id: request.id,
+          userId: request.user_id,
+          userEmail: request.user_email,
+          userName: resolvedName,
+          panelIds: request.panel_ids,
+          motivo: request.motivo,
+          status: request.status,
+          createdAt: request.created_at,
+        };
+      }),
     };
   });
+
 
 export const approvePanelAccessRequest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { PAINEIS } from "@/data/site";
 import { useAuth } from "@/hooks/useAuth";
 import { usePanelPermissions } from "@/hooks/usePanelPermissions";
+import { useLogPortalVisit } from "@/hooks/useLogPortalVisit";
 
 const VisualizarPainel = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +17,12 @@ const VisualizarPainel = () => {
   const { user, loading: authLoading } = useAuth();
   const { panelIds: allowedIds, loading: permLoading } = usePanelPermissions();
 
+  // Registra a visualização do painel (inclusive para administradores) para
+  // alimentar a aba "Estatísticas" em Gerenciar usuários.
+  useLogPortalVisit(`/paineis/${id}`);
+
   if (!painel) return <Navigate to="/paineis" replace />;
+
 
   if (painel.restrito) {
     if (authLoading || permLoading) {
