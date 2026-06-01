@@ -33,8 +33,15 @@ const Auth = () => {
   
 
   useEffect(() => {
+    let recovering = false;
+    try { recovering = sessionStorage.getItem("pw_recovery") === "1"; } catch { /* ignore */ }
+    if (recovering) {
+      navigate("/auth/reset", { replace: true });
+      return;
+    }
     if (user) navigate("/painel", { replace: true });
   }, [user, navigate]);
+
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
