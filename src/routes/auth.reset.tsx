@@ -48,9 +48,11 @@ const AuthReset = () => {
       return;
     }
     toast({ title: "Senha redefinida", description: "Acesse com sua nova senha." });
+    try { sessionStorage.removeItem("pw_recovery"); } catch { /* ignore */ }
     await supabase.auth.signOut();
     navigate("/auth", { replace: true });
   };
+
 
   return (
     <div className="container mx-auto px-4 py-16 animate-fade-in max-w-md">
