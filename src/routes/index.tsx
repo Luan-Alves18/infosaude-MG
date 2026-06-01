@@ -173,10 +173,10 @@ const Index = () => {
         <div className="gradient-hero rounded-2xl p-10 md:p-14 text-primary-foreground text-center shadow-elegant">
           <h2 className="text-3xl md:text-4xl font-bold mb-3">É gestor ou profissional de saúde?</h2>
           <p className="opacity-90 mb-6 max-w-xl mx-auto">
-            Acesse painéis restritos e indicadores avançados criando uma conta no portal.
+            Acesse painéis restritos e indicadores avançados entrando em sua conta institucional e solicitando acesso aos mesmos.
           </p>
           <Button asChild size="lg" variant="secondary">
-            <Link to="/auth">Criar conta gratuita</Link>
+            <Link to="/auth">Entrar no Portal</Link>
           </Button>
         </div>
       </section>
