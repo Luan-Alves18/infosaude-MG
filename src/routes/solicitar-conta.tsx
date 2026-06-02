@@ -106,7 +106,7 @@ const SolicitarConta = () => {
               <Input id="nome_completo" name="nome_completo" required />
             </div>
             <div>
-              <Label htmlFor="instituicao">Instituição de trabalho *</Label>
+              <Label htmlFor="instituicao">Equipe de Trabalho *</Label>
               <Input id="instituicao" name="instituicao" required />
             </div>
             <div>

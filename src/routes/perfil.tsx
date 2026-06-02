@@ -63,6 +63,7 @@ const Perfil = () => {
 
   const [section, setSection] = useState<Section>("overview");
   const [displayName, setDisplayName] = useState("");
+  const [equipeTrabalho, setEquipeTrabalho] = useState("");
   const [email, setEmail] = useState("");
   const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [savingProfile, setSavingProfile] = useState(false);
@@ -74,14 +75,22 @@ const Perfil = () => {
   const [newPw, setNewPw] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
   const [changingPw, setChangingPw] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpSentAt, setOtpSentAt] = useState<number | null>(null);
+  const [sendingOtp, setSendingOtp] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     getProfileFn()
       .then((res) => {
-        setDisplayName(res.profile?.display_name ?? "");
-        setEmail(res.profile?.email ?? user.email ?? "");
-        setCreatedAt(res.profile?.created_at ?? user.created_at ?? null);
+        const p = res.profile as
+          | { display_name?: string | null; email?: string | null; created_at?: string | null; equipe_trabalho?: string | null }
+          | null;
+        setDisplayName(p?.display_name ?? "");
+        setEquipeTrabalho(p?.equipe_trabalho ?? "");
+        setEmail(p?.email ?? user.email ?? "");
+        setCreatedAt(p?.created_at ?? user.created_at ?? null);
       })
       .catch(() => {
         setEmail(user.email ?? "");
@@ -130,7 +139,12 @@ const Perfil = () => {
     }
     setSavingProfile(true);
     try {
-      await updateProfileFn({ data: { display_name: name } });
+      await updateProfileFn({
+        data: {
+          display_name: name,
+          equipe_trabalho: equipeTrabalho.trim() || null,
+        },
+      });
       toast({ title: "Perfil atualizado" });
     } catch (err) {
       toast({
@@ -156,8 +170,58 @@ const Perfil = () => {
     }
   };
 
+  const handleSendOtp = async () => {
+    const targetEmail = (email || user.email || "").trim().toLowerCase();
+    if (!targetEmail) {
+      toast({ title: "E-mail não disponível", variant: "destructive" });
+      return;
+    }
+    setSendingOtp(true);
+    const { error } = await supabase.auth.signInWithOtp({
+      email: targetEmail,
+      options: { shouldCreateUser: false },
+    });
+    setSendingOtp(false);
+    if (error) {
+      toast({
+        title: "Erro ao enviar código",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+    setOtpSent(true);
+    setOtpSentAt(Date.now());
+    toast({
+      title: "Código enviado",
+      description: `Enviamos um código de 6 dígitos para ${targetEmail}. Validade: 5 minutos.`,
+    });
+  };
+
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!otpSent) {
+      toast({
+        title: "Solicite o código de verificação",
+        description: "Clique em \"Enviar código\" para receber a confirmação por e-mail.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (otpSentAt && Date.now() - otpSentAt > 5 * 60 * 1000) {
+      toast({
+        title: "Código expirado",
+        description: "Solicite um novo código por e-mail.",
+        variant: "destructive",
+      });
+      setOtpSent(false);
+      setOtpCode("");
+      return;
+    }
+    if (!/^\d{6}$/.test(otpCode.trim())) {
+      toast({ title: "Informe o código de 6 dígitos", variant: "destructive" });
+      return;
+    }
     if (newPw.length < 8) {
       toast({
         title: "Senha muito curta",
@@ -171,8 +235,12 @@ const Perfil = () => {
       return;
     }
     setChangingPw(true);
+
+    const targetEmail = (email || user.email || "").trim().toLowerCase();
+
+    // 1) Confirma a senha atual.
     const { error: verifyErr } = await supabase.auth.signInWithPassword({
-      email: email || user.email || "",
+      email: targetEmail,
       password: currentPw,
     });
     if (verifyErr) {
@@ -180,6 +248,24 @@ const Perfil = () => {
       toast({ title: "Senha atual incorreta", variant: "destructive" });
       return;
     }
+
+    // 2) Confirma o código enviado por e-mail (camada extra de segurança).
+    const { error: otpErr } = await supabase.auth.verifyOtp({
+      email: targetEmail,
+      token: otpCode.trim(),
+      type: "email",
+    });
+    if (otpErr) {
+      setChangingPw(false);
+      toast({
+        title: "Código inválido ou expirado",
+        description: otpErr.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // 3) Atualiza a senha.
     const { error } = await supabase.auth.updateUser({ password: newPw });
     setChangingPw(false);
     if (error) {
@@ -193,6 +279,9 @@ const Perfil = () => {
     setCurrentPw("");
     setNewPw("");
     setConfirmPw("");
+    setOtpCode("");
+    setOtpSent(false);
+    setOtpSentAt(null);
     toast({ title: "Senha alterada com sucesso" });
   };
 
@@ -389,6 +478,18 @@ const Perfil = () => {
                       Para alterar o e-mail, contate o administrador.
                     </p>
                   </div>
+                  <div>
+                    <Label htmlFor="equipeTrabalho">Equipe de Trabalho</Label>
+                    <Input
+                      id="equipeTrabalho"
+                      value={equipeTrabalho}
+                      onChange={(e) => setEquipeTrabalho(e.target.value)}
+                      placeholder="Ex.: Núcleo de Inteligência e Governança de Dados"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Informe a equipe/setor em que você trabalha. Pode ser editado a qualquer momento.
+                    </p>
+                  </div>
                   <Separator className="my-2" />
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Perfil de acesso</span>
@@ -442,7 +543,8 @@ const Perfil = () => {
                   <KeyRound className="h-4 w-4" /> Alterar senha
                 </h2>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Por segurança, é necessário informar sua senha atual.
+                  Por segurança, exigimos a senha atual e um código de
+                  verificação enviado por e-mail (válido por 5 minutos).
                 </p>
                 <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
                   <div>
@@ -480,7 +582,45 @@ const Perfil = () => {
                       minLength={8}
                     />
                   </div>
-                  <Button type="submit" disabled={changingPw}>
+                  <Separator className="my-2" />
+                  <div className="rounded-md border border-border bg-muted/40 p-3 space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium flex items-center gap-2">
+                          <ShieldCheck className="h-4 w-4 text-primary" />
+                          Verificação por e-mail
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Enviaremos um código de 6 dígitos para {email}. Validade: 5 minutos.
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSendOtp}
+                        disabled={sendingOtp}
+                      >
+                        {sendingOtp ? "Enviando…" : otpSent ? "Reenviar código" : "Enviar código"}
+                      </Button>
+                    </div>
+                    {otpSent && (
+                      <div>
+                        <Label htmlFor="otpCode">Código recebido por e-mail</Label>
+                        <Input
+                          id="otpCode"
+                          inputMode="numeric"
+                          autoComplete="one-time-code"
+                          maxLength={6}
+                          value={otpCode}
+                          onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
+                          placeholder="000000"
+                          required
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <Button type="submit" disabled={changingPw || !otpSent}>
                     {changingPw ? "Alterando…" : "Alterar senha"}
                   </Button>
                 </form>

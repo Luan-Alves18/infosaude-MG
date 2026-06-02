@@ -2,17 +2,19 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * Registra UMA visita à entrada do portal por sessão de navegador.
- * - Só dispara na primeira montagem dentro da sessão (sessionStorage flag).
+ * Registra UMA visita por sessão de navegador para o `path` informado.
+ * - Marca a flag de "já registrado" SINCRONAMENTE antes do insert, evitando
+ *   contagem duplicada quando o componente remonta (StrictMode, mudanças de
+ *   estado de auth, etc.) e o `.then()` do insert ainda não rodou.
  * - Falhas são silenciosas: nunca devem quebrar a UI.
- * - A função roda imediatamente; assim que o portal for publicado,
- *   cada acesso novo passa a ser contabilizado automaticamente.
  */
 export function useLogPortalVisit(path: string = "/") {
   useEffect(() => {
     const FLAG = `portal_visit_logged:${path}`;
     try {
       if (sessionStorage.getItem(FLAG)) return;
+      // Marca ANTES do insert para impedir remontagens de duplicar a contagem.
+      sessionStorage.setItem(FLAG, "1");
     } catch {
       // sessionStorage indisponível — segue tentando registrar
     }
@@ -39,9 +41,11 @@ export function useLogPortalVisit(path: string = "/") {
           typeof navigator !== "undefined" ? navigator.userAgent : null,
       })
       .then(({ error }: any) => {
-        if (!error) {
+        if (error) {
+          // Se o insert falhar, libera a flag para uma nova tentativa em
+          // outra montagem dentro da mesma sessão.
           try {
-            sessionStorage.setItem(FLAG, "1");
+            sessionStorage.removeItem(FLAG);
           } catch {
             /* ignore */
           }
