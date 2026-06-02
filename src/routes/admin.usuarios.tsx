@@ -60,6 +60,7 @@ const AdminUsuarios = () => {
   const listPermsFn = useServerFn(listPanelPermissions);
   const setPermFn = useServerFn(setPanelPermission);
   const approveRequestFn = useServerFn(approvePanelAccessRequest);
+  const rejectRequestFn = useServerFn(rejectPanelAccessRequest);
   const getStatsFn = useServerFn(getPanelVisitsStats);
 
   const [users, setUsers] = useState<AdminUser[]>([]);
@@ -78,12 +79,16 @@ const AdminUsuarios = () => {
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [loadingRequests, setLoadingRequests] = useState(false);
   const [approvingRequestId, setApprovingRequestId] = useState<string | null>(null);
+  const [rejectingRequestId, setRejectingRequestId] = useState<string | null>(null);
 
   const restritos = useMemo(() => PAINEIS.filter((p) => p.restrito), []);
   const isAdmin = roles.includes("admin");
 
+  const panelInfo = (panelId: string) =>
+    restritos.find((panel) => String(panel.id) === String(panelId));
   const panelLabel = (panelId: string) =>
-    restritos.find((panel) => String(panel.id) === String(panelId))?.titulo ?? `Painel ${panelId}`;
+    panelInfo(panelId)?.titulo ?? `Painel ${panelId}`;
+  const panelArea = (panelId: string) => panelInfo(panelId)?.areaNome ?? "—";
 
   const upsertUserFromRequest = (request: PanelAccessRequest) => {
     setUsers((prev) => {
