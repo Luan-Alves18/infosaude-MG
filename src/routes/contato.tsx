@@ -22,9 +22,9 @@ const Contato = () => {
   };
 
   const contacts = [
-    { icon: Mail, t: "Fale Conosco", v: "nucleodedados@saude.mg.gov.br", d: "Resposta em até 5 dias úteis" },
-    { icon: MapPin, t: "Endereço", v: "Cidade Administrativa Tancredo Neves", d: "Rod. Papa João Paulo II, 4143 – Belo Horizonte/MG" },
-    { icon: Globe, t: "Site oficial SES-MG", v: "saude.mg.gov.br", d: "Portal institucional", url: "https://www.saude.mg.gov.br" },
+    { icon: Mail, t: "FALE CONOSCO", v: "nucleodedados@saude.mg.gov.br", d: "Resposta em até 5 dias úteis" },
+    { icon: MapPin, t: "ENDEREÇO", v: "Cidade Administrativa Tancredo Neves", d: "Rod. Papa João Paulo II, 4143 – Belo Horizonte/MG" },
+    { icon: Globe, t: "SITE OFICIAL SES-MG", v: "saude.mg.gov.br", d: "Portal institucional", url: "https://www.saude.mg.gov.br" },
   ];
 
   return (
@@ -33,8 +33,7 @@ const Contato = () => {
         <Badge variant="secondary" className="mb-3">Fale Conosco</Badge>
         <h1 className="text-4xl md:text-5xl font-bold mb-4">Contato</h1>
         <p className="text-lg text-muted-foreground">
-          Principais canais de comunicação com a Secretaria de Estado de Saúde
-          de Minas Gerais.
+          Entre em contato com a nossa Equipe.
         </p>
       </div>
 
