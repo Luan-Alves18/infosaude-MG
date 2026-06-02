@@ -288,6 +288,9 @@ export const approveAccountRequest = createServerFn({ method: "POST" })
 
     const email = req.email.trim().toLowerCase();
 
+    // Dynamic import: client.server só pode ser carregado no runtime do server.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
     const origin =
       process.env.SITE_URL ||
       `https://project--6bcf2ab2-9482-479a-a655-be09a4f31797.lovable.app`;
