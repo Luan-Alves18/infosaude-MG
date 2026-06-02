@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { createClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 async function ensureAdmin(supabase: SupabaseClient, userId: string) {
@@ -281,7 +281,7 @@ export const approveAccountRequest = createServerFn({ method: "POST" })
 
     const { data: req, error: reqErr } = await supabase
       .from("account_requests")
-      .select("id, email, nome_completo, status")
+      .select("id, email, nome_completo, instituicao, status")
       .eq("id", data.requestId)
       .maybeSingle();
     if (reqErr) throw new Error(reqErr.message);
@@ -289,29 +289,52 @@ export const approveAccountRequest = createServerFn({ method: "POST" })
 
     const email = req.email.trim().toLowerCase();
 
-    // Cliente anon do lado do servidor (não persiste sessão).
-    const SUPABASE_URL = process.env.SUPABASE_URL!;
-    const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY!;
-    const anon = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
-
     const origin =
       process.env.SITE_URL ||
       `https://project--6bcf2ab2-9482-479a-a655-be09a4f31797.lovable.app`;
+    const redirectTo = `${origin}/auth/reset`;
 
-    // Cria o usuário (se ainda não existir) e envia um magic link para acessar.
-    // O trigger handle_new_user cuida de profile + role automaticamente.
-    const { error: otpErr } = await anon.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: true,
-        emailRedirectTo: `${origin}/auth/reset`,
-        data: { display_name: req.nome_completo },
-      },
-    });
+    // Usa o client admin para CONVIDAR o usuário diretamente. Diferente do
+    // signInWithOtp anon, o invite respeita o `redirectTo` informado mesmo
+    // quando a Site URL do Supabase aponta para localhost — assim o link no
+    // e-mail vai sempre para o domínio publicado do portal.
+    let invitedUserId: string | undefined;
+    const { data: inviteData, error: inviteErr } =
+      await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+        redirectTo,
+        data: {
+          display_name: req.nome_completo,
+          equipe_trabalho: req.instituicao,
+        },
+      });
 
-    if (otpErr) throw new Error(otpErr.message);
+    if (inviteErr) {
+      const msg = inviteErr.message?.toLowerCase() ?? "";
+      const alreadyRegistered =
+        msg.includes("already") || msg.includes("registered") || msg.includes("exist");
+      if (!alreadyRegistered) throw new Error(inviteErr.message);
+
+      // Usuário já existe → envia magic link via admin.generateLink para o
+      // mesmo `redirectTo`. Como a Supabase não dispara o e-mail nesse caso,
+      // tentamos `signInWithOtp` como fallback que ENVIA o e-mail.
+      const { error: otpErr } = await supabaseAdmin.auth.signInWithOtp({
+        email,
+        options: { shouldCreateUser: false, emailRedirectTo: redirectTo },
+      });
+      if (otpErr) throw new Error(otpErr.message);
+    } else {
+      invitedUserId = inviteData?.user?.id;
+    }
+
+    // Pré-preenche "Equipe de Trabalho" no profile a partir da instituição
+    // informada na solicitação. Para usuários novos, aguarda o trigger
+    // handle_new_user criar o profile; o update abaixo é idempotente.
+    if (invitedUserId && req.instituicao) {
+      await supabaseAdmin
+        .from("profiles")
+        .update({ equipe_trabalho: req.instituicao } as never)
+        .eq("id", invitedUserId);
+    }
 
     const { error: updErr } = await supabase
       .from("account_requests")
@@ -336,6 +359,22 @@ export const rejectAccountRequest = createServerFn({ method: "POST" })
       .eq("id", data.requestId);
     if (error) throw new Error(error.message);
     return { ok: true };
+  });
+
+export const rejectPanelAccessRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { requestId: string }) =>
+    z.object({ requestId: z.string().uuid() }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId, supabase } = context as { userId: string; supabase: SupabaseClient };
+    await ensureAdmin(supabase, userId);
+    const { error } = await supabase
+      .from("panel_access_requests")
+      .update({ status: "recusado" })
+      .eq("id", data.requestId);
+    if (error) throw new Error(error.message);
+    return { ok: true as const };
   });
 
 // ---------- Estatísticas de visitas por painel ----------
