@@ -139,7 +139,12 @@ const Perfil = () => {
     }
     setSavingProfile(true);
     try {
-      await updateProfileFn({ data: { display_name: name } });
+      await updateProfileFn({
+        data: {
+          display_name: name,
+          equipe_trabalho: equipeTrabalho.trim() || null,
+        },
+      });
       toast({ title: "Perfil atualizado" });
     } catch (err) {
       toast({
@@ -165,8 +170,58 @@ const Perfil = () => {
     }
   };
 
+  const handleSendOtp = async () => {
+    const targetEmail = (email || user.email || "").trim().toLowerCase();
+    if (!targetEmail) {
+      toast({ title: "E-mail não disponível", variant: "destructive" });
+      return;
+    }
+    setSendingOtp(true);
+    const { error } = await supabase.auth.signInWithOtp({
+      email: targetEmail,
+      options: { shouldCreateUser: false },
+    });
+    setSendingOtp(false);
+    if (error) {
+      toast({
+        title: "Erro ao enviar código",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+    setOtpSent(true);
+    setOtpSentAt(Date.now());
+    toast({
+      title: "Código enviado",
+      description: `Enviamos um código de 6 dígitos para ${targetEmail}. Validade: 5 minutos.`,
+    });
+  };
+
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!otpSent) {
+      toast({
+        title: "Solicite o código de verificação",
+        description: "Clique em \"Enviar código\" para receber a confirmação por e-mail.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (otpSentAt && Date.now() - otpSentAt > 5 * 60 * 1000) {
+      toast({
+        title: "Código expirado",
+        description: "Solicite um novo código por e-mail.",
+        variant: "destructive",
+      });
+      setOtpSent(false);
+      setOtpCode("");
+      return;
+    }
+    if (!/^\d{6}$/.test(otpCode.trim())) {
+      toast({ title: "Informe o código de 6 dígitos", variant: "destructive" });
+      return;
+    }
     if (newPw.length < 8) {
       toast({
         title: "Senha muito curta",
@@ -180,8 +235,12 @@ const Perfil = () => {
       return;
     }
     setChangingPw(true);
+
+    const targetEmail = (email || user.email || "").trim().toLowerCase();
+
+    // 1) Confirma a senha atual.
     const { error: verifyErr } = await supabase.auth.signInWithPassword({
-      email: email || user.email || "",
+      email: targetEmail,
       password: currentPw,
     });
     if (verifyErr) {
@@ -189,6 +248,24 @@ const Perfil = () => {
       toast({ title: "Senha atual incorreta", variant: "destructive" });
       return;
     }
+
+    // 2) Confirma o código enviado por e-mail (camada extra de segurança).
+    const { error: otpErr } = await supabase.auth.verifyOtp({
+      email: targetEmail,
+      token: otpCode.trim(),
+      type: "email",
+    });
+    if (otpErr) {
+      setChangingPw(false);
+      toast({
+        title: "Código inválido ou expirado",
+        description: otpErr.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // 3) Atualiza a senha.
     const { error } = await supabase.auth.updateUser({ password: newPw });
     setChangingPw(false);
     if (error) {
@@ -202,6 +279,9 @@ const Perfil = () => {
     setCurrentPw("");
     setNewPw("");
     setConfirmPw("");
+    setOtpCode("");
+    setOtpSent(false);
+    setOtpSentAt(null);
     toast({ title: "Senha alterada com sucesso" });
   };
 
