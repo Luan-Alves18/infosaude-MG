@@ -225,6 +225,23 @@ const AdminUsuarios = () => {
     }
   };
 
+  const rejectRequest = async (request: PanelAccessRequest) => {
+    setRejectingRequestId(request.id);
+    try {
+      await rejectRequestFn({ data: { requestId: request.id } });
+      setRequests((prev) => prev.filter((item) => item.id !== request.id));
+      toast({ title: "Solicitação recusada" });
+    } catch (e) {
+      toast({
+        title: "Erro",
+        description: e instanceof Error ? e.message : "Falha ao recusar solicitação.",
+        variant: "destructive",
+      });
+    } finally {
+      setRejectingRequestId(null);
+    }
+  };
+
   const handleApproveAccount = async (req: AccountRequest) => {
     setProcessingAccountId(req.id);
     try {
