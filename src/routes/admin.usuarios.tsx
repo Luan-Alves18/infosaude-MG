@@ -453,25 +453,53 @@ const AdminUsuarios = () => {
                         Solicitado em {new Date(request.createdAt).toLocaleString("pt-BR")}
                       </div>
                     </div>
-                    <Button
-                      onClick={() => approveRequest(request)}
-                      disabled={approvingRequestId === request.id}
-                      className="gap-2"
-                    >
-                      <CheckCheck className="h-4 w-4" />
-                      {approvingRequestId === request.id ? "Aprovando…" : "Aprovar acesso"}
-                    </Button>
+                    <div className="flex gap-2 shrink-0">
+                      <Button
+                        variant="outline"
+                        onClick={() => rejectRequest(request)}
+                        disabled={
+                          rejectingRequestId === request.id || approvingRequestId === request.id
+                        }
+                        className="gap-2"
+                      >
+                        <X className="h-4 w-4" />
+                        {rejectingRequestId === request.id ? "Recusando…" : "Recusar"}
+                      </Button>
+                      <Button
+                        onClick={() => approveRequest(request)}
+                        disabled={
+                          approvingRequestId === request.id || rejectingRequestId === request.id
+                        }
+                        className="gap-2"
+                      >
+                        <CheckCheck className="h-4 w-4" />
+                        {approvingRequestId === request.id ? "Aprovando…" : "Aprovar acesso"}
+                      </Button>
+                    </div>
                   </div>
 
                   <div>
                     <p className="text-xs font-medium text-muted-foreground mb-1">Painéis solicitados</p>
-                    <div className="flex flex-wrap gap-2">
-                      {request.panelIds.map((panelId) => (
-                        <Badge key={panelId} variant="secondary">
-                          {panelLabel(panelId)}
-                        </Badge>
-                      ))}
-                    </div>
+                    <ul className="space-y-1.5">
+                      {request.panelIds.map((panelId) => {
+                        const color = getAreaColor(panelInfo(panelId)?.areaSlug ?? "");
+                        return (
+                          <li
+                            key={panelId}
+                            className="flex flex-wrap items-center gap-2 text-sm"
+                          >
+                            <span className="font-medium">{panelLabel(panelId)}</span>
+                            <Badge
+                              variant="outline"
+                              className={`text-[10px] gap-1.5 border-transparent ${color.bg}`}
+                            >
+                              <span className={`h-1.5 w-1.5 rounded-full ${color.dot}`} />
+                              {panelArea(panelId)}
+                            </Badge>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
 
                   <div>
