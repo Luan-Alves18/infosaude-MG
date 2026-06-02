@@ -22,8 +22,10 @@ import {
   listPanelAccessRequests,
   listPanelPermissions,
   rejectAccountRequest,
+  rejectPanelAccessRequest,
   setPanelPermission,
 } from "@/lib/admin.functions";
+import { getAreaColor } from "@/lib/areaColors";
 
 type AdminUser = { id: string; email: string; name: string; created_at: string; roles: string[] };
 type PanelAccessRequest = {
