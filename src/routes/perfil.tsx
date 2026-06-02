@@ -63,6 +63,7 @@ const Perfil = () => {
 
   const [section, setSection] = useState<Section>("overview");
   const [displayName, setDisplayName] = useState("");
+  const [equipeTrabalho, setEquipeTrabalho] = useState("");
   const [email, setEmail] = useState("");
   const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [savingProfile, setSavingProfile] = useState(false);
@@ -74,14 +75,22 @@ const Perfil = () => {
   const [newPw, setNewPw] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
   const [changingPw, setChangingPw] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpSentAt, setOtpSentAt] = useState<number | null>(null);
+  const [sendingOtp, setSendingOtp] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     getProfileFn()
       .then((res) => {
-        setDisplayName(res.profile?.display_name ?? "");
-        setEmail(res.profile?.email ?? user.email ?? "");
-        setCreatedAt(res.profile?.created_at ?? user.created_at ?? null);
+        const p = res.profile as
+          | { display_name?: string | null; email?: string | null; created_at?: string | null; equipe_trabalho?: string | null }
+          | null;
+        setDisplayName(p?.display_name ?? "");
+        setEquipeTrabalho(p?.equipe_trabalho ?? "");
+        setEmail(p?.email ?? user.email ?? "");
+        setCreatedAt(p?.created_at ?? user.created_at ?? null);
       })
       .catch(() => {
         setEmail(user.email ?? "");
