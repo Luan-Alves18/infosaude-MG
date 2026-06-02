@@ -543,7 +543,8 @@ const Perfil = () => {
                   <KeyRound className="h-4 w-4" /> Alterar senha
                 </h2>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Por segurança, é necessário informar sua senha atual.
+                  Por segurança, exigimos a senha atual e um código de
+                  verificação enviado por e-mail (válido por 5 minutos).
                 </p>
                 <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
                   <div>
@@ -581,7 +582,45 @@ const Perfil = () => {
                       minLength={8}
                     />
                   </div>
-                  <Button type="submit" disabled={changingPw}>
+                  <Separator className="my-2" />
+                  <div className="rounded-md border border-border bg-muted/40 p-3 space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium flex items-center gap-2">
+                          <ShieldCheck className="h-4 w-4 text-primary" />
+                          Verificação por e-mail
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Enviaremos um código de 6 dígitos para {email}. Validade: 5 minutos.
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSendOtp}
+                        disabled={sendingOtp}
+                      >
+                        {sendingOtp ? "Enviando…" : otpSent ? "Reenviar código" : "Enviar código"}
+                      </Button>
+                    </div>
+                    {otpSent && (
+                      <div>
+                        <Label htmlFor="otpCode">Código recebido por e-mail</Label>
+                        <Input
+                          id="otpCode"
+                          inputMode="numeric"
+                          autoComplete="one-time-code"
+                          maxLength={6}
+                          value={otpCode}
+                          onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
+                          placeholder="000000"
+                          required
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <Button type="submit" disabled={changingPw || !otpSent}>
                     {changingPw ? "Alterando…" : "Alterar senha"}
                   </Button>
                 </form>
