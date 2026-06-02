@@ -130,6 +130,7 @@ export type Database = {
           created_at: string
           display_name: string | null
           email: string | null
+          equipe_trabalho: string | null
           id: string
           updated_at: string
         }
@@ -137,6 +138,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           email?: string | null
+          equipe_trabalho?: string | null
           id: string
           updated_at?: string
         }
@@ -144,6 +146,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           email?: string | null
+          equipe_trabalho?: string | null
           id?: string
           updated_at?: string
         }
