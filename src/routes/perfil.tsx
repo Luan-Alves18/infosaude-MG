@@ -478,6 +478,18 @@ const Perfil = () => {
                       Para alterar o e-mail, contate o administrador.
                     </p>
                   </div>
+                  <div>
+                    <Label htmlFor="equipeTrabalho">Equipe de Trabalho</Label>
+                    <Input
+                      id="equipeTrabalho"
+                      value={equipeTrabalho}
+                      onChange={(e) => setEquipeTrabalho(e.target.value)}
+                      placeholder="Ex.: Núcleo de Inteligência e Governança de Dados"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Informe a equipe/setor em que você trabalha. Pode ser editado a qualquer momento.
+                    </p>
+                  </div>
                   <Separator className="my-2" />
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Perfil de acesso</span>
