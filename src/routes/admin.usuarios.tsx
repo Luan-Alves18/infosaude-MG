@@ -744,9 +744,6 @@ const AdminUsuarios = () => {
                       </div>
                     )}
                   </div>
-                      </div>
-                    )}
-                  </div>
                 </>
               )}
             </CardContent>
