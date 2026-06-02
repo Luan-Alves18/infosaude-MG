@@ -675,29 +675,75 @@ const AdminUsuarios = () => {
                   </div>
 
                   <div>
-                    <h3 className="font-medium mb-3">Acessos por área temática</h3>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-medium">Acessos por área temática</h3>
+                      <Badge variant="secondary">
+                        {statsByArea.reduce((acc, s) => acc + s.total, 0)} acessos
+                      </Badge>
+                    </div>
                     {statsByArea.length === 0 ? (
                       <p className="text-sm text-muted-foreground">Sem acessos no período.</p>
                     ) : (
-                      <div className="space-y-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {statsByArea.map(({ area, total, paneis }) => {
-                          const max = statsByArea[0].total || 1;
-                          const pct = Math.round((total / max) * 100);
+                          const color = getAreaColor(area.slug);
+                          const panelsWithCountsInArea = paneis
+                            .map((p) => ({ p, count: statsCounts[String(p.id)] ?? 0 }))
+                            .filter((s) => s.count > 0)
+                            .sort((a, b) => b.count - a.count);
                           return (
-                            <div key={area.slug} className="border border-border rounded-md p-3">
-                              <div className="flex items-center justify-between gap-3 mb-2">
-                                <span className="font-medium text-sm">{area.nome}</span>
-                                <Badge variant="secondary">{total} acessos</Badge>
+                            <div
+                              key={area.slug}
+                              className={`relative overflow-hidden border border-border rounded-lg p-4 ${color.bg}`}
+                            >
+                              <div
+                                className={`absolute inset-y-0 left-0 w-1 ${color.dot}`}
+                                aria-hidden
+                              />
+                              <div className="flex items-baseline justify-between gap-3 mb-2">
+                                <div className="min-w-0">
+                                  <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                                    Área temática
+                                  </p>
+                                  <p className="font-semibold text-sm leading-snug truncate">
+                                    {area.nome}
+                                  </p>
+                                </div>
+                                <div className="text-right shrink-0">
+                                  <p className="text-2xl font-bold leading-none">{total}</p>
+                                  <p className="text-[10px] text-muted-foreground uppercase">
+                                    acessos
+                                  </p>
+                                </div>
                               </div>
-                              <div className="h-2 rounded-full bg-muted overflow-hidden">
-                                <div className="h-full bg-primary" style={{ width: `${pct}%` }} />
-                              </div>
-                              <p className="text-xs text-muted-foreground mt-2">
-                                {paneis.length} painel(éis) com registros
+                              <p className="text-xs text-muted-foreground mb-2">
+                                {panelsWithCountsInArea.length} de {paneis.length}{" "}
+                                {paneis.length === 1 ? "painel" : "painéis"} com registros
                               </p>
+                              {panelsWithCountsInArea.length > 0 && (
+                                <ul className="space-y-1 max-h-32 overflow-auto">
+                                  {panelsWithCountsInArea.slice(0, 5).map(({ p, count }) => (
+                                    <li
+                                      key={p.id}
+                                      className="flex items-center justify-between gap-2 text-xs"
+                                    >
+                                      <span className="truncate">{p.titulo}</span>
+                                      <span className="font-semibold tabular-nums">{count}</span>
+                                    </li>
+                                  ))}
+                                  {panelsWithCountsInArea.length > 5 && (
+                                    <li className="text-[10px] text-muted-foreground italic">
+                                      + {panelsWithCountsInArea.length - 5} outros
+                                    </li>
+                                  )}
+                                </ul>
+                              )}
                             </div>
                           );
                         })}
+                      </div>
+                    )}
+                  </div>
                       </div>
                     )}
                   </div>
