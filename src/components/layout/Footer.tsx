@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import { Mail, MapPin, ExternalLink } from "lucide-react";
 import { MapaMGMini } from "@/components/MapaMGMini";
+import { HideInModoEleitoral } from "@/lib/modoEleitoral";
 
 export const Footer = () => (
   <footer className="gradient-footer text-primary-foreground mt-20">
@@ -8,9 +9,11 @@ export const Footer = () => (
       {/* Marca */}
       <div className="md:col-span-5">
         <div className="flex items-center gap-3 mb-4">
-          <div className="h-11 w-11 rounded-lg bg-primary-foreground/10 p-1.5 flex items-center justify-center">
-            <MapaMGMini variant="light" className="h-full w-full text-primary-foreground" />
-          </div>
+          <HideInModoEleitoral>
+            <div className="h-11 w-11 rounded-lg bg-primary-foreground/10 p-1.5 flex items-center justify-center">
+              <MapaMGMini variant="light" className="h-full w-full text-primary-foreground" />
+            </div>
+          </HideInModoEleitoral>
           <div>
             <div className="font-bold text-lg leading-tight">
               InfoSaúde<span className="opacity-80"> MG</span>
@@ -41,7 +44,9 @@ export const Footer = () => (
           <li><Link to="/" className="opacity-80 hover:opacity-100 hover:underline">Início</Link></li>
           <li><Link to="/paineis" className="opacity-80 hover:opacity-100 hover:underline">Galeria de Painéis</Link></li>
           <li><Link to="/dados-abertos" className="opacity-80 hover:opacity-100 hover:underline">Dados Abertos</Link></li>
-          <li><Link to="/sobre" className="opacity-80 hover:opacity-100 hover:underline">Sobre</Link></li>
+          <HideInModoEleitoral>
+            <li><Link to="/sobre" className="opacity-80 hover:opacity-100 hover:underline">Sobre</Link></li>
+          </HideInModoEleitoral>
           <li><Link to="/contato" className="opacity-80 hover:opacity-100 hover:underline">Contato</Link></li>
         </ul>
       </div>
