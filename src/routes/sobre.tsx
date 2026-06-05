@@ -1,9 +1,33 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
-import { Target, Users, Database, ShieldCheck } from "lucide-react";
+import { Target, Users, Database, ShieldCheck, Info } from "lucide-react";
 import { FichaTecnica } from "@/components/FichaTecnica";
+import { isModoEleitoral } from "@/lib/modoEleitoral";
+import { Link } from "@/lib/router-compat";
+import { Button } from "@/components/ui/button";
 
-const Sobre = () => (
+const SobreEleitoral = () => (
+  <div className="container mx-auto px-4 py-20 animate-fade-in">
+    <div className="max-w-2xl mx-auto text-center">
+      <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center mx-auto mb-5">
+        <Info className="h-7 w-7 text-muted-foreground" />
+      </div>
+      <h1 className="text-2xl md:text-3xl font-bold mb-3">
+        Conteúdo temporariamente indisponível
+      </h1>
+      <p className="text-muted-foreground leading-relaxed mb-6">
+        Em conformidade com a legislação eleitoral (Lei nº 9.504/97), esta
+        página está temporariamente indisponível durante o período de vedações.
+        O conteúdo será restabelecido após o encerramento do período eleitoral.
+      </p>
+      <Button asChild variant="outline">
+        <Link to="/">Voltar ao início</Link>
+      </Button>
+    </div>
+  </div>
+);
+
+const SobreCompleto = () => (
   <div className="container mx-auto px-4 py-12 animate-fade-in">
     <div className="max-w-3xl mb-12">
       <Badge variant="secondary" className="mb-3">Sobre o Portal</Badge>
@@ -60,5 +84,7 @@ const Sobre = () => (
     </section>
   </div>
 );
+
+const Sobre = () => (isModoEleitoral() ? <SobreEleitoral /> : <SobreCompleto />);
 
 export const Route = createFileRoute("/sobre")({ component: Sobre });
