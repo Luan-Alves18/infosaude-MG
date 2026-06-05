@@ -12,6 +12,7 @@ import { MapaMG } from "@/components/MapaMG";
 import { supabase } from "@/integrations/supabase/client";
 import { useLogPortalVisit } from "@/hooks/useLogPortalVisit";
 import { formatVisitsApprox } from "@/lib/visits";
+import { HideInModoEleitoral } from "@/lib/modoEleitoral";
 
 const Index = () => {
   // Registra a visita à entrada do portal (1x por sessão).
@@ -60,45 +61,49 @@ const Index = () => {
               </Button>
             </div>
           </div>
-          <div className="relative h-[280px] sm:h-[360px] lg:h-[440px] mt-6 lg:mt-0">
-            <MapaMG />
-          </div>
-        </div>
-      </section>
-
-      {/* INDICADORES */}
-      <section className="container mx-auto px-4 -mt-12 relative z-10">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          {indicadores.map((i) => (
-            <Card key={i.label} className="shadow-elegant border-0 gradient-card animate-scale-in">
-              <CardContent className="p-5 md:p-6">
-                <div className="text-2xl md:text-4xl font-bold text-primary leading-none">{i.valor}</div>
-                <div className="mt-2 text-sm font-semibold text-foreground">{i.label}</div>
-                <div className="text-xs text-muted-foreground mt-1">{i.sub}</div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* DESTAQUES / FUNCIONALIDADES */}
-      <section className="container mx-auto px-4 pt-20 pb-10">
-        <div className="grid lg:grid-cols-3 gap-6">
-          {[
-            { icon: BarChart3, t: "Painéis interativos", d: "Visualize indicadores com filtros por município, regional e período." },
-            { icon: Database, t: "Produtos de dados", d: "Bases consolidadas para apoiar gestores e pesquisadores." },
-            { icon: Activity, t: "Atualização contínua", d: "Dados oficiais integrados a sistemas estaduais e federais." },
-          ].map((f) => (
-            <div key={f.t} className="bg-card p-6 rounded-xl shadow-soft border border-border/60">
-              <div className="h-11 w-11 rounded-lg gradient-accent flex items-center justify-center mb-4">
-                <f.icon className="h-5 w-5 text-white" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2">{f.t}</h3>
-              <p className="text-sm text-muted-foreground">{f.d}</p>
+          <HideInModoEleitoral>
+            <div className="relative h-[280px] sm:h-[360px] lg:h-[440px] mt-6 lg:mt-0">
+              <MapaMG />
             </div>
-          ))}
+          </HideInModoEleitoral>
         </div>
       </section>
+
+      <HideInModoEleitoral>
+        {/* INDICADORES */}
+        <section className="container mx-auto px-4 -mt-12 relative z-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            {indicadores.map((i) => (
+              <Card key={i.label} className="shadow-elegant border-0 gradient-card animate-scale-in">
+                <CardContent className="p-5 md:p-6">
+                  <div className="text-2xl md:text-4xl font-bold text-primary leading-none">{i.valor}</div>
+                  <div className="mt-2 text-sm font-semibold text-foreground">{i.label}</div>
+                  <div className="text-xs text-muted-foreground mt-1">{i.sub}</div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* DESTAQUES / FUNCIONALIDADES */}
+        <section className="container mx-auto px-4 pt-20 pb-10">
+          <div className="grid lg:grid-cols-3 gap-6">
+            {[
+              { icon: BarChart3, t: "Painéis interativos", d: "Visualize indicadores com filtros por município, regional e período." },
+              { icon: Database, t: "Produtos de dados", d: "Bases consolidadas para apoiar gestores e pesquisadores." },
+              { icon: Activity, t: "Atualização contínua", d: "Dados oficiais integrados a sistemas estaduais e federais." },
+            ].map((f) => (
+              <div key={f.t} className="bg-card p-6 rounded-xl shadow-soft border border-border/60">
+                <div className="h-11 w-11 rounded-lg gradient-accent flex items-center justify-center mb-4">
+                  <f.icon className="h-5 w-5 text-white" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">{f.t}</h3>
+                <p className="text-sm text-muted-foreground">{f.d}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </HideInModoEleitoral>
 
       {/* ÁREAS TEMÁTICAS */}
       <section className="container mx-auto px-4 py-16">
@@ -137,36 +142,38 @@ const Index = () => {
       </section>
 
 
-      {/* MAPA ESTRATÉGICO */}
-      <section className="container mx-auto px-4 pb-20">
-        <div className="rounded-2xl border border-border/60 bg-card shadow-elegant overflow-hidden">
-          <div className="p-6 md:p-10 border-b border-border/60 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="flex items-start gap-4">
-              <div className="h-12 w-12 rounded-xl gradient-accent flex items-center justify-center shadow-soft shrink-0">
-                <Target className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <Badge variant="secondary" className="mb-2">Mapa Estratégico · 2023-2026</Badge>
-                <h2 className="text-2xl md:text-3xl font-bold leading-tight">Mapa Estratégico da SES-MG</h2>
-                <p className="text-sm md:text-base text-muted-foreground mt-2 max-w-2xl">
-                  Acompanhe de forma interativa a visão, os objetivos e os indicadores estratégicos
-                  da Secretaria de Estado de Saúde de Minas Gerais para o ciclo 2023-2026,
-                  organizando as prioridades que orientam as ações de saúde no Estado.
-                </p>
+      <HideInModoEleitoral>
+        {/* MAPA ESTRATÉGICO */}
+        <section className="container mx-auto px-4 pb-20">
+          <div className="rounded-2xl border border-border/60 bg-card shadow-elegant overflow-hidden">
+            <div className="p-6 md:p-10 border-b border-border/60 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <div className="h-12 w-12 rounded-xl gradient-accent flex items-center justify-center shadow-soft shrink-0">
+                  <Target className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <Badge variant="secondary" className="mb-2">Mapa Estratégico · 2023-2026</Badge>
+                  <h2 className="text-2xl md:text-3xl font-bold leading-tight">Mapa Estratégico da SES-MG</h2>
+                  <p className="text-sm md:text-base text-muted-foreground mt-2 max-w-2xl">
+                    Acompanhe de forma interativa a visão, os objetivos e os indicadores estratégicos
+                    da Secretaria de Estado de Saúde de Minas Gerais para o ciclo 2023-2026,
+                    organizando as prioridades que orientam as ações de saúde no Estado.
+                  </p>
+                </div>
               </div>
             </div>
+            <div className="relative w-full bg-muted/30" style={{ aspectRatio: "16 / 7" }}>
+              <iframe
+                title="Mapa Estratégico SES-MG 2023-2026"
+                src="https://app.powerbi.com/view?r=eyJrIjoiOGIxZjhjOGEtNDMwNy00ZmFkLWE3OTYtMTMwMzkyMDNlZTMwIiwidCI6ImU1ZDNhZTdjLTliMzgtNDhkZS1hMDg3LWY2NzM0YTI4NzU3NCJ9"
+                className="absolute inset-0 w-full h-full"
+                frameBorder={0}
+                allowFullScreen
+              />
+            </div>
           </div>
-          <div className="relative w-full bg-muted/30" style={{ aspectRatio: "16 / 7" }}>
-            <iframe
-              title="Mapa Estratégico SES-MG 2023-2026"
-              src="https://app.powerbi.com/view?r=eyJrIjoiOGIxZjhjOGEtNDMwNy00ZmFkLWE3OTYtMTMwMzkyMDNlZTMwIiwidCI6ImU1ZDNhZTdjLTliMzgtNDhkZS1hMDg3LWY2NzM0YTI4NzU3NCJ9"
-              className="absolute inset-0 w-full h-full"
-              frameBorder={0}
-              allowFullScreen
-            />
-          </div>
-        </div>
-      </section>
+        </section>
+      </HideInModoEleitoral>
 
       {/* CTA */}
       <section className="container mx-auto px-4 pb-20">
