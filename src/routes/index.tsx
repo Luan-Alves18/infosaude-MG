@@ -12,7 +12,7 @@ import { MapaMG } from "@/components/MapaMG";
 import { supabase } from "@/integrations/supabase/client";
 import { useLogPortalVisit } from "@/hooks/useLogPortalVisit";
 import { formatVisitsApprox } from "@/lib/visits";
-import { HideInModoEleitoral } from "@/lib/modoEleitoral";
+import { HideInModoEleitoral, isModoEleitoral } from "@/lib/modoEleitoral";
 
 const Index = () => {
   // Registra a visita à entrada do portal (1x por sessão).
