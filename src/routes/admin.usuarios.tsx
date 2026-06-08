@@ -9,13 +9,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ShieldCheck, ArrowDownAZ, CheckCheck, FileClock, UserPlus, BarChart3, X } from "lucide-react";
+import { Search, ShieldCheck, ArrowDownAZ, CheckCheck, FileClock, UserPlus, BarChart3, X, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { AREAS_TEMATICAS, PAINEIS } from "@/data/site";
 import {
   approveAccountRequest,
   approvePanelAccessRequest,
+  deleteUser,
   getPanelVisitsStats,
   listAccountRequests,
   listUsers,
