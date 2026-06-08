@@ -74,6 +74,26 @@ const AdminUsuarios = () => {
   const approveRequestFn = useServerFn(approvePanelAccessRequest);
   const rejectRequestFn = useServerFn(rejectPanelAccessRequest);
   const getStatsFn = useServerFn(getPanelVisitsStats);
+  const deleteUserFn = useServerFn(deleteUser);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+
+  const handleDeleteUser = async (u: AdminUser) => {
+    setDeletingUserId(u.id);
+    try {
+      await deleteUserFn({ data: { userId: u.id } });
+      setUsers((prev) => prev.filter((item) => item.id !== u.id));
+      if (selectedUser?.id === u.id) setSelectedUser(null);
+      toast({ title: "Usuário excluído", description: u.email });
+    } catch (e) {
+      toast({
+        title: "Erro",
+        description: e instanceof Error ? e.message : "Falha ao excluir usuário.",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingUserId(null);
+    }
+  };
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [requests, setRequests] = useState<PanelAccessRequest[]>([]);
