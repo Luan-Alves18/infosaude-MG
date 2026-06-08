@@ -315,7 +315,10 @@ export const approveAccountRequest = createServerFn({ method: "POST" })
       const msg = inviteErr.message?.toLowerCase() ?? "";
       const alreadyRegistered =
         msg.includes("already") || msg.includes("registered") || msg.includes("exist");
-      if (!alreadyRegistered) throw new Error(inviteErr.message);
+      if (!alreadyRegistered) {
+        console.error("[approveAccountRequest:invite]", inviteErr.message);
+        throw new Error("Não foi possível enviar o convite. Tente novamente.");
+      }
 
       // Usuário já existe → envia magic link via admin.generateLink para o
       // mesmo `redirectTo`. Como a Supabase não dispara o e-mail nesse caso,
@@ -324,7 +327,10 @@ export const approveAccountRequest = createServerFn({ method: "POST" })
         email,
         options: { shouldCreateUser: false, emailRedirectTo: redirectTo },
       });
-      if (otpErr) throw new Error(otpErr.message);
+      if (otpErr) {
+        console.error("[approveAccountRequest:otp]", otpErr.message);
+        throw new Error("Não foi possível enviar o link de acesso.");
+      }
     } else {
       invitedUserId = inviteData?.user?.id;
     }
