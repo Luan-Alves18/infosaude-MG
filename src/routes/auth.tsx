@@ -191,7 +191,7 @@ const Auth = () => {
               </div>
               <div>
                 <Label htmlFor="si-pw">Senha</Label>
-                <Input id="si-pw" name="password" type="password" required />
+                <PasswordInput id="si-pw" name="password" required />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Acessando…" : "Acessar"}
