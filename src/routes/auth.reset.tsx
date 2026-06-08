@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "@/lib/router-compat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -70,11 +71,11 @@ const AuthReset = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label htmlFor="password">Nova senha</Label>
-                <Input id="password" name="password" type="password" required minLength={8} />
+                <PasswordInput id="password" name="password" required minLength={8} />
               </div>
               <div>
                 <Label htmlFor="confirm">Confirmar nova senha</Label>
-                <Input id="confirm" name="confirm" type="password" required minLength={8} />
+                <PasswordInput id="confirm" name="confirm" required minLength={8} />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Salvando…" : "Redefinir senha"}

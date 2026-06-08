@@ -9,13 +9,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ShieldCheck, ArrowDownAZ, CheckCheck, FileClock, UserPlus, BarChart3, X } from "lucide-react";
+import { Search, ShieldCheck, ArrowDownAZ, CheckCheck, FileClock, UserPlus, BarChart3, X, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { AREAS_TEMATICAS, PAINEIS } from "@/data/site";
 import {
   approveAccountRequest,
   approvePanelAccessRequest,
+  deleteUser,
   getPanelVisitsStats,
   listAccountRequests,
   listUsers,
@@ -62,6 +74,26 @@ const AdminUsuarios = () => {
   const approveRequestFn = useServerFn(approvePanelAccessRequest);
   const rejectRequestFn = useServerFn(rejectPanelAccessRequest);
   const getStatsFn = useServerFn(getPanelVisitsStats);
+  const deleteUserFn = useServerFn(deleteUser);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+
+  const handleDeleteUser = async (u: AdminUser) => {
+    setDeletingUserId(u.id);
+    try {
+      await deleteUserFn({ data: { userId: u.id } });
+      setUsers((prev) => prev.filter((item) => item.id !== u.id));
+      if (selectedUser?.id === u.id) setSelectedUser(null);
+      toast({ title: "Usuário excluído", description: u.email });
+    } catch (e) {
+      toast({
+        title: "Erro",
+        description: e instanceof Error ? e.message : "Falha ao excluir usuário.",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingUserId(null);
+    }
+  };
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [requests, setRequests] = useState<PanelAccessRequest[]>([]);
@@ -343,33 +375,72 @@ const AdminUsuarios = () => {
                   {!loadingUsers && users.length === 0 && (
                     <p className="text-sm text-muted-foreground py-6 text-center">Nenhum usuário encontrado.</p>
                   )}
-                  {users.map((u) => (
-                    <button
-                      key={u.id}
-                      type="button"
-                      onClick={() => setSelectedUser(u)}
-                      className={`w-full text-left py-3 px-2 rounded-md hover:bg-muted/60 transition-colors ${
-                        selectedUser?.id === u.id ? "bg-muted" : ""
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="min-w-0">
-                          <div className="font-medium truncate">{u.name || "(sem nome)"}</div>
-                          <div className="text-xs text-muted-foreground truncate">{u.email}</div>
-                        </div>
-                        <div className="flex flex-wrap gap-1 shrink-0">
-                          {u.roles.map((r) => (
-                            <span
-                              key={r}
-                              className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-foreground font-semibold uppercase"
+                  {users.map((u) => {
+                    const isSelf = u.id === user?.id;
+                    return (
+                      <div
+                        key={u.id}
+                        className={`flex items-center gap-2 py-1 px-1 rounded-md ${
+                          selectedUser?.id === u.id ? "bg-muted" : ""
+                        }`}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => setSelectedUser(u)}
+                          className="flex-1 min-w-0 text-left py-2 px-2 rounded-md hover:bg-muted/60 transition-colors"
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="min-w-0">
+                              <div className="font-medium truncate">{u.name || "(sem nome)"}</div>
+                              <div className="text-xs text-muted-foreground truncate">{u.email}</div>
+                            </div>
+                            <div className="flex flex-wrap gap-1 shrink-0">
+                              {u.roles.map((r) => (
+                                <span
+                                  key={r}
+                                  className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-foreground font-semibold uppercase"
+                                >
+                                  {r}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
+                              disabled={isSelf || deletingUserId === u.id}
+                              title={isSelf ? "Você não pode excluir sua própria conta" : "Excluir usuário"}
+                              aria-label="Excluir usuário"
                             >
-                              {r}
-                            </span>
-                          ))}
-                        </div>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Excluir usuário?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Esta ação removerá permanentemente {u.name || u.email} ({u.email}) do sistema,
+                                incluindo perfil, permissões e favoritos. Não é possível desfazer.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteUser(u)}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                {deletingUserId === u.id ? "Excluindo…" : "Excluir"}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
-                    </button>
-                  ))}
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>

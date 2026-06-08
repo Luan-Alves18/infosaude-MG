@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -549,9 +550,8 @@ const Perfil = () => {
                 <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
                   <div>
                     <Label htmlFor="currentPw">Senha atual</Label>
-                    <Input
+                    <PasswordInput
                       id="currentPw"
-                      type="password"
                       value={currentPw}
                       onChange={(e) => setCurrentPw(e.target.value)}
                       required
@@ -559,9 +559,8 @@ const Perfil = () => {
                   </div>
                   <div>
                     <Label htmlFor="newPw">Nova senha</Label>
-                    <Input
+                    <PasswordInput
                       id="newPw"
-                      type="password"
                       value={newPw}
                       onChange={(e) => setNewPw(e.target.value)}
                       required
@@ -573,9 +572,8 @@ const Perfil = () => {
                   </div>
                   <div>
                     <Label htmlFor="confirmPw">Confirmar nova senha</Label>
-                    <Input
+                    <PasswordInput
                       id="confirmPw"
-                      type="password"
                       value={confirmPw}
                       onChange={(e) => setConfirmPw(e.target.value)}
                       required

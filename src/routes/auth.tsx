@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@/lib/router-compat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -191,7 +192,7 @@ const Auth = () => {
               </div>
               <div>
                 <Label htmlFor="si-pw">Senha</Label>
-                <Input id="si-pw" name="password" type="password" required />
+                <PasswordInput id="si-pw" name="password" required />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Acessando…" : "Acessar"}
