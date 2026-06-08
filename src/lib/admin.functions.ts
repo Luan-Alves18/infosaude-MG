@@ -386,6 +386,29 @@ export const rejectPanelAccessRequest = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+export const deleteUser = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { userId: string }) =>
+    z.object({ userId: z.string().uuid() }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId: adminId, supabase } = context as {
+      userId: string;
+      supabase: SupabaseClient;
+    };
+    await ensureAdmin(supabase, adminId);
+    if (data.userId === adminId) {
+      throw new Error("Você não pode excluir sua própria conta.");
+    }
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(data.userId);
+    if (error) {
+      console.error("[deleteUser]", error.message);
+      throw new Error("Não foi possível excluir o usuário.");
+    }
+    return { ok: true as const };
+  });
+
 // ---------- Estatísticas de visitas por painel ----------
 
 export const getPanelVisitsStats = createServerFn({ method: "POST" })
