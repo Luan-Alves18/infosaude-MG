@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { safeDbError } from "@/lib/db-error";
 
 const accountReqSchema = z.object({
   nome_completo: z.string().trim().min(1).max(200),
@@ -21,7 +22,14 @@ export const createAccountRequest = createServerFn({ method: "POST" })
       email: data.email.toLowerCase(),
       motivo: data.motivo,
     });
-    if (error) throw new Error(error.message);
+    if (error) {
+      // Mascarar erros conhecidos para não expor schema/constraints
+      console.error("[createAccountRequest]", error.message);
+      if (/Muitas solicitações/i.test(error.message)) {
+        throw new Error("Muitas solicitações deste e-mail. Tente novamente amanhã.");
+      }
+      throw new Error("Não foi possível enviar sua solicitação. Tente novamente.");
+    }
     return { ok: true };
   });
 
@@ -54,6 +62,6 @@ export const createPanelAccessRequest = createServerFn({ method: "POST" })
       panel_ids: data.panel_ids,
       motivo: data.motivo,
     });
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error, "Não foi possível enviar a solicitação.");
     return { ok: true };
   });

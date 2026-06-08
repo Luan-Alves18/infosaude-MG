@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { safeDbError } from "@/lib/db-error";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const getMyProfile = createServerFn({ method: "POST" })
@@ -12,7 +13,7 @@ export const getMyProfile = createServerFn({ method: "POST" })
       .select("id, display_name, email, created_at, equipe_trabalho")
       .eq("id", userId)
       .maybeSingle();
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error, "Não foi possível carregar o perfil.");
     return { profile: data };
   });
 
@@ -34,6 +35,6 @@ export const updateMyProfile = createServerFn({ method: "POST" })
       patch.equipe_trabalho = data.equipe_trabalho === "" ? null : data.equipe_trabalho;
     if (Object.keys(patch).length === 0) return { ok: true };
     const { error } = await supabase.from("profiles").update(patch).eq("id", userId);
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error, "Não foi possível atualizar o perfil.");
     return { ok: true };
   });

@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { safeDbError } from "@/lib/db-error";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const listFavorites = createServerFn({ method: "POST" })
@@ -11,7 +12,7 @@ export const listFavorites = createServerFn({ method: "POST" })
       .from("user_favorites")
       .select("panel_id")
       .eq("user_id", userId);
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error, "Não foi possível carregar seus favoritos.");
     return { panelIds: (data ?? []).map((r) => String(r.panel_id)) };
   });
 
@@ -25,7 +26,9 @@ export const addFavorite = createServerFn({ method: "POST" })
     const { error } = await supabase
       .from("user_favorites")
       .insert({ user_id: userId, panel_id: data.panelId });
-    if (error && !/duplicate|unique/i.test(error.message)) throw new Error(error.message);
+    if (error && !/duplicate|unique/i.test(error.message)) {
+      throw safeDbError(error, "Não foi possível adicionar aos favoritos.");
+    }
     return { ok: true };
   });
 
@@ -41,6 +44,6 @@ export const removeFavorite = createServerFn({ method: "POST" })
       .delete()
       .eq("user_id", userId)
       .eq("panel_id", data.panelId);
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error, "Não foi possível remover dos favoritos.");
     return { ok: true };
   });
