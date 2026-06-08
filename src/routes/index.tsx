@@ -37,14 +37,16 @@ const Index = () => {
     i.label === "Acessos/mês" ? { ...i, valor: acessos } : i,
   );
 
+  const eleitoral = isModoEleitoral();
+
   return (
     <div className="animate-fade-in">
       {/* HERO */}
       <section className="relative overflow-hidden gradient-hero text-primary-foreground">
         <div className="absolute inset-0 opacity-20"
           style={{ backgroundImage: "radial-gradient(circle at 20% 20%, white 1px, transparent 1px), radial-gradient(circle at 80% 60%, white 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
-        <div className="container mx-auto px-4 py-12 sm:py-16 md:py-24 relative grid lg:grid-cols-2 gap-6 lg:gap-10 items-center">
-          <div className="max-w-2xl">
+        <div className={`container mx-auto px-4 py-12 sm:py-16 md:py-24 relative grid gap-6 lg:gap-10 items-center ${eleitoral ? "" : "lg:grid-cols-2"}`}>
+          <div className={eleitoral ? "max-w-3xl mx-auto text-center" : "max-w-2xl"}>
             <Badge className="mb-5 bg-primary-foreground/15 text-primary-foreground border-0 backdrop-blur hover:bg-primary-foreground/25">
               <Sparkles className="h-3 w-3 mr-1" /> Integração das informações em saúde de MG
             </Badge>
@@ -55,7 +57,7 @@ const Index = () => {
               Análise de dados e informações em saúde do Estado de Minas Gerais
               por meio de ferramentas interativas e produtos de dados.
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className={`flex flex-wrap gap-3 ${eleitoral ? "justify-center" : ""}`}>
               <Button asChild size="lg" variant="secondary" className="text-sm sm:text-base flex-1 sm:flex-none min-w-[160px]">
                 <Link to="/paineis">Galeria de Painéis <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
