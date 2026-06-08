@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { safeDbError } from "@/lib/db-error";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 async function ensureAdmin(supabase: SupabaseClient, userId: string) {
