@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { safeDbError } from "@/lib/db-error";
 
 export const getMyPanelPermissions = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -12,6 +13,6 @@ export const getMyPanelPermissions = createServerFn({ method: "POST" })
       .from("panel_permissions")
       .select("panel_id")
       .eq("user_id", userId);
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error, "Não foi possível carregar as permissões.");
     return { panelIds: (data ?? []).map((r: { panel_id: string }) => r.panel_id) };
   });
