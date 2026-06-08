@@ -10,7 +10,7 @@ async function ensureAdmin(supabase: SupabaseClient, userId: string) {
     .eq("user_id", userId)
     .eq("role", "admin")
     .maybeSingle();
-  if (error) throw new Error(error.message);
+  if (error) throw safeDbError(error);
   if (!data) throw new Error("Acesso restrito ao administrador.");
 }
 
@@ -35,7 +35,7 @@ export const listUsers = createServerFn({ method: "POST" })
       .from("profiles")
       .select("id, email, display_name, created_at")
       .order("created_at", { ascending: false });
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error);
 
     const { data: requests } = await supabase
       .from("account_requests")
@@ -87,7 +87,7 @@ export const listPanelPermissions = createServerFn({ method: "POST" })
       .from("panel_permissions")
       .select("panel_id")
       .eq("user_id", data.userId);
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error);
     return { panelIds: (rows ?? []).map((r) => r.panel_id) };
   });
 
@@ -103,7 +103,7 @@ export const listPanelAccessRequests = createServerFn({ method: "POST" })
       .eq("status", "pendente")
       .order("created_at", { ascending: false });
 
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error);
 
     // Mesma lógica de nome usada em listUsers: prioriza nome_completo de
     // account_requests, depois display_name do profile, depois deriva do e-mail.
@@ -170,7 +170,7 @@ export const approvePanelAccessRequest = createServerFn({ method: "POST" })
       .eq("id", data.requestId)
       .maybeSingle();
 
-    if (requestError) throw new Error(requestError.message);
+    if (requestError) throw safeDbError(requestError);
     if (!request) throw new Error("Solicitação não encontrada.");
 
     const panelIds: string[] = Array.from(
@@ -187,7 +187,7 @@ export const approvePanelAccessRequest = createServerFn({ method: "POST" })
         { onConflict: "user_id,panel_id" },
       );
 
-      if (permissionError) throw new Error(permissionError.message);
+      if (permissionError) throw safeDbError(permissionError);
     }
 
     if (request.status !== "aprovado") {
@@ -196,7 +196,7 @@ export const approvePanelAccessRequest = createServerFn({ method: "POST" })
         .update({ status: "aprovado" })
         .eq("id", request.id);
 
-      if (updateError) throw new Error(updateError.message);
+      if (updateError) throw safeDbError(updateError);
     }
 
     return { ok: true as const, userId: request.user_id, panelIds };
@@ -226,14 +226,14 @@ export const setPanelPermission = createServerFn({ method: "POST" })
           { user_id: data.userId, panel_id: data.panelId, granted_by: adminId },
           { onConflict: "user_id,panel_id" },
         );
-      if (error) throw new Error(error.message);
+      if (error) throw safeDbError(error);
     } else {
       const { error } = await supabase
         .from("panel_permissions")
         .delete()
         .eq("user_id", data.userId)
         .eq("panel_id", data.panelId);
-      if (error) throw new Error(error.message);
+      if (error) throw safeDbError(error);
     }
     return { ok: true };
   });
@@ -252,7 +252,7 @@ export const listAccountRequests = createServerFn({ method: "POST" })
       .eq("status", "pendente")
       .order("created_at", { ascending: false });
 
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error);
 
     return {
       requests: (data ?? []).map((r) => ({
@@ -283,7 +283,7 @@ export const approveAccountRequest = createServerFn({ method: "POST" })
       .select("id, email, nome_completo, instituicao, status")
       .eq("id", data.requestId)
       .maybeSingle();
-    if (reqErr) throw new Error(reqErr.message);
+    if (reqErr) throw safeDbError(reqErr);
     if (!req) throw new Error("Solicitação não encontrada.");
 
     const email = req.email.trim().toLowerCase();
@@ -342,7 +342,7 @@ export const approveAccountRequest = createServerFn({ method: "POST" })
       .from("account_requests")
       .update({ status: "aprovado" })
       .eq("id", req.id);
-    if (updErr) throw new Error(updErr.message);
+    if (updErr) throw safeDbError(updErr);
 
     return { ok: true as const };
   });
@@ -359,7 +359,7 @@ export const rejectAccountRequest = createServerFn({ method: "POST" })
       .from("account_requests")
       .update({ status: "recusado" })
       .eq("id", data.requestId);
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error);
     return { ok: true };
   });
 
@@ -375,7 +375,7 @@ export const rejectPanelAccessRequest = createServerFn({ method: "POST" })
       .from("panel_access_requests")
       .update({ status: "recusado" })
       .eq("id", data.requestId);
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error);
     return { ok: true as const };
   });
 
@@ -401,7 +401,7 @@ export const getPanelVisitsStats = createServerFn({ method: "POST" })
       .like("path", "/paineis/%")
       .limit(50000);
 
-    if (error) throw new Error(error.message);
+    if (error) throw safeDbError(error);
 
     const countsByPanelId = new Map<string, number>();
     for (const row of rows ?? []) {
