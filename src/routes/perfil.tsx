@@ -358,7 +358,7 @@ const Perfil = () => {
             </CardContent>
           </Card>
 
-          <Card className="mt-4 hidden lg:block">
+          <Card className="mt-4">
             <CardContent className="p-4 space-y-3">
               <h3 className="font-semibold text-xs uppercase tracking-wide text-muted-foreground">
                 Ações rápidas
