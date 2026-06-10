@@ -398,6 +398,27 @@ const Perfil = () => {
         <section className="space-y-6">
           {section === "overview" && (
             <>
+              <Card className="border-primary/30 bg-primary/5">
+                <CardContent className="p-5 flex items-start gap-3">
+                  <div className="h-9 w-9 rounded-lg bg-primary/15 text-primary flex items-center justify-center shrink-0">
+                    <Lock className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-sm mb-1">
+                      Acesso a painéis restritos
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Para visualizar painéis restritos do InfoSaúde MG,
+                      solicite acesso à equipe administradora informando os
+                      painéis desejados e a justificativa de uso.
+                    </p>
+                  </div>
+                  <Button asChild size="sm" variant="outline" className="shrink-0">
+                    <Link to="/solicitar-acesso-painel">Solicitar acesso</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
               <div className="grid sm:grid-cols-3 gap-4">
                 <StatCard
                   icon={Star}
