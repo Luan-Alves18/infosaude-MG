@@ -40,7 +40,7 @@ const Auth = () => {
       navigate("/auth/reset", { replace: true });
       return;
     }
-    if (user) navigate("/painel", { replace: true });
+    if (user) navigate("/perfil", { replace: true });
   }, [user, navigate]);
 
 
@@ -91,7 +91,7 @@ const Auth = () => {
     } else {
       setLoading(false);
       toast({ title: "Bem-vindo!", description: "Login realizado com sucesso." });
-      navigate("/painel");
+      navigate("/perfil");
     }
   };
 
@@ -112,7 +112,7 @@ const Auth = () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "azure",
       options: {
-        redirectTo: `${redirectOrigin}/painel`,
+        redirectTo: `${redirectOrigin}/perfil`,
         scopes: "email openid profile",
         skipBrowserRedirect: inIframe,
       },

@@ -80,6 +80,27 @@ export type Database = {
         }
         Relationships: []
       }
+      panel_notes: {
+        Row: {
+          content: string
+          panel_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          content?: string
+          panel_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          content?: string
+          panel_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       panel_permissions: {
         Row: {
           granted_at: string
