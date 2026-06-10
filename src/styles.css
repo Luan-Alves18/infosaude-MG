@@ -154,3 +154,20 @@
   .animate-fade-in { animation: fade-in 0.4s ease-out; }
   .animate-scale-in { animation: scale-in 0.3s ease-out; }
 }
+
+/* Força orientação paisagem na visualização de painéis em dispositivos móveis
+   quando o navegador não permite screen.orientation.lock(). O conteúdo é
+   rotacionado via CSS e a viewport é ajustada para que o usuário entenda
+   que deve deitar o aparelho. */
+@media (max-width: 768px) and (orientation: portrait) {
+  html.force-landscape body {
+    transform: rotate(90deg);
+    transform-origin: left top;
+    width: 100vh;
+    height: 100vw;
+    overflow-x: hidden;
+    position: absolute;
+    top: 100vh;
+    left: 0;
+  }
+}
