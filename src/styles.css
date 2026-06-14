@@ -171,3 +171,14 @@
     left: 0;
   }
 }
+
+/* Modo "tela cheia do painel": oculta o cabeçalho e rodapé globais quando
+   o usuário está visualizando um painel. A barra superior pode ser
+   restaurada pelo botão dedicado dentro da página de visualização. */
+html.panel-fullscreen header,
+html.panel-fullscreen footer {
+  display: none !important;
+}
+html.panel-fullscreen body {
+  overflow: hidden;
+}
