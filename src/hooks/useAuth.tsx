@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
 import { toast } from "@/hooks/use-toast";
 
-type Role = "admin" | "gestor" | "user";
+type Role = "admin" | "owner" | "gestor" | "user";
 
 type Ctx = {
   user: User | null;
