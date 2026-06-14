@@ -372,11 +372,11 @@ const Perfil = () => {
                   Explorar painéis
                 </Link>
                 <Link
-                  to="/solicitar-acesso-painel"
+                  to="/dados-abertos"
                   className="flex items-center gap-2 text-sm px-2 py-2 rounded-md hover:bg-muted transition-colors"
                 >
-                  <Lock className="h-4 w-4 text-primary" />
-                  Solicitar acesso
+                  <CalendarDays className="h-4 w-4 text-primary" />
+                  Dados abertos
                 </Link>
                 <Link
                   to="/contato"
