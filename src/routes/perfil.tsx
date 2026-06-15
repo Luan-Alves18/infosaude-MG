@@ -117,8 +117,10 @@ const Perfil = () => {
     [allowedPanelIds],
   );
 
-  const primaryRole = roles.includes("admin")
-    ? "Administrador"
+  const primaryRole = roles.includes("owner")
+    ? "Owner"
+    : roles.includes("admin")
+      ? "Administrador"
     : roles.includes("gestor")
       ? "Gestor"
       : "Usuário";
