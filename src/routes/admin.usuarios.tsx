@@ -103,6 +103,7 @@ const AdminUsuarios = () => {
   const [processingAccountId, setProcessingAccountId] = useState<string | null>(null);
 
   const [statsPeriod, setStatsPeriod] = useState<Period>("month");
+  const [expandedAreas, setExpandedAreas] = useState<string[]>([]);
   const [statsCounts, setStatsCounts] = useState<Record<string, number>>({});
   const [loadingStats, setLoadingStats] = useState(false);
 
@@ -792,8 +793,11 @@ const AdminUsuarios = () => {
                                 {paneis.length === 1 ? "painel" : "painéis"} com registros
                               </p>
                               {panelsWithCountsInArea.length > 0 && (
-                                <ul className="space-y-1 max-h-32 overflow-auto">
-                                  {panelsWithCountsInArea.slice(0, 5).map(({ p, count }) => (
+                                <ul className="space-y-1 max-h-40 overflow-auto">
+                                  {(expandedAreas.includes(area.slug)
+                                    ? panelsWithCountsInArea
+                                    : panelsWithCountsInArea.slice(0, 5)
+                                  ).map(({ p, count }) => (
                                     <li
                                       key={p.id}
                                       className="flex items-center justify-between gap-2 text-xs"
@@ -803,8 +807,22 @@ const AdminUsuarios = () => {
                                     </li>
                                   ))}
                                   {panelsWithCountsInArea.length > 5 && (
-                                    <li className="text-[10px] text-muted-foreground italic">
-                                      + {panelsWithCountsInArea.length - 5} outros
+                                    <li>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setExpandedAreas((prev) =>
+                                            prev.includes(area.slug)
+                                              ? prev.filter((s) => s !== area.slug)
+                                              : [...prev, area.slug],
+                                          )
+                                        }
+                                        className="text-[10px] text-primary font-medium hover:underline"
+                                      >
+                                        {expandedAreas.includes(area.slug)
+                                          ? "− Mostrar menos"
+                                          : `+ ${panelsWithCountsInArea.length - 5} outros`}
+                                      </button>
                                     </li>
                                   )}
                                 </ul>
