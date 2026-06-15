@@ -38,6 +38,7 @@ import {
   setPanelPermission,
 } from "@/lib/admin.functions";
 import { getAreaColor } from "@/lib/areaColors";
+import { primaryRoleLabel } from "@/lib/roleLabel";
 
 type AdminUser = { id: string; email: string; name: string; created_at: string; roles: string[] };
 type PanelAccessRequest = {
@@ -395,14 +396,13 @@ const AdminUsuarios = () => {
                               <div className="text-xs text-muted-foreground truncate">{u.email}</div>
                             </div>
                             <div className="flex flex-wrap gap-1 shrink-0">
-                              {u.roles.map((r) => (
+                              {u.roles.length > 0 && (
                                 <span
-                                  key={r}
                                   className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-foreground font-semibold uppercase"
                                 >
-                                  {r}
+                                  {primaryRoleLabel(u.roles)}
                                 </span>
-                              ))}
+                              )}
                             </div>
                           </div>
                         </button>
