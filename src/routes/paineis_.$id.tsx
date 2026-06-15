@@ -190,11 +190,10 @@ const VisualizarPainel = () => {
 
   return (
     <div className={`fixed inset-x-0 bottom-0 ${containerTop} z-30 bg-background flex flex-col`}>
-      {/* Barra de ferramentas flutuante (sempre visível, fica sobre o painel
-          mas ocupa pouco espaço). */}
-      <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between gap-2 pointer-events-none">
+      {/* Barra de ferramentas — fica no fluxo do flex (não cobre o painel). */}
+      <div className="shrink-0 flex items-center justify-between gap-2 px-2 sm:px-3 py-2 border-b border-border bg-background/95 backdrop-blur-md">
         {/* Lado esquerdo: voltar + título */}
-        <div className="flex items-center gap-2 pointer-events-auto bg-background/95 backdrop-blur-md border border-border rounded-full shadow-md pl-1 pr-3 py-1 max-w-[60%]">
+        <div className="flex items-center gap-2 min-w-0">
           <Button
             asChild
             size="icon"
@@ -217,8 +216,8 @@ const VisualizarPainel = () => {
           </div>
         </div>
 
-        {/* Lado direito: favorito, abrir em nova aba e mostrar/ocultar barra */}
-        <div className="flex items-center gap-1.5 pointer-events-auto bg-background/95 backdrop-blur-md border border-border rounded-full shadow-md px-1.5 py-1">
+        {/* Lado direito: favorito, abrir em nova aba e mostrar/ocultar header global */}
+        <div className="flex items-center gap-1 shrink-0">
           <Button
             variant="ghost"
             size="icon"
@@ -240,8 +239,8 @@ const VisualizarPainel = () => {
             size="icon"
             className="rounded-full h-9 w-9"
             onClick={() => setHeaderVisible((v) => !v)}
-            aria-label={headerVisible ? "Ocultar barra superior" : "Mostrar barra superior"}
-            title={headerVisible ? "Ocultar barra superior" : "Mostrar barra superior"}
+            aria-label={headerVisible ? "Ocultar barra superior do portal" : "Mostrar barra superior do portal"}
+            title={headerVisible ? "Ocultar barra superior do portal" : "Mostrar barra superior do portal"}
             aria-pressed={headerVisible}
           >
             {headerVisible ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
@@ -265,14 +264,14 @@ const VisualizarPainel = () => {
           className="absolute inset-0 w-full h-full border-0"
         />
 
-        {/* Botão flutuante "Notas técnicas" — canto inferior esquerdo,
-            próximo ao rótulo "Microsoft Power BI" do iframe. */}
+        {/* Botão flutuante "Notas técnicas" — canto inferior DIREITO,
+            para não cobrir o rótulo "Microsoft Power BI" do iframe. */}
         {!notesOpen && (
           <Button
             size="sm"
             variant="secondary"
             onClick={() => setNotesOpen(true)}
-            className="absolute bottom-3 left-3 z-20 gap-1.5 rounded-full shadow-md border border-border bg-background/95 backdrop-blur-md hover:bg-background"
+            className="absolute bottom-3 right-3 z-20 gap-1.5 rounded-full shadow-md border border-border bg-background/95 backdrop-blur-md hover:bg-background text-foreground"
           >
             <FileText className="h-4 w-4 text-primary" />
             Notas técnicas
@@ -338,7 +337,7 @@ const VisualizarPainel = () => {
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
+              <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
                 {note}
               </p>
             )}

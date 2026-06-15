@@ -75,9 +75,15 @@ export const Footer = () => (
     </div>
 
     <div className="border-t border-primary-foreground/15">
-      <div className="container mx-auto px-4 py-4 text-xs flex flex-col md:flex-row items-center justify-between gap-2 opacity-80">
-        <span>© {new Date().getFullYear()} Secretaria de Estado de Saúde de Minas Gerais</span>
-        <span>Dados oficiais · Atualização contínua</span>
+      <div className="container mx-auto px-4 py-4 text-xs flex flex-col md:flex-row md:items-center md:justify-between gap-3 opacity-90">
+        <div className="flex flex-col gap-0.5">
+          <span>© {new Date().getFullYear()} Secretaria de Estado de Saúde de Minas Gerais</span>
+          <span className="opacity-80">Dados oficiais · Atualização contínua</span>
+        </div>
+        <div className="text-xs md:text-right">
+          <div className="font-semibold opacity-95">Desenvolvido por: Luan Rodrigues</div>
+          <div className="opacity-80">Assessoria de Tecnologia e Informação – NIGD</div>
+        </div>
       </div>
     </div>
   </footer>

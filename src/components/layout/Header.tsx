@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "@/lib/router-compat";
-import { Search, Menu, X, LogIn, LogOut, User as UserIcon, Accessibility, Type, Contrast } from "lucide-react";
+import { Search, Menu, X, LogIn, LogOut, User as UserIcon, Type, Contrast } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { useAccessibility } from "@/hooks/useAccessibility";
+import { AccessibilityMenu } from "@/components/AccessibilityMenu";
 import { MapaMGMini } from "@/components/MapaMGMini";
 import { HideInModoEleitoral, isModoEleitoral } from "@/lib/modoEleitoral";
+import { primaryRoleLabel } from "@/lib/roleLabel";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,7 +66,7 @@ export const Header = () => {
             <button onClick={toggleContrast} className="hover:underline flex items-center gap-1" aria-label="Alto contraste">
               <Contrast className="h-3 w-3" /> Contraste
             </button>
-            <span className="flex items-center gap-1"><Accessibility className="h-3 w-3" /> Acessibilidade</span>
+            <AccessibilityMenu variant="topbar" />
           </div>
         </div>
       </div>
@@ -128,13 +130,13 @@ export const Header = () => {
                   <DropdownMenuLabel>
                     <div className="text-xs text-muted-foreground">Conectado como</div>
                     <div className="truncate">{user.email}</div>
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {roles.map((r) => (
-                        <span key={r} className="text-[10px] px-1.5 py-0.5 rounded bg-secondary/15 text-secondary font-semibold uppercase">
-                          {r}
+                    {roles.length > 0 && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-secondary/15 text-secondary font-semibold uppercase">
+                          {primaryRoleLabel(roles)}
                         </span>
-                      ))}
-                    </div>
+                      </div>
+                    )}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => navigate("/perfil")}>
@@ -213,6 +215,9 @@ export const Header = () => {
               <button onClick={toggleContrast} className="flex-1 min-w-[120px] px-3 py-2 rounded-lg text-xs font-medium bg-muted hover:bg-muted/70 inline-flex items-center justify-center gap-1.5">
                 <Contrast className="h-3.5 w-3.5" /> Alto contraste
               </button>
+              <div className="flex-1 min-w-[120px] flex">
+                <AccessibilityMenu variant="ghost" />
+              </div>
             </div>
           </nav>
         )}

@@ -38,6 +38,7 @@ import {
   setPanelPermission,
 } from "@/lib/admin.functions";
 import { getAreaColor } from "@/lib/areaColors";
+import { primaryRoleLabel } from "@/lib/roleLabel";
 
 type AdminUser = { id: string; email: string; name: string; created_at: string; roles: string[] };
 type PanelAccessRequest = {
@@ -102,6 +103,7 @@ const AdminUsuarios = () => {
   const [processingAccountId, setProcessingAccountId] = useState<string | null>(null);
 
   const [statsPeriod, setStatsPeriod] = useState<Period>("month");
+  const [expandedAreas, setExpandedAreas] = useState<string[]>([]);
   const [statsCounts, setStatsCounts] = useState<Record<string, number>>({});
   const [loadingStats, setLoadingStats] = useState(false);
 
@@ -393,6 +395,15 @@ const AdminUsuarios = () => {
                             <div className="min-w-0">
                               <div className="font-medium truncate">{u.name || "(sem nome)"}</div>
                               <div className="text-xs text-muted-foreground truncate">{u.email}</div>
+                            </div>
+                            <div className="flex flex-wrap gap-1 shrink-0">
+                              {u.roles.length > 0 && (
+                                <span
+                                  className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-foreground font-semibold uppercase"
+                                >
+                                  {primaryRoleLabel(u.roles)}
+                                </span>
+                              )}
                             </div>
                           </div>
                         </button>
@@ -782,8 +793,11 @@ const AdminUsuarios = () => {
                                 {paneis.length === 1 ? "painel" : "painéis"} com registros
                               </p>
                               {panelsWithCountsInArea.length > 0 && (
-                                <ul className="space-y-1 max-h-32 overflow-auto">
-                                  {panelsWithCountsInArea.slice(0, 5).map(({ p, count }) => (
+                                <ul className="space-y-1 max-h-40 overflow-auto">
+                                  {(expandedAreas.includes(area.slug)
+                                    ? panelsWithCountsInArea
+                                    : panelsWithCountsInArea.slice(0, 5)
+                                  ).map(({ p, count }) => (
                                     <li
                                       key={p.id}
                                       className="flex items-center justify-between gap-2 text-xs"
@@ -793,8 +807,22 @@ const AdminUsuarios = () => {
                                     </li>
                                   ))}
                                   {panelsWithCountsInArea.length > 5 && (
-                                    <li className="text-[10px] text-muted-foreground italic">
-                                      + {panelsWithCountsInArea.length - 5} outros
+                                    <li>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setExpandedAreas((prev) =>
+                                            prev.includes(area.slug)
+                                              ? prev.filter((s) => s !== area.slug)
+                                              : [...prev, area.slug],
+                                          )
+                                        }
+                                        className="text-[10px] text-primary font-medium hover:underline"
+                                      >
+                                        {expandedAreas.includes(area.slug)
+                                          ? "− Mostrar menos"
+                                          : `+ ${panelsWithCountsInArea.length - 5} outros`}
+                                      </button>
                                     </li>
                                   )}
                                 </ul>

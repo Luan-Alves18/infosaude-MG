@@ -12,7 +12,8 @@ import { MapaMG } from "@/components/MapaMG";
 import { supabase } from "@/integrations/supabase/client";
 import { useLogPortalVisit } from "@/hooks/useLogPortalVisit";
 import { formatVisitsApprox } from "@/lib/visits";
-import { HideInModoEleitoral, isModoEleitoral } from "@/lib/modoEleitoral";
+import { HideInModoEleitoral, ShowOnlyInModoEleitoral, isModoEleitoral } from "@/lib/modoEleitoral";
+import brasaoMG from "@/assets/brasao-mg.jpg";
 
 const Index = () => {
   // Registra a visita à entrada do portal (1x por sessão).
@@ -68,6 +69,16 @@ const Index = () => {
               <MapaMG />
             </div>
           </HideInModoEleitoral>
+          <ShowOnlyInModoEleitoral>
+            <div className="flex justify-center mt-8">
+              <img
+                src={brasaoMG}
+                alt="Brasão do Estado de Minas Gerais"
+                loading="lazy"
+                className="h-44 sm:h-56 md:h-64 w-auto opacity-95 drop-shadow-2xl mix-blend-screen"
+              />
+            </div>
+          </ShowOnlyInModoEleitoral>
         </div>
       </section>
 
