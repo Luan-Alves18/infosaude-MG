@@ -131,7 +131,7 @@ export const Header = () => {
                     <div className="mt-1 flex flex-wrap gap-1">
                       {roles.map((r) => (
                         <span key={r} className="text-[10px] px-1.5 py-0.5 rounded bg-secondary/15 text-secondary font-semibold uppercase">
-                          {r}
+                          {r === "user" || r === "admin" ? "" : r}
                         </span>
                       ))}
                     </div>
