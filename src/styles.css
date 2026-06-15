@@ -125,6 +125,22 @@
 .font-size-lg { font-size: 112.5%; }
 .font-size-xl { font-size: 125%; }
 
+/* Acessibilidade: sublinhar todos os links de conteúdo */
+.a11y-underline-links a:not([class*="no-underline"]) {
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+
+/* Acessibilidade: reduzir animações/transições */
+.a11y-reduce-motion *,
+.a11y-reduce-motion *::before,
+.a11y-reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
 @layer base {
   * { border-color: hsl(var(--border)); }
   body {
