@@ -400,7 +400,7 @@ const AdminUsuarios = () => {
                                   key={r}
                                   className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-foreground font-semibold uppercase"
                                 >
-                                  {r === "user" || r === "admin" ? "" : r}
+                                  {r}
                                 </span>
                               ))}
                             </div>
