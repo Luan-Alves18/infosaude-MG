@@ -394,6 +394,16 @@ const AdminUsuarios = () => {
                               <div className="font-medium truncate">{u.name || "(sem nome)"}</div>
                               <div className="text-xs text-muted-foreground truncate">{u.email}</div>
                             </div>
+                            <div className="flex flex-wrap gap-1 shrink-0">
+                              {u.roles.map((r) => (
+                                <span
+                                  key={r}
+                                  className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-foreground font-semibold uppercase"
+                                >
+                                  {r}
+                                </span>
+                              ))}
+                            </div>
                           </div>
                         </button>
                         <AlertDialog>
