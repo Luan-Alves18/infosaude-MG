@@ -192,15 +192,42 @@ const Paineis = () => {
         </h2>
       </div>
 
-      <div className="relative mb-8">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Buscar painel pelo título…"
-          className="pl-10 h-12"
-        />
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Buscar painel pelo título…"
+            className="pl-10 h-12"
+          />
+        </div>
+        <label className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+          <span className="hidden sm:inline">Ordenar:</span>
+          <select
+            value={sortMode}
+            onChange={(e) => setSortMode(e.target.value as "az" | "za" | "favorites")}
+            className="h-12 rounded-md border border-border bg-background px-3 text-sm text-foreground"
+          >
+            <option value="az">Ordem alfabética (A-Z)</option>
+            <option value="za">Ordem alfabética (Z-A)</option>
+            <option value="favorites">Meus favoritos</option>
+          </select>
+        </label>
       </div>
+
+      {sortMode === "favorites" && (
+        <div className="mb-6 rounded-md border border-primary/30 bg-primary/5 px-4 py-3 text-sm text-foreground flex items-start gap-2">
+          <Star className="h-4 w-4 text-amber-500 fill-amber-500 mt-0.5 shrink-0" />
+          <span>
+            Você também pode visualizar todos os seus painéis favoritos em{" "}
+            <Link to="/perfil" className="text-primary font-medium hover:underline">
+              Meu perfil
+            </Link>
+            {areaSlug !== "todas" && " (mostrando apenas a área temática selecionada)"}.
+          </span>
+        </div>
+      )}
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((p) => {
