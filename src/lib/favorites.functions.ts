@@ -10,8 +10,9 @@ export const listFavorites = createServerFn({ method: "POST" })
     const { userId, supabase } = context as { userId: string; supabase: SupabaseClient };
     const { data, error } = await supabase
       .from("user_favorites")
-      .select("panel_id")
-      .eq("user_id", userId);
+      .select("panel_id, created_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
     if (error) throw safeDbError(error, "Não foi possível carregar seus favoritos.");
     return { panelIds: (data ?? []).map((r) => String(r.panel_id)) };
   });
