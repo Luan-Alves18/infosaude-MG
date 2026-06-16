@@ -21,6 +21,7 @@ const sortByName = <T extends { nome: string }>(arr: T[]) =>
 const Paineis = () => {
   const [params, setParams] = useSearchParams();
   const [q, setQ] = useState("");
+  const [sortMode, setSortMode] = useState<"az" | "za" | "favorites">("az");
   const areaSlug = params.get("area") || "todas";
   const { user } = useAuth();
   const { panelIds: allowedPanelIds } = usePanelPermissions();
@@ -71,21 +72,20 @@ const Paineis = () => {
   }, [countsByArea]);
 
   const filtered = useMemo(() => {
-    const list = visiblePaineis.filter(
+    let list = visiblePaineis.filter(
       (p) =>
         (areaSlug === "todas" || p.areaSlug === areaSlug) &&
         p.titulo.toLowerCase().includes(q.toLowerCase().trim()),
     );
-    // Sem filtro de área: ordena apenas por título (alfabética).
-    // Com filtro: ordena por área e então por título.
-    return list.sort((a, b) => {
-      if (areaSlug !== "todas") {
-        const areaCmp = a.areaNome.localeCompare(b.areaNome, "pt-BR", { sensitivity: "base" });
-        if (areaCmp !== 0) return areaCmp;
-      }
-      return a.titulo.localeCompare(b.titulo, "pt-BR", { sensitivity: "base" });
+    if (sortMode === "favorites") {
+      list = list.filter((p) => favoriteIds.includes(String(p.id)));
+    }
+    list = [...list].sort((a, b) => {
+      const t = a.titulo.localeCompare(b.titulo, "pt-BR", { sensitivity: "base" });
+      return sortMode === "za" ? -t : t;
     });
-  }, [q, areaSlug, visiblePaineis]);
+    return list;
+  }, [q, areaSlug, visiblePaineis, sortMode, favoriteIds]);
 
   const toggleFavorite = async (panelId: string) => {
     if (!user) {
