@@ -552,14 +552,34 @@ const Perfil = () => {
           {section === "favoritos" && (
             <Card>
               <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
                   <h2 className="font-semibold flex items-center gap-2">
                     <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
                     Painéis favoritos
                   </h2>
-                  <span className="text-xs text-muted-foreground">
-                    {favorites.length} {favorites.length === 1 ? "painel" : "painéis"}
-                  </span>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <label className="text-xs text-muted-foreground flex items-center gap-2">
+                      Ordenar por:
+                      <select
+                        value={favSort}
+                        onChange={(e) => setFavSort(e.target.value)}
+                        className="h-8 rounded-md border border-border bg-background px-2 text-xs"
+                      >
+                        <option value="recent">Adicionados por último</option>
+                        <option value="az">Ordem alfabética (A-Z)</option>
+                        {favAreas.length > 0 && (
+                          <optgroup label="Áreas temáticas">
+                            {favAreas.map((a) => (
+                              <option key={a.slug} value={`area:${a.slug}`}>{a.nome}</option>
+                            ))}
+                          </optgroup>
+                        )}
+                      </select>
+                    </label>
+                    <span className="text-xs text-muted-foreground">
+                      {sortedFavorites.length} {sortedFavorites.length === 1 ? "painel" : "painéis"}
+                    </span>
+                  </div>
                 </div>
                 {loadingFavs ? (
                   <p className="text-sm text-muted-foreground">Carregando…</p>
@@ -567,7 +587,7 @@ const Perfil = () => {
                   <EmptyFavorites />
                 ) : (
                   <div className="grid sm:grid-cols-2 gap-3">
-                    {favorites.map((p) => (
+                    {sortedFavorites.map((p) => (
                       <FavoriteCard
                         key={p.id}
                         panel={p}
