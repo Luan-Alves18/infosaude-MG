@@ -71,6 +71,7 @@ const Perfil = () => {
 
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [loadingFavs, setLoadingFavs] = useState(false);
+  const [favSort, setFavSort] = useState<string>("recent");
 
   const [currentPw, setCurrentPw] = useState("");
   const [newPw, setNewPw] = useState("");
