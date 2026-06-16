@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import { Mail, MapPin, ExternalLink } from "lucide-react";
 import brasaoMG from "@/assets/brasao-mg.jpg";
+import { HideInModoEleitoral } from "@/lib/modoEleitoral";
 
 export const Footer = () => (
   <footer className="gradient-footer text-primary-foreground mt-20">
