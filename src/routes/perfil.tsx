@@ -120,10 +120,10 @@ const Perfil = () => {
   const primaryRole = roles.includes("owner")
     ? "Owner"
     : roles.includes("admin")
-      ? "Administrador"
+      ? "ADMIN"
     : roles.includes("gestor")
       ? "Gestor"
-      : "Usuário";
+      : "USER";
 
   if (authLoading)
     return (

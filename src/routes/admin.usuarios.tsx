@@ -519,7 +519,7 @@ const AdminUsuarios = () => {
                 <div key={request.id} className="border border-border rounded-md p-4 space-y-3">
                   <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                     <div className="min-w-0 space-y-1">
-                      <div className="font-medium truncate">{request.userName || "Usuário sem nome"}</div>
+                      <div className="font-medium truncate">{request.userName || "USER sem nome"}</div>
                       <div className="text-sm text-muted-foreground break-all">{request.userEmail}</div>
                       <div className="text-xs text-muted-foreground">
                         Solicitado em {new Date(request.createdAt).toLocaleString("pt-BR")}

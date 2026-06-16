@@ -14,11 +14,11 @@ export function primaryRoleLabel(roles: string[]): string {
     case "owner":
       return "Owner";
     case "admin":
-      return "Administrador";
+      return "ADMIN";
     case "gestor":
       return "Gestor";
     case "user":
-      return "Usuário";
+      return "USER";
     default:
       return "—";
   }
