@@ -1,6 +1,6 @@
 import { Link } from "@/lib/router-compat";
 import { Mail, MapPin, ExternalLink } from "lucide-react";
-import { MapaMGMini } from "@/components/MapaMGMini";
+import brasaoMG from "@/assets/brasao-mg.jpg";
 import { HideInModoEleitoral } from "@/lib/modoEleitoral";
 
 export const Footer = () => (
@@ -9,11 +9,14 @@ export const Footer = () => (
       {/* Marca */}
       <div className="md:col-span-5">
         <div className="flex items-center gap-3 mb-4">
-          <HideInModoEleitoral>
-            <div className="h-11 w-11 rounded-lg bg-primary-foreground/10 p-1.5 flex items-center justify-center">
-              <MapaMGMini variant="light" className="h-full w-full text-primary-foreground" />
-            </div>
-          </HideInModoEleitoral>
+          <div className="h-12 w-12 shrink-0 rounded-md bg-primary-foreground/10 p-1 flex items-center justify-center">
+            <img
+              src={brasaoMG}
+              alt="Brasão de Minas Gerais"
+              className="h-full w-auto object-contain"
+              loading="lazy"
+            />
+          </div>
           <div>
             <div className="font-bold text-lg leading-tight">
               InfoSaúde<span className="opacity-80"> MG</span>

@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { useAccessibility } from "@/hooks/useAccessibility";
 import { AccessibilityMenu } from "@/components/AccessibilityMenu";
-import { MapaMGMini } from "@/components/MapaMGMini";
-import { HideInModoEleitoral, isModoEleitoral } from "@/lib/modoEleitoral";
+import brasaoMG from "@/assets/brasao-mg.jpg";
+import { isModoEleitoral } from "@/lib/modoEleitoral";
 import { primaryRoleLabel } from "@/lib/roleLabel";
 import {
   DropdownMenu,
@@ -75,11 +75,14 @@ export const Header = () => {
       <div className="container mx-auto px-3 sm:px-4">
         <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
           <Link to="/" className="flex items-center gap-2 sm:gap-3 group min-w-0">
-            <HideInModoEleitoral>
-              <div className="h-9 w-9 sm:h-11 sm:w-11 rounded-lg bg-primary/5 group-hover:bg-primary/10 p-1 flex items-center justify-center transition-smooth shrink-0">
-                <MapaMGMini className="h-full w-full" />
-              </div>
-            </HideInModoEleitoral>
+            <div className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 flex items-center justify-center">
+              <img
+                src={brasaoMG}
+                alt="Brasão de Minas Gerais"
+                className="h-full w-auto object-contain"
+                loading="eager"
+              />
+            </div>
             <div className="leading-tight min-w-0">
               <div className="font-bold text-base sm:text-lg text-foreground truncate">InfoSaúde<span className="text-secondary"> MG</span></div>
               <div className="text-[11px] text-muted-foreground hidden sm:block">Portal Oficial · SES-MG</div>

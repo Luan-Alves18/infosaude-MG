@@ -71,6 +71,7 @@ const Perfil = () => {
 
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [loadingFavs, setLoadingFavs] = useState(false);
+  const [favSort, setFavSort] = useState<string>("recent");
 
   const [currentPw, setCurrentPw] = useState("");
   const [newPw, setNewPw] = useState("");
@@ -104,10 +105,29 @@ const Perfil = () => {
       .finally(() => setLoadingFavs(false));
   }, [user, getProfileFn, listFavoritesFn]);
 
-  const favorites = useMemo(
-    () => PAINEIS.filter((p) => favoriteIds.includes(String(p.id))),
-    [favoriteIds],
-  );
+  const favorites = useMemo(() => {
+    // preserva a ordem retornada pelo servidor (mais recentes primeiro)
+    const byId = new Map(PAINEIS.map((p) => [String(p.id), p]));
+    return favoriteIds.map((id) => byId.get(id)).filter(Boolean) as typeof PAINEIS;
+  }, [favoriteIds]);
+
+  const favAreas = useMemo(() => {
+    const seen = new Map<string, string>();
+    favorites.forEach((p) => { if (!seen.has(p.areaSlug)) seen.set(p.areaSlug, p.areaNome); });
+    return Array.from(seen, ([slug, nome]) => ({ slug, nome }))
+      .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+  }, [favorites]);
+
+  const sortedFavorites = useMemo(() => {
+    if (favSort === "az") {
+      return [...favorites].sort((a, b) => a.titulo.localeCompare(b.titulo, "pt-BR", { sensitivity: "base" }));
+    }
+    if (favSort.startsWith("area:")) {
+      const slug = favSort.slice(5);
+      return favorites.filter((p) => p.areaSlug === slug);
+    }
+    return favorites; // recent (default)
+  }, [favorites, favSort]);
 
   const accessiblePanels = useMemo(
     () =>
@@ -465,8 +485,8 @@ const Perfil = () => {
                   ) : favorites.length === 0 ? (
                     <EmptyFavorites />
                   ) : (
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {favorites.slice(0, 2).map((p) => (
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {favorites.slice(0, 6).map((p) => (
                         <FavoriteCard key={p.id} panel={p} />
                       ))}
                     </div>
@@ -532,14 +552,34 @@ const Perfil = () => {
           {section === "favoritos" && (
             <Card>
               <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
                   <h2 className="font-semibold flex items-center gap-2">
                     <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
                     Painéis favoritos
                   </h2>
-                  <span className="text-xs text-muted-foreground">
-                    {favorites.length} {favorites.length === 1 ? "painel" : "painéis"}
-                  </span>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <label className="text-xs text-muted-foreground flex items-center gap-2">
+                      Ordenar por:
+                      <select
+                        value={favSort}
+                        onChange={(e) => setFavSort(e.target.value)}
+                        className="h-8 rounded-md border border-border bg-background px-2 text-xs"
+                      >
+                        <option value="recent">Adicionados por último</option>
+                        <option value="az">Ordem alfabética (A-Z)</option>
+                        {favAreas.length > 0 && (
+                          <optgroup label="Áreas temáticas">
+                            {favAreas.map((a) => (
+                              <option key={a.slug} value={`area:${a.slug}`}>{a.nome}</option>
+                            ))}
+                          </optgroup>
+                        )}
+                      </select>
+                    </label>
+                    <span className="text-xs text-muted-foreground">
+                      {sortedFavorites.length} {sortedFavorites.length === 1 ? "painel" : "painéis"}
+                    </span>
+                  </div>
                 </div>
                 {loadingFavs ? (
                   <p className="text-sm text-muted-foreground">Carregando…</p>
@@ -547,7 +587,7 @@ const Perfil = () => {
                   <EmptyFavorites />
                 ) : (
                   <div className="grid sm:grid-cols-2 gap-3">
-                    {favorites.map((p) => (
+                    {sortedFavorites.map((p) => (
                       <FavoriteCard
                         key={p.id}
                         panel={p}
