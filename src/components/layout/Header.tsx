@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAccessibility } from "@/hooks/useAccessibility";
 import { AccessibilityMenu } from "@/components/AccessibilityMenu";
 import brasaoMG from "@/assets/brasao-mg.jpg";
-import { HideInModoEleitoral, isModoEleitoral } from "@/lib/modoEleitoral";
+import { isModoEleitoral } from "@/lib/modoEleitoral";
 import { primaryRoleLabel } from "@/lib/roleLabel";
 import {
   DropdownMenu,
