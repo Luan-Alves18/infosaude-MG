@@ -264,19 +264,24 @@ const VisualizarPainel = () => {
           className="absolute inset-0 w-full h-full border-0"
         />
 
-        {/* Botão flutuante "Notas técnicas" — canto inferior DIREITO,
-            para não cobrir o rótulo "Microsoft Power BI" do iframe. */}
-        {!notesOpen && (
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() => setNotesOpen(true)}
-            className="absolute bottom-3 right-3 z-20 gap-1.5 rounded-full shadow-md border border-border bg-background/95 backdrop-blur-md hover:bg-background text-foreground"
-          >
-            <FileText className="h-4 w-4 text-primary" />
-            Notas técnicas
-          </Button>
-        )}
+        {/* Botão flutuante "Notas técnicas" — canto inferior ESQUERDO,
+            sempre visível, mesmo quando o painel está aberto. */}
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => setNotesOpen((v) => !v)}
+          aria-expanded={notesOpen}
+          className="absolute bottom-3 left-3 z-20 gap-1.5 rounded-full shadow-md border border-border bg-background/95 backdrop-blur-md hover:bg-background text-foreground"
+          title={notesOpen ? "Minimizar notas técnicas" : "Abrir notas técnicas"}
+        >
+          <FileText className="h-4 w-4 text-primary" />
+          Notas técnicas
+          {notesOpen ? (
+            <ChevronDown className="h-4 w-4" />
+          ) : (
+            <ChevronUp className="h-4 w-4" />
+          )}
+        </Button>
       </div>
 
       {/* Painel de Notas técnicas */}
