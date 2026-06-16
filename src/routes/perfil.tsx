@@ -105,10 +105,29 @@ const Perfil = () => {
       .finally(() => setLoadingFavs(false));
   }, [user, getProfileFn, listFavoritesFn]);
 
-  const favorites = useMemo(
-    () => PAINEIS.filter((p) => favoriteIds.includes(String(p.id))),
-    [favoriteIds],
-  );
+  const favorites = useMemo(() => {
+    // preserva a ordem retornada pelo servidor (mais recentes primeiro)
+    const byId = new Map(PAINEIS.map((p) => [String(p.id), p]));
+    return favoriteIds.map((id) => byId.get(id)).filter(Boolean) as typeof PAINEIS;
+  }, [favoriteIds]);
+
+  const favAreas = useMemo(() => {
+    const seen = new Map<string, string>();
+    favorites.forEach((p) => { if (!seen.has(p.areaSlug)) seen.set(p.areaSlug, p.areaNome); });
+    return Array.from(seen, ([slug, nome]) => ({ slug, nome }))
+      .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+  }, [favorites]);
+
+  const sortedFavorites = useMemo(() => {
+    if (favSort === "az") {
+      return [...favorites].sort((a, b) => a.titulo.localeCompare(b.titulo, "pt-BR", { sensitivity: "base" }));
+    }
+    if (favSort.startsWith("area:")) {
+      const slug = favSort.slice(5);
+      return favorites.filter((p) => p.areaSlug === slug);
+    }
+    return favorites; // recent (default)
+  }, [favorites, favSort]);
 
   const accessiblePanels = useMemo(
     () =>
