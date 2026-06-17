@@ -198,3 +198,31 @@ html.panel-fullscreen footer {
 html.panel-fullscreen body {
   overflow: hidden;
 }
+
+/* ===== Otimizações gerais para smartphones ===== */
+/* Respeita safe-areas (notch / barra do iOS) para evitar conteúdo cortado. */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Em telas pequenas: reduz padding lateral dos containers e tamanho dos
+   títulos para melhorar a leitura sem quebrar o layout desktop. */
+@media (max-width: 640px) {
+  .container { padding-left: 1rem; padding-right: 1rem; }
+  h1 { font-size: clamp(1.6rem, 6vw, 2.25rem); line-height: 1.15; }
+  h2 { font-size: clamp(1.25rem, 5vw, 1.75rem); line-height: 1.2; }
+  /* Inputs com tamanho mínimo de 16px evitam zoom automático no iOS. */
+  input, select, textarea { font-size: 16px; }
+  /* Quebra de palavras longas (URLs, e-mails) para não estourar layout. */
+  p, span, a, h1, h2, h3 { overflow-wrap: anywhere; }
+  /* Tabelas com scroll horizontal em vez de explodir o layout. */
+  table { display: block; overflow-x: auto; max-width: 100%; }
+}
+
+/* Aumenta área tocável de botões e links na barra superior em mobile. */
+@media (max-width: 640px) {
+  header button, header a { min-height: 40px; }
+}

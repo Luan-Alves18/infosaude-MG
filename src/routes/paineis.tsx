@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { usePanelPermissions } from "@/hooks/usePanelPermissions";
 import { addFavorite, listFavorites, removeFavorite } from "@/lib/favorites.functions";
 import { toast } from "@/hooks/use-toast";
+import { matchesSearch } from "@/lib/normalize";
 
 const sortByName = <T extends { nome: string }>(arr: T[]) =>
   [...arr].sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" }));
@@ -75,7 +76,7 @@ const Paineis = () => {
     let list = visiblePaineis.filter(
       (p) =>
         (areaSlug === "todas" || p.areaSlug === areaSlug) &&
-        p.titulo.toLowerCase().includes(q.toLowerCase().trim()),
+        matchesSearch(p.titulo, q),
     );
     if (sortMode === "favorites") {
       list = list.filter((p) => favoriteIds.includes(String(p.id)));

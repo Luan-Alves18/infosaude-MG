@@ -5,16 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Search } from "lucide-react";
 import { AREAS_TEMATICAS, PAINEIS } from "@/data/site";
-
-// Normaliza string: minúsculas, sem acentos, sem pontuação extra
-const normalize = (s: string) =>
-  s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+import { normalizeSearch as normalize } from "@/lib/normalize";
 
 // Atalhos de página: várias palavras-chave (já normalizadas) -> rota
 const PAGE_SHORTCUTS: { keywords: string[]; path: string }[] = [

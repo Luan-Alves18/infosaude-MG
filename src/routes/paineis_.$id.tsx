@@ -184,12 +184,16 @@ const VisualizarPainel = () => {
     }
   };
 
-  // Quando o cabeçalho global está visível (sticky 64px), descemos a área
-  // do painel para não ficar atrás dele.
-  const containerTop = headerVisible ? "top-16 sm:top-20" : "top-0";
+  // Quando o cabeçalho global está visível, descemos a área do painel
+  // para não ficar atrás dele. O Header total = topbar gov (h-8 = 32px) +
+  // main bar (h-16 mobile / h-20 ≥sm), totalizando 96px (24*4) no mobile
+  // e 112px (28*4) no desktop. Usamos esses valores para garantir que a
+  // barra de navegação interna do painel não fique oculta pelo header.
+  const containerTop = headerVisible ? "top-24 sm:top-28" : "top-0";
 
   return (
     <div className={`fixed inset-x-0 bottom-0 ${containerTop} z-30 bg-background flex flex-col`}>
+
       {/* Barra de ferramentas — fica no fluxo do flex (não cobre o painel). */}
       <div className="shrink-0 flex items-center justify-between gap-2 px-2 sm:px-3 py-2 border-b border-border bg-background/95 backdrop-blur-md">
         {/* Lado esquerdo: voltar + título */}
@@ -264,14 +268,16 @@ const VisualizarPainel = () => {
           className="absolute inset-0 w-full h-full border-0"
         />
 
-        {/* Botão flutuante "Notas técnicas" — canto inferior ESQUERDO,
-            sempre visível, mesmo quando o painel está aberto. */}
+        {/* Botão flutuante "Notas técnicas" — canto inferior DIREITO.
+            O selo "Power BI" da Microsoft fica no canto inferior esquerdo
+            do embed, então mantemos esta opção do lado oposto para nunca
+            sobrepor o link do Power BI. A seta indica abrir/minimizar. */}
         <Button
           size="sm"
           variant="secondary"
           onClick={() => setNotesOpen((v) => !v)}
           aria-expanded={notesOpen}
-          className="absolute bottom-3 left-3 z-20 gap-1.5 rounded-full shadow-md border border-border bg-background/95 backdrop-blur-md hover:bg-background text-foreground"
+          className="absolute bottom-3 right-3 z-20 gap-1.5 rounded-full shadow-md border border-border bg-background/95 backdrop-blur-md hover:bg-background text-foreground"
           title={notesOpen ? "Minimizar notas técnicas" : "Abrir notas técnicas"}
         >
           <FileText className="h-4 w-4 text-primary" />
