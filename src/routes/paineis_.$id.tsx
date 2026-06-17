@@ -268,14 +268,16 @@ const VisualizarPainel = () => {
           className="absolute inset-0 w-full h-full border-0"
         />
 
-        {/* Botão flutuante "Notas técnicas" — canto inferior ESQUERDO,
-            sempre visível, mesmo quando o painel está aberto. */}
+        {/* Botão flutuante "Notas técnicas" — canto inferior DIREITO.
+            O selo "Power BI" da Microsoft fica no canto inferior esquerdo
+            do embed, então mantemos esta opção do lado oposto para nunca
+            sobrepor o link do Power BI. A seta indica abrir/minimizar. */}
         <Button
           size="sm"
           variant="secondary"
           onClick={() => setNotesOpen((v) => !v)}
           aria-expanded={notesOpen}
-          className="absolute bottom-3 left-3 z-20 gap-1.5 rounded-full shadow-md border border-border bg-background/95 backdrop-blur-md hover:bg-background text-foreground"
+          className="absolute bottom-3 right-3 z-20 gap-1.5 rounded-full shadow-md border border-border bg-background/95 backdrop-blur-md hover:bg-background text-foreground"
           title={notesOpen ? "Minimizar notas técnicas" : "Abrir notas técnicas"}
         >
           <FileText className="h-4 w-4 text-primary" />
