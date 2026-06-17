@@ -76,7 +76,7 @@ const Paineis = () => {
     let list = visiblePaineis.filter(
       (p) =>
         (areaSlug === "todas" || p.areaSlug === areaSlug) &&
-        p.titulo.toLowerCase().includes(q.toLowerCase().trim()),
+        matchesSearch(p.titulo, q),
     );
     if (sortMode === "favorites") {
       list = list.filter((p) => favoriteIds.includes(String(p.id)));
