@@ -23,6 +23,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PaineisIdRouteImport } from './routes/paineis_.$id'
 import { Route as AuthResetRouteImport } from './routes/auth.reset'
 import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
+import { Route as AdminInformacoesTecnicasRouteImport } from './routes/admin.informacoes-tecnicas'
 
 const SolicitarContaRoute = SolicitarContaRouteImport.update({
   id: '/solicitar-conta',
@@ -94,6 +95,12 @@ const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
   path: '/admin/usuarios',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminInformacoesTecnicasRoute =
+  AdminInformacoesTecnicasRouteImport.update({
+    id: '/admin/informacoes-tecnicas',
+    path: '/admin/informacoes-tecnicas',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/solicitar-acesso-painel': typeof SolicitarAcessoPainelRoute
   '/solicitar-conta': typeof SolicitarContaRoute
+  '/admin/informacoes-tecnicas': typeof AdminInformacoesTecnicasRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/auth/reset': typeof AuthResetRoute
   '/paineis/$id': typeof PaineisIdRoute
@@ -123,6 +131,7 @@ export interface FileRoutesByTo {
   '/sobre': typeof SobreRoute
   '/solicitar-acesso-painel': typeof SolicitarAcessoPainelRoute
   '/solicitar-conta': typeof SolicitarContaRoute
+  '/admin/informacoes-tecnicas': typeof AdminInformacoesTecnicasRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/auth/reset': typeof AuthResetRoute
   '/paineis/$id': typeof PaineisIdRoute
@@ -140,6 +149,7 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/solicitar-acesso-painel': typeof SolicitarAcessoPainelRoute
   '/solicitar-conta': typeof SolicitarContaRoute
+  '/admin/informacoes-tecnicas': typeof AdminInformacoesTecnicasRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/auth/reset': typeof AuthResetRoute
   '/paineis_/$id': typeof PaineisIdRoute
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/solicitar-acesso-painel'
     | '/solicitar-conta'
+    | '/admin/informacoes-tecnicas'
     | '/admin/usuarios'
     | '/auth/reset'
     | '/paineis/$id'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/solicitar-acesso-painel'
     | '/solicitar-conta'
+    | '/admin/informacoes-tecnicas'
     | '/admin/usuarios'
     | '/auth/reset'
     | '/paineis/$id'
@@ -190,6 +202,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/solicitar-acesso-painel'
     | '/solicitar-conta'
+    | '/admin/informacoes-tecnicas'
     | '/admin/usuarios'
     | '/auth/reset'
     | '/paineis_/$id'
@@ -207,6 +220,7 @@ export interface RootRouteChildren {
   SobreRoute: typeof SobreRoute
   SolicitarAcessoPainelRoute: typeof SolicitarAcessoPainelRoute
   SolicitarContaRoute: typeof SolicitarContaRoute
+  AdminInformacoesTecnicasRoute: typeof AdminInformacoesTecnicasRoute
   AdminUsuariosRoute: typeof AdminUsuariosRoute
   PaineisIdRoute: typeof PaineisIdRoute
 }
@@ -311,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsuariosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/informacoes-tecnicas': {
+      id: '/admin/informacoes-tecnicas'
+      path: '/admin/informacoes-tecnicas'
+      fullPath: '/admin/informacoes-tecnicas'
+      preLoaderRoute: typeof AdminInformacoesTecnicasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -336,6 +357,7 @@ const rootRouteChildren: RootRouteChildren = {
   SobreRoute: SobreRoute,
   SolicitarAcessoPainelRoute: SolicitarAcessoPainelRoute,
   SolicitarContaRoute: SolicitarContaRoute,
+  AdminInformacoesTecnicasRoute: AdminInformacoesTecnicasRoute,
   AdminUsuariosRoute: AdminUsuariosRoute,
   PaineisIdRoute: PaineisIdRoute,
 }
