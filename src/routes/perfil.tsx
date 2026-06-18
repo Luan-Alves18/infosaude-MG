@@ -486,7 +486,7 @@ const Perfil = () => {
                     <EmptyFavorites />
                   ) : (
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {favorites.slice(0, 6).map((p) => (
+                      {favorites.slice(0, 2).map((p) => (
                         <FavoriteCard key={p.id} panel={p} />
                       ))}
                     </div>

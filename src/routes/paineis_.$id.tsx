@@ -277,7 +277,7 @@ const VisualizarPainel = () => {
           variant="secondary"
           onClick={() => setNotesOpen((v) => !v)}
           aria-expanded={notesOpen}
-          className="absolute bottom-3 right-3 z-20 gap-1.5 rounded-full shadow-md border border-border bg-background/95 backdrop-blur-md hover:bg-background text-foreground"
+          className="absolute bottom-12 left-3 z-20 gap-1.5 rounded-full shadow-md border border-border bg-background/95 backdrop-blur-md hover:bg-background text-foreground"
           title={notesOpen ? "Minimizar notas técnicas" : "Abrir notas técnicas"}
         >
           <FileText className="h-4 w-4 text-primary" />

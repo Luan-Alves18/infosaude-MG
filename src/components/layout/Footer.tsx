@@ -1,6 +1,6 @@
 import { Link } from "@/lib/router-compat";
 import { Mail, MapPin, ExternalLink } from "lucide-react";
-import brasaoMG from "@/assets/brasao-mg.jpg";
+import brasaoMG from "@/assets/brasao-mg.png";
 import { HideInModoEleitoral } from "@/lib/modoEleitoral";
 
 export const Footer = () => (
@@ -9,11 +9,11 @@ export const Footer = () => (
       {/* Marca */}
       <div className="md:col-span-5">
         <div className="flex items-center gap-3 mb-4">
-          <div className="h-12 w-12 shrink-0 rounded-md bg-primary-foreground/10 p-1 flex items-center justify-center">
+          <div className="h-12 w-12 shrink-0 flex items-center justify-center">
             <img
               src={brasaoMG}
               alt="Brasão de Minas Gerais"
-              className="h-full w-auto object-contain"
+              className="h-full w-auto object-contain brightness-0 invert"
               loading="lazy"
             />
           </div>

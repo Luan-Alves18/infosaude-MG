@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { useAccessibility } from "@/hooks/useAccessibility";
 import { AccessibilityMenu } from "@/components/AccessibilityMenu";
-import brasaoMG from "@/assets/brasao-mg.jpg";
+import brasaoMG from "@/assets/brasao-mg.png";
 import { isModoEleitoral } from "@/lib/modoEleitoral";
 import { primaryRoleLabel } from "@/lib/roleLabel";
 import {
@@ -151,6 +151,11 @@ export const Header = () => {
                   {roles.includes("admin") && (
                     <DropdownMenuItem onClick={() => navigate("/admin/usuarios")}>
                       Gerenciar usuários
+                    </DropdownMenuItem>
+                  )}
+                  {roles.includes("owner") && (
+                    <DropdownMenuItem onClick={() => navigate("/admin/informacoes-tecnicas")}>
+                      Informações técnicas
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem onClick={signOut} className="text-destructive">
