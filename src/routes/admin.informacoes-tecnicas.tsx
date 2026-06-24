@@ -44,7 +44,7 @@ const InformacoesTecnicas = () => {
   const [search, setSearch] = useState("");
   const [areaFilter, setAreaFilter] = useState<string>("all");
   const [accessFilter, setAccessFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("az");
+  const [sortBy, setSortBy] = useState<string>("recent");
 
   const isOwner = roles.includes("owner");
 
@@ -89,13 +89,9 @@ const InformacoesTecnicas = () => {
         return true;
       })
       .sort((a, b) => {
-        if (sortBy === "za") return b.titulo.localeCompare(a.titulo, "pt-BR", { sensitivity: "base" });
-        if (sortBy === "recent" || sortBy === "old") {
-          const ta = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
-          const tb = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
-          return sortBy === "recent" ? tb - ta : ta - tb;
-        }
-        return a.titulo.localeCompare(b.titulo, "pt-BR", { sensitivity: "base" });
+        const ta = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+        const tb = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+        return sortBy === "old" ? ta - tb : tb - ta;
       });
   }, [rows, search, areaFilter, accessFilter, sortBy]);
 
@@ -179,8 +175,6 @@ const InformacoesTecnicas = () => {
                   <SelectValue placeholder="Ordenar por" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="az">Título (A-Z)</SelectItem>
-                  <SelectItem value="za">Título (Z-A)</SelectItem>
                   <SelectItem value="recent">Atualizados recentemente</SelectItem>
                   <SelectItem value="old">Atualizados há mais tempo</SelectItem>
                 </SelectContent>
