@@ -88,8 +88,16 @@ const InformacoesTecnicas = () => {
         if (accessFilter === "restrito") return r.restrito;
         return true;
       })
-      .sort((a, b) => a.titulo.localeCompare(b.titulo, "pt-BR", { sensitivity: "base" }));
-  }, [rows, search, areaFilter, accessFilter]);
+      .sort((a, b) => {
+        if (sortBy === "za") return b.titulo.localeCompare(a.titulo, "pt-BR", { sensitivity: "base" });
+        if (sortBy === "recent" || sortBy === "old") {
+          const ta = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+          const tb = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+          return sortBy === "recent" ? tb - ta : ta - tb;
+        }
+        return a.titulo.localeCompare(b.titulo, "pt-BR", { sensitivity: "base" });
+      });
+  }, [rows, search, areaFilter, accessFilter, sortBy]);
 
   if (authLoading) {
     return (
