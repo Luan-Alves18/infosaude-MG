@@ -44,6 +44,7 @@ const InformacoesTecnicas = () => {
   const [search, setSearch] = useState("");
   const [areaFilter, setAreaFilter] = useState<string>("all");
   const [accessFilter, setAccessFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("az");
 
   const isOwner = roles.includes("owner");
 
