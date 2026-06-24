@@ -44,6 +44,7 @@ const InformacoesTecnicas = () => {
   const [search, setSearch] = useState("");
   const [areaFilter, setAreaFilter] = useState<string>("all");
   const [accessFilter, setAccessFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("az");
 
   const isOwner = roles.includes("owner");
 
@@ -87,8 +88,16 @@ const InformacoesTecnicas = () => {
         if (accessFilter === "restrito") return r.restrito;
         return true;
       })
-      .sort((a, b) => a.titulo.localeCompare(b.titulo, "pt-BR", { sensitivity: "base" }));
-  }, [rows, search, areaFilter, accessFilter]);
+      .sort((a, b) => {
+        if (sortBy === "za") return b.titulo.localeCompare(a.titulo, "pt-BR", { sensitivity: "base" });
+        if (sortBy === "recent" || sortBy === "old") {
+          const ta = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+          const tb = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+          return sortBy === "recent" ? tb - ta : ta - tb;
+        }
+        return a.titulo.localeCompare(b.titulo, "pt-BR", { sensitivity: "base" });
+      });
+  }, [rows, search, areaFilter, accessFilter, sortBy]);
 
   if (authLoading) {
     return (
@@ -163,6 +172,17 @@ const InformacoesTecnicas = () => {
                   <SelectItem value="all">Públicos e privados</SelectItem>
                   <SelectItem value="publico">Apenas públicos</SelectItem>
                   <SelectItem value="restrito">Apenas privados</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="md:w-56">
+                  <SelectValue placeholder="Ordenar por" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="az">Título (A-Z)</SelectItem>
+                  <SelectItem value="za">Título (Z-A)</SelectItem>
+                  <SelectItem value="recent">Atualizados recentemente</SelectItem>
+                  <SelectItem value="old">Atualizados há mais tempo</SelectItem>
                 </SelectContent>
               </Select>
             </CardContent>
