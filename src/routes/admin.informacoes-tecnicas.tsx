@@ -174,6 +174,17 @@ const InformacoesTecnicas = () => {
                   <SelectItem value="restrito">Apenas privados</SelectItem>
                 </SelectContent>
               </Select>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="md:w-56">
+                  <SelectValue placeholder="Ordenar por" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="az">Título (A-Z)</SelectItem>
+                  <SelectItem value="za">Título (Z-A)</SelectItem>
+                  <SelectItem value="recent">Atualizados recentemente</SelectItem>
+                  <SelectItem value="old">Atualizados há mais tempo</SelectItem>
+                </SelectContent>
+              </Select>
             </CardContent>
           </Card>
 
