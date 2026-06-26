@@ -7,7 +7,6 @@ export const AREAS_TEMATICAS = [
   { id: 8, slug: "regulacao", nome: "Regulação do Acesso a Serviços de Saúde", descricao: "Acompanhamento da regulação assistencial e fluxos de atendimento.", icon: "Network", cor: "from-cyan-500 to-teal-600" },
   { id: 10, slug: "atencao-primaria", nome: "Atenção Primária", descricao: "Indicadores da APS, ESF e cobertura assistencial municipal.", icon: "HeartHandshake", cor: "from-emerald-500 to-green-600" },
   { id: 11, slug: "regionalizacao", nome: "Regionalização", descricao: "Dados por regiões ampliadas e macrorregiões de saúde de MG.", icon: "Map", cor: "from-amber-500 to-orange-600" },
-  { id: 13, slug: "vigilancia-sanitaria", nome: "Vigilância Sanitária", descricao: "Ações de fiscalização, inspeção e segurança sanitária.", icon: "ShieldCheck", cor: "from-sky-500 to-blue-600" },
   { id: 14, slug: "auditoria-sus", nome: "Auditoria do SUS-MG", descricao: "Painéis e indicadores das auditorias do SUS em Minas.", icon: "ClipboardCheck", cor: "from-pink-500 to-rose-600" },
   { id: 15, slug: "saude-digital", nome: "Saúde Digital", descricao: "Transformação digital e produtos de dados em saúde.", icon: "MonitorSmartphone", cor: "from-indigo-500 to-blue-700" },
   { id: 16, slug: "atencao-especializada", nome: "Atenção Especializada", descricao: "Atenção ambulatorial e hospitalar de média e alta complexidade.", icon: "Stethoscope", cor: "from-teal-500 to-emerald-600" },
@@ -15,7 +14,7 @@ export const AREAS_TEMATICAS = [
 
 export const INDICADORES_HOME = [
   { label: "Municípios cobertos", valor: "853", sub: "100% de Minas Gerais" },
-  { label: "Painéis publicados", valor: "46+", sub: "em 10 áreas temáticas" },
+  { label: "Painéis publicados", valor: "21", sub: "em 9 áreas temáticas" },
   { label: "Atualização", valor: "Diária", sub: "dados de fontes oficiais" },
   { label: "Acessos/mês", valor: "+120 mil", sub: "gestores e cidadãos" },
 ];
