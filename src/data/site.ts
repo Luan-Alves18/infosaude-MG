@@ -63,8 +63,6 @@ export const PAINEIS: Painel[] = [
   // Auditoria do SUS-MG
   { id: 70, titulo: "Painel de Auditoria do SUS-MG", areaId: 14, areaSlug: "auditoria-sus", areaNome: "Auditoria do SUS-MG", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMjAyZjRlZDUtNzllMC00OTQ2LThiMWMtODEwZDNjZGRkYmJjIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
 
-  // Saúde Digital — público
-  { id: 72, titulo: "Observatório Saúde Digital: análises do SUS Digital", areaId: 15, areaSlug: "saude-digital", areaNome: "Saúde Digital", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNmY2MTczM2QtMmRhMC00YjMxLTllZWQtMzk5ODU3MjkxYjRlIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
 
   // Painéis restritos
   { id: 1001, titulo: "Arboviroses - Lista de Solicitações em Aberto", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYTI4NmIyNmYtM2ViNi00Zjg3LWFhNDUtNWYwNjg0NmY1MDExIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
