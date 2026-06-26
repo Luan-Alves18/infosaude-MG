@@ -8,8 +8,14 @@ import { supabase } from "@/integrations/supabase/client";
  *   estado de auth, etc.) e o `.then()` do insert ainda não rodou.
  * - Falhas são silenciosas: nunca devem quebrar a UI.
  */
+// Flag global para pausar o registro de visitas. Quando `true`, o hook
+// não envia nada para `portal_visits`. Reative trocando para `false`
+// (e, opcionalmente, removendo este bloco) quando o cliente solicitar.
+const VISIT_LOGGING_PAUSED = true;
+
 export function useLogPortalVisit(path: string = "/") {
   useEffect(() => {
+    if (VISIT_LOGGING_PAUSED) return;
     const FLAG = `portal_visit_logged:${path}`;
     try {
       if (sessionStorage.getItem(FLAG)) return;
