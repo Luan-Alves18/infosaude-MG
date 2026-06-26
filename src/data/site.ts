@@ -71,7 +71,7 @@ export const PAINEIS: Painel[] = [
   { id: 1006, titulo: "Monitoramento Infecções Respiratórias", areaId: 10, areaSlug: "atencao-primaria", areaNome: "Atenção Primária", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMzdhOTc3MWYtNDViOS00MThhLThhYzgtYzBkYmQyZjA0ZjQ0IiwidCI6IjVjMGUxMWNkLWEyZTMtNDAxNS1hNzM3LTIxOWFlMDcxOWUwOCJ9" },
   { id: 1008, titulo: "Observatório de Emendas Parlamentares", areaId: 7, areaSlug: "gestao", areaNome: "Gestão", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiOTc3NDFhMGItMzNlNS00ODM5LTg3ZWEtYzgxZjNmNWZhM2Y1IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
   { id: 1009, titulo: "Observatório do Acesso - Lista de Solicitações em Aberto", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNmVmODY4NTYtZmM0NC00NzdmLWFjNzgtYWU1MDEzMzcxMDA3IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
-  { id: 1011, titulo: "Pontos Focais SUS Digital", areaId: 15, areaSlug: "saude-digital", areaNome: "Saúde Digital", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYzRmNTBkMTctYjQ1NC00MGY3LTllMjItY2Y1NmYxOWY1OGY1IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  
   { id: 1013, titulo: "Síndromes Respiratórias - Lista de Solicitações em Aberto", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYjExMTQyY2QtNzcyYS00NjIyLWI0ZWItYWM3NTkwMWIwMzM1IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
 ];
 // Compat: usado em algumas telas antigas
