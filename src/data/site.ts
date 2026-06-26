@@ -8,16 +8,16 @@ export const AREAS_TEMATICAS = [
   { id: 10, slug: "atencao-primaria", nome: "Atenção Primária", descricao: "Indicadores da APS, ESF e cobertura assistencial municipal.", icon: "HeartHandshake", cor: "from-emerald-500 to-green-600" },
   { id: 11, slug: "regionalizacao", nome: "Regionalização", descricao: "Dados por regiões ampliadas e macrorregiões de saúde de MG.", icon: "Map", cor: "from-amber-500 to-orange-600" },
   { id: 14, slug: "auditoria-sus", nome: "Auditoria do SUS-MG", descricao: "Painéis e indicadores das auditorias do SUS em Minas.", icon: "ClipboardCheck", cor: "from-pink-500 to-rose-600" },
-  { id: 15, slug: "saude-digital", nome: "Saúde Digital", descricao: "Transformação digital e produtos de dados em saúde.", icon: "MonitorSmartphone", cor: "from-indigo-500 to-blue-700" },
   { id: 16, slug: "atencao-especializada", nome: "Atenção Especializada", descricao: "Atenção ambulatorial e hospitalar de média e alta complexidade.", icon: "Stethoscope", cor: "from-teal-500 to-emerald-600" },
 ];
 
 export const INDICADORES_HOME = [
   { label: "Municípios cobertos", valor: "853", sub: "100% de Minas Gerais" },
-  { label: "Painéis publicados", valor: "21", sub: "em 9 áreas temáticas" },
+  { label: "Painéis publicados", valor: "19", sub: "em 8 áreas temáticas" },
   { label: "Atualização", valor: "Diária", sub: "dados de fontes oficiais" },
   { label: "Acessos/mês", valor: "+120 mil", sub: "gestores e cidadãos" },
 ];
+
 
 export const NOTICIAS = [
   { titulo: "Novo painel de Mortalidade Infantil e Materna é publicado", categoria: "Vigilância", data: "2025-03-18", resumo: "Ferramenta interativa permite acompanhar indicadores por município e regional de saúde em Minas Gerais." },
@@ -63,8 +63,6 @@ export const PAINEIS: Painel[] = [
   // Auditoria do SUS-MG
   { id: 70, titulo: "Painel de Auditoria do SUS-MG", areaId: 14, areaSlug: "auditoria-sus", areaNome: "Auditoria do SUS-MG", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMjAyZjRlZDUtNzllMC00OTQ2LThiMWMtODEwZDNjZGRkYmJjIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
 
-  // Saúde Digital — público
-  { id: 72, titulo: "Observatório Saúde Digital: análises do SUS Digital", areaId: 15, areaSlug: "saude-digital", areaNome: "Saúde Digital", embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNmY2MTczM2QtMmRhMC00YjMxLTllZWQtMzk5ODU3MjkxYjRlIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
 
   // Painéis restritos
   { id: 1001, titulo: "Arboviroses - Lista de Solicitações em Aberto", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYTI4NmIyNmYtM2ViNi00Zjg3LWFhNDUtNWYwNjg0NmY1MDExIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
@@ -73,7 +71,7 @@ export const PAINEIS: Painel[] = [
   { id: 1006, titulo: "Monitoramento Infecções Respiratórias", areaId: 10, areaSlug: "atencao-primaria", areaNome: "Atenção Primária", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMzdhOTc3MWYtNDViOS00MThhLThhYzgtYzBkYmQyZjA0ZjQ0IiwidCI6IjVjMGUxMWNkLWEyZTMtNDAxNS1hNzM3LTIxOWFlMDcxOWUwOCJ9" },
   { id: 1008, titulo: "Observatório de Emendas Parlamentares", areaId: 7, areaSlug: "gestao", areaNome: "Gestão", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiOTc3NDFhMGItMzNlNS00ODM5LTg3ZWEtYzgxZjNmNWZhM2Y1IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
   { id: 1009, titulo: "Observatório do Acesso - Lista de Solicitações em Aberto", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNmVmODY4NTYtZmM0NC00NzdmLWFjNzgtYWU1MDEzMzcxMDA3IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
-  { id: 1011, titulo: "Pontos Focais SUS Digital", areaId: 15, areaSlug: "saude-digital", areaNome: "Saúde Digital", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYzRmNTBkMTctYjQ1NC00MGY3LTllMjItY2Y1NmYxOWY1OGY1IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
+  
   { id: 1013, titulo: "Síndromes Respiratórias - Lista de Solicitações em Aberto", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYjExMTQyY2QtNzcyYS00NjIyLWI0ZWItYWM3NTkwMWIwMzM1IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
 ];
 // Compat: usado em algumas telas antigas
