@@ -84,7 +84,7 @@ export const Header = () => {
               />
             </div>
             <div className="leading-tight min-w-0">
-              <div className="font-bold text-base sm:text-lg text-foreground truncate">InfoSaúde<span className="text-secondary"> MG</span></div>
+              <div className="font-bold text-base sm:text-lg text-foreground truncate">InfoSaúde<span className={isModoEleitoral() ? "text-foreground" : "text-secondary"}> MG</span></div>
               <div className="text-[11px] text-muted-foreground hidden sm:block">Portal Oficial · SES-MG</div>
             </div>
           </Link>

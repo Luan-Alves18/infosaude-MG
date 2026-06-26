@@ -42,7 +42,10 @@ const Index = () => {
   return (
     <div className="animate-fade-in">
       {/* HERO */}
-      <section className="relative overflow-hidden gradient-hero text-primary-foreground">
+      <section
+        className={`relative overflow-hidden text-primary-foreground ${eleitoral ? "" : "gradient-hero"}`}
+        style={eleitoral ? { backgroundColor: "#6B5D55" } : undefined}
+      >
         <div className="absolute inset-0 opacity-20"
           style={{ backgroundImage: "radial-gradient(circle at 20% 20%, white 1px, transparent 1px), radial-gradient(circle at 80% 60%, white 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
         <div className={`container mx-auto px-4 py-12 sm:py-16 md:py-24 relative grid gap-6 lg:gap-10 items-center ${eleitoral ? "" : "lg:grid-cols-2"}`}>
