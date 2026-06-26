@@ -13,7 +13,7 @@ export const AREAS_TEMATICAS = [
 
 export const INDICADORES_HOME = [
   { label: "Municípios cobertos", valor: "853", sub: "100% de Minas Gerais" },
-  { label: "Painéis publicados", valor: "19", sub: "em 8 áreas temáticas" },
+  { label: "Painéis publicados", valor: "17", sub: "em 8 áreas temáticas" },
   { label: "Atualização", valor: "Diária", sub: "dados de fontes oficiais" },
   { label: "Acessos/mês", valor: "+120 mil", sub: "gestores e cidadãos" },
 ];
