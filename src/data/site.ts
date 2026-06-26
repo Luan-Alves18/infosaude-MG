@@ -13,7 +13,7 @@ export const AREAS_TEMATICAS = [
 
 export const INDICADORES_HOME = [
   { label: "Municípios cobertos", valor: "853", sub: "100% de Minas Gerais" },
-  { label: "Painéis publicados", valor: "19", sub: "em 8 áreas temáticas" },
+  { label: "Painéis publicados", valor: "17", sub: "em 8 áreas temáticas" },
   { label: "Atualização", valor: "Diária", sub: "dados de fontes oficiais" },
   { label: "Acessos/mês", valor: "+120 mil", sub: "gestores e cidadãos" },
 ];
@@ -67,9 +67,7 @@ export const PAINEIS: Painel[] = [
   // Painéis restritos
   { id: 1001, titulo: "Arboviroses - Lista de Solicitações em Aberto", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYTI4NmIyNmYtM2ViNi00Zjg3LWFhNDUtNWYwNjg0NmY1MDExIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
   { id: 1002, titulo: "Monitoramento - Câncer de Mama", areaId: 16, areaSlug: "atencao-especializada", areaNome: "Atenção Especializada", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNjRiODg0NjgtZjNlZS00OTc4LTg1ZmEtNjQ0ZGY4NTkyNTViIiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
-  { id: 1004, titulo: "Laboratórios de Biologia Molecular", areaId: 1, areaSlug: "vigilancia-epidemiologica", areaNome: "Vigilância Epidemiológica", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiZWMzMjkwNjItNDIwMC00MjNlLTg2NDQtOTI3MDUwOTRlNmI0IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
   { id: 1006, titulo: "Monitoramento Infecções Respiratórias", areaId: 10, areaSlug: "atencao-primaria", areaNome: "Atenção Primária", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiMzdhOTc3MWYtNDViOS00MThhLThhYzgtYzBkYmQyZjA0ZjQ0IiwidCI6IjVjMGUxMWNkLWEyZTMtNDAxNS1hNzM3LTIxOWFlMDcxOWUwOCJ9" },
-  { id: 1008, titulo: "Observatório de Emendas Parlamentares", areaId: 7, areaSlug: "gestao", areaNome: "Gestão", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiOTc3NDFhMGItMzNlNS00ODM5LTg3ZWEtYzgxZjNmNWZhM2Y1IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
   { id: 1009, titulo: "Observatório do Acesso - Lista de Solicitações em Aberto", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiNmVmODY4NTYtZmM0NC00NzdmLWFjNzgtYWU1MDEzMzcxMDA3IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
   
   { id: 1013, titulo: "Síndromes Respiratórias - Lista de Solicitações em Aberto", areaId: 8, areaSlug: "regulacao", areaNome: "Regulação do Acesso a Serviços de Saúde", restrito: true, embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiYjExMTQyY2QtNzcyYS00NjIyLWI0ZWItYWM3NTkwMWIwMzM1IiwidCI6Ijg3ZTRkYTJiLTgyZGYtNDhmNi05MTU3LTY5YzNjYTYwMGRmMiIsImMiOjR9" },
