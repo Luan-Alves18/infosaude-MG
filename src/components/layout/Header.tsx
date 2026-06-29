@@ -23,7 +23,7 @@ const ALL_NAV_ITEMS = [
   { to: "/paineis", label: "Galeria de Painéis" },
   { to: "/dados-abertos", label: "Dados Abertos" },
   { to: "/sobre", label: "Sobre", hideInModoEleitoral: true },
-  { to: "/contato", label: "Contato" },
+  { to: "/contato", label: "Contato e Informações" },
 ];
 const navItems = isModoEleitoral()
   ? ALL_NAV_ITEMS.filter((i) => !i.hideInModoEleitoral)
