@@ -61,7 +61,7 @@ const Contato = () => {
             <div className="min-w-0">
               <div className="text-xs text-muted-foreground uppercase tracking-wide">{c.t}</div>
               {"url" in c && c.url ? (
-                <a href={c.url} target="_blank" rel="noreferrer" className="font-semibold text-primary hover:underline break-all">
+                <a href={c.url as string} target="_blank" rel="noreferrer" className="font-semibold text-primary hover:underline break-all">
                   {c.v}
                 </a>
               ) : (
