@@ -19,6 +19,7 @@ import { AREAS_TEMATICAS, PAINEIS } from "@/data/site";
 import { getAreaColor } from "@/lib/areaColors";
 import { listAllPanelNotes } from "@/lib/panel-notes.functions";
 import { matchesSearch } from "@/lib/normalize";
+import { TechnicalDocsManager } from "@/components/TechnicalDocsManager";
 
 type NoteRow = { panelId: string; content: string; updatedAt: string | null };
 
@@ -243,19 +244,7 @@ const InformacoesTecnicas = () => {
         </TabsContent>
 
         <TabsContent value="docs">
-          <Card>
-            <CardContent className="p-10 text-center">
-              <BookOpen className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-              <h2 className="text-lg font-semibold mb-1">
-                Documentações técnicas
-              </h2>
-              <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                Espaço reservado para as documentações técnicas e demais
-                materiais do Núcleo de Dados. Nenhum documento foi
-                publicado ainda — esta área será preenchida em breve.
-              </p>
-            </CardContent>
-          </Card>
+          <TechnicalDocsManager />
         </TabsContent>
       </Tabs>
     </div>
