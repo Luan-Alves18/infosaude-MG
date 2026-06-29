@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Mail, MapPin, Globe, Clock, LifeBuoy, Accessibility, ShieldCheck, FileQuestion } from "lucide-react";
+import { Mail, MapPin, Globe, LifeBuoy, Accessibility, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const Contato = () => {
@@ -11,22 +11,10 @@ const Contato = () => {
 
   const info = [
     {
-      icon: Clock,
-      t: "HORÁRIO DE ATENDIMENTO",
-      v: "Segunda a sexta, das 8h às 18h",
-      d: "Exceto feriados nacionais e estaduais.",
-    },
-    {
       icon: LifeBuoy,
       t: "SUPORTE TÉCNICO",
       v: "Dúvidas sobre painéis e acesso",
       d: "Encaminhe sua solicitação pelo e-mail institucional informando o painel e o tipo de problema.",
-    },
-    {
-      icon: FileQuestion,
-      t: "SOLICITAÇÃO DE ACESSO",
-      v: "Painéis restritos",
-      d: "Servidores podem solicitar acesso a painéis restritos diretamente pela área autenticada do portal.",
     },
     {
       icon: Accessibility,
