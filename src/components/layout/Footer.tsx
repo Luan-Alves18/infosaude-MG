@@ -50,7 +50,7 @@ export const Footer = () => (
           <HideInModoEleitoral>
             <li><Link to="/sobre" className="opacity-80 hover:opacity-100 hover:underline">Sobre</Link></li>
           </HideInModoEleitoral>
-          <li><Link to="/contato" className="opacity-80 hover:opacity-100 hover:underline">Contato</Link></li>
+          <li><Link to="/contato" className="opacity-80 hover:opacity-100 hover:underline">Contato e Informações</Link></li>
         </ul>
       </div>
 
