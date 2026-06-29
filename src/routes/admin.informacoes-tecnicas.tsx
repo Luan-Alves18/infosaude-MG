@@ -19,6 +19,7 @@ import { AREAS_TEMATICAS, PAINEIS } from "@/data/site";
 import { getAreaColor } from "@/lib/areaColors";
 import { listAllPanelNotes } from "@/lib/panel-notes.functions";
 import { matchesSearch } from "@/lib/normalize";
+import { TechnicalDocsManager } from "@/components/TechnicalDocsManager";
 
 type NoteRow = { panelId: string; content: string; updatedAt: string | null };
 
