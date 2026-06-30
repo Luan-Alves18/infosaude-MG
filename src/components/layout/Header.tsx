@@ -4,7 +4,7 @@ import { Search, Menu, X, LogIn, LogOut, User as UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
-import { useAccessibility } from "@/hooks/useAccessibility";
+
 import { AccessibilityMenu } from "@/components/AccessibilityMenu";
 import brasaoMG from "@/assets/brasao-mg.png";
 import { isModoEleitoral } from "@/lib/modoEleitoral";
