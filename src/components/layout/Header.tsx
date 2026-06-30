@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "@/lib/router-compat";
-import { Search, Menu, X, LogIn, LogOut, User as UserIcon, Type, Contrast } from "lucide-react";
+import { Search, Menu, X, LogIn, LogOut, User as UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
-import { useAccessibility } from "@/hooks/useAccessibility";
+
 import { AccessibilityMenu } from "@/components/AccessibilityMenu";
 import brasaoMG from "@/assets/brasao-mg.png";
 import { isModoEleitoral } from "@/lib/modoEleitoral";
@@ -34,7 +34,7 @@ export const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const { user, signOut, roles } = useAuth();
-  const { toggleContrast, cycleFont } = useAccessibility();
+  
   const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
@@ -60,14 +60,9 @@ export const Header = () => {
             GOVERNO DE MINAS GERAIS · Secretaria de Estado de Saúde
           </a>
           <div className="hidden sm:flex items-center gap-3">
-            <button onClick={cycleFont} className="hover:underline flex items-center gap-1" aria-label="Tamanho da fonte">
-              <Type className="h-3 w-3" /> Fonte
-            </button>
-            <button onClick={toggleContrast} className="hover:underline flex items-center gap-1" aria-label="Alto contraste">
-              <Contrast className="h-3 w-3" /> Contraste
-            </button>
             <AccessibilityMenu variant="topbar" />
           </div>
+
         </div>
       </div>
 
@@ -216,17 +211,12 @@ export const Header = () => {
                 {item.label}
               </NavLink>
             ))}
-            <div className="mt-2 pt-3 border-t border-border flex flex-wrap gap-2">
-              <button onClick={cycleFont} className="flex-1 min-w-[120px] px-3 py-2 rounded-lg text-xs font-medium bg-muted hover:bg-muted/70 inline-flex items-center justify-center gap-1.5">
-                <Type className="h-3.5 w-3.5" /> Tamanho da fonte
-              </button>
-              <button onClick={toggleContrast} className="flex-1 min-w-[120px] px-3 py-2 rounded-lg text-xs font-medium bg-muted hover:bg-muted/70 inline-flex items-center justify-center gap-1.5">
-                <Contrast className="h-3.5 w-3.5" /> Alto contraste
-              </button>
-              <div className="flex-1 min-w-[120px] flex">
+            <div className="mt-2 pt-3 border-t border-border flex">
+              <div className="flex-1 flex">
                 <AccessibilityMenu variant="ghost" />
               </div>
             </div>
+
           </nav>
         )}
       </div>
