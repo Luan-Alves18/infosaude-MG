@@ -211,17 +211,12 @@ export const Header = () => {
                 {item.label}
               </NavLink>
             ))}
-            <div className="mt-2 pt-3 border-t border-border flex flex-wrap gap-2">
-              <button onClick={cycleFont} className="flex-1 min-w-[120px] px-3 py-2 rounded-lg text-xs font-medium bg-muted hover:bg-muted/70 inline-flex items-center justify-center gap-1.5">
-                <Type className="h-3.5 w-3.5" /> Tamanho da fonte
-              </button>
-              <button onClick={toggleContrast} className="flex-1 min-w-[120px] px-3 py-2 rounded-lg text-xs font-medium bg-muted hover:bg-muted/70 inline-flex items-center justify-center gap-1.5">
-                <Contrast className="h-3.5 w-3.5" /> Alto contraste
-              </button>
-              <div className="flex-1 min-w-[120px] flex">
+            <div className="mt-2 pt-3 border-t border-border flex">
+              <div className="flex-1 flex">
                 <AccessibilityMenu variant="ghost" />
               </div>
             </div>
+
           </nav>
         )}
       </div>
