@@ -34,7 +34,7 @@ export const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const { user, signOut, roles } = useAuth();
-  const { toggleContrast, cycleFont } = useAccessibility();
+  
   const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
