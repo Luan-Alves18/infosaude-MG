@@ -60,14 +60,9 @@ export const Header = () => {
             GOVERNO DE MINAS GERAIS · Secretaria de Estado de Saúde
           </a>
           <div className="hidden sm:flex items-center gap-3">
-            <button onClick={cycleFont} className="hover:underline flex items-center gap-1" aria-label="Tamanho da fonte">
-              <Type className="h-3 w-3" /> Fonte
-            </button>
-            <button onClick={toggleContrast} className="hover:underline flex items-center gap-1" aria-label="Alto contraste">
-              <Contrast className="h-3 w-3" /> Contraste
-            </button>
             <AccessibilityMenu variant="topbar" />
           </div>
+
         </div>
       </div>
 
