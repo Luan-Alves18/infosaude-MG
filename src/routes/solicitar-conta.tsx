@@ -68,8 +68,8 @@ const SolicitarConta = () => {
 
     // Inserção direta usando a política RLS de INSERT pública (anon).
     const { error } = await supabase.from("account_requests").insert(payload);
-    setLoading(false);
     if (error) {
+      setLoading(false);
       toast({
         title: "Erro ao enviar solicitação",
         description: error.message,
@@ -77,6 +77,18 @@ const SolicitarConta = () => {
       });
       return;
     }
+
+    // Notifica o administrador via SMTP institucional (não bloqueia o fluxo
+    // do usuário em caso de falha de envio).
+    try {
+      await supabase.functions.invoke("send-smtp-notification", {
+        body: { tipo_notificacao: "nova_solicitacao_conta", dados: payload },
+      });
+    } catch (err) {
+      console.warn("[send-smtp-notification] falha ao notificar admin:", err);
+    }
+
+    setLoading(false);
     toast({
       title: "Solicitação enviada",
       description: "Sua solicitação foi registrada. Você será notificado quando a conta for criada.",

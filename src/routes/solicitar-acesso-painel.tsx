@@ -39,6 +39,30 @@ const SolicitarAcessoPainel = () => {
     setLoading(true);
     try {
       await submitFn({ data: { panel_ids: selected, motivo: motivo.trim() } });
+
+      // Notifica o admin via SMTP institucional. Falha de envio não invalida
+      // a solicitação já persistida.
+      const titulos = selected
+        .map((id) => PAINEIS.find((p) => String(p.id) === id)?.titulo ?? id);
+      try {
+        const { supabase } = await import("@/integrations/supabase/client");
+        await supabase.functions.invoke("send-smtp-notification", {
+          body: {
+            tipo_notificacao: "solicitacao_painel",
+            dados: {
+              user_email: user.email,
+              user_name:
+                user.user_metadata?.display_name ?? user.email?.split("@")[0],
+              panel_ids: selected,
+              panel_titulos: titulos,
+              motivo: motivo.trim(),
+            },
+          },
+        });
+      } catch (err) {
+        console.warn("[send-smtp-notification] falha ao notificar admin:", err);
+      }
+
       toast({ title: "Solicitação enviada", description: "Sua solicitação foi registrada." });
       setSelected([]);
       setMotivo("");
