@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "@/lib/router-compat";
-import { Search, Menu, X, LogIn, LogOut, User as UserIcon, Type, Contrast } from "lucide-react";
+import { Search, Menu, X, LogIn, LogOut, User as UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
